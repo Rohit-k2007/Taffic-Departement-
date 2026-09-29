@@ -1,0 +1,22 @@
+{
+  "name": "natdams-traffic-portal",
+  "version": "2.4.0",
+  "description": "National Automated Traffic Department & AI Mobility Surveillance System (NATDAMS) - Pan-India Traffic Forensics, Real-Time Govt & AI Roadworks, Google Maps & ISRO Satellite Telemetry",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "traffic-management",
+    "nhai",
+    "morth",
+    "google-maps",
+    "isro-satellite",
+    "anpr",
+    "echallan",
+    "natdams"
+  ],
+  "author": "Government of India - National Traffic Directorate",
+  "license": "ISC"
+}
