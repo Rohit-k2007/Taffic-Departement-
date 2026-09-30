@@ -1098,6 +1098,51 @@ function requestHandler(req, res) {
     });
   }
 
+  // 18. GET /api/users (Citizen Registry for Admin Management)
+  if (pathname === '/api/users' && req.method === 'GET') {
+    return sendJSON(res, 200, { success: true, count: (db.users || []).length, users: db.users || [] });
+  }
+
+  // 19. PUT /api/users/:id/toggle (Admin Suspend / Reinstate License)
+  if (pathname.startsWith('/api/users/') && pathname.endsWith('/toggle') && req.method === 'PUT') {
+    const userId = pathname.split('/')[3];
+    const u = (db.users || []).find(item => item.id === userId);
+    if (u) {
+      u.licenseStatus = u.licenseStatus === 'Active' ? 'Suspended / Revoked' : 'Active';
+      saveDB();
+      return sendJSON(res, 200, { success: true, user: u });
+    }
+    return sendJSON(res, 404, { success: false, message: "User not found" });
+  }
+
+  // 20. POST /api/officers (Commission New Police Officer)
+  if (pathname === '/api/officers' && req.method === 'POST') {
+    return getBody(req, off => {
+      const newOff = Object.assign({
+        id: "OFF-COMM-" + Math.floor(10 + Math.random() * 90),
+        issuedBy: "Directorate General of Traffic Police",
+        passValidity: "2028-12-31"
+      }, off);
+      if (!db.officers) db.officers = [];
+      db.officers.unshift(newOff);
+      saveDB();
+      return sendJSON(res, 201, { success: true, officer: newOff });
+    });
+  }
+
+  // 21. POST /api/admin/broadcast (Emergency Highway Broadcast)
+  if (pathname === '/api/admin/broadcast' && req.method === 'POST') {
+    return getBody(req, body => {
+      const alertEntry = {
+        id: "ADVISORY-" + Date.now(),
+        message: body.message || "High-Speed Enforcement & Weather Advisory Active",
+        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19) + " IST",
+        priority: body.priority || "HIGH"
+      };
+      return sendJSON(res, 200, { success: true, broadcast: alertEntry });
+    });
+  }
+
   // --- STATIC FILE SERVING ---
   let reqPath = pathname;
   if (reqPath === '/') reqPath = '/index.html';

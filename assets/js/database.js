@@ -77,7 +77,14 @@ class TrafficDatabase {
         this.emergencies = data.emergencies || [];
       }
 
-      // 7. Fetch VAHAN Vehicle Registrations (1995-2026 Official Dataset)
+      // 9. Fetch Citizen Users Registry (Admin Management)
+      const resUsers = await fetch(`${this.apiBase}/api/users`);
+      if (resUsers.ok) {
+        const data = await resUsers.json();
+        this.users = data.users || [];
+      }
+
+      // 10. Fetch VAHAN Vehicle Registrations (1995-2026 Official Dataset)
       const resVahan = await fetch(`${this.apiBase}/api/vahan-registrations`);
       if (resVahan.ok) {
         const data = await resVahan.json();
@@ -249,8 +256,43 @@ class TrafficDatabase {
       });
       return await res.json();
     } catch (e) {
-      return { success: false, message: "Network connection error while reaching Officer Registry." };
+  async commissionOfficer(officerData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/officers`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(officerData)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        this.officers.unshift(data.officer);
+        return data.officer;
+      }
+    } catch (e) { }
+    const fallback = Object.assign({
+      id: "OFF-COMM-" + Math.floor(10 + Math.random() * 90),
+      issuedBy: "Directorate General of Traffic Police",
+      passValidity: "2028-12-31"
+    }, officerData);
+    this.officers.unshift(fallback);
+    return fallback;
+  }
+
+  // --- CITIZEN USERS (Admin Management) ---
+  getUsers() {
+    return this.users || [];
+  }
+
+  async toggleUserStatus(userId) {
+    const u = (this.users || []).find(item => item.id === userId);
+    if (u) {
+      u.licenseStatus = u.licenseStatus === 'Active' ? 'Suspended / Revoked' : 'Active';
+      try {
+        fetch(`${this.apiBase}/api/users/${userId}/toggle`, { method: 'PUT' });
+      } catch (e) { }
+      return u;
     }
+    return null;
   }
 
   // --- AUDIT LOGS ---

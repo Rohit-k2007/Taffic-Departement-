@@ -2390,5 +2390,93 @@
       "etaMinutes": 1,
       "timestamp": "2026-09-30 08:58:00"
     }
+  ],
+  "users": [
+    {
+      "id": "USR-DL-98201",
+      "name": "Vikramaditya Singhania",
+      "dlNumber": "DL-0420190089211",
+      "linkedPlates": [
+        "DL-01-AB-4921",
+        "HR-26-DK-2004"
+      ],
+      "city": "New Delhi",
+      "state": "DL",
+      "kycStatus": "Aadhaar e-KYC Verified",
+      "pendingChallans": 1,
+      "licenseStatus": "Active",
+      "registeredDate": "2023-04-12"
+    },
+    {
+      "id": "USR-MH-44120",
+      "name": "Ananya Deshmukh",
+      "dlNumber": "MH-0120200055412",
+      "linkedPlates": [
+        "MH-02-CP-8802"
+      ],
+      "city": "Mumbai",
+      "state": "MH",
+      "kycStatus": "Aadhaar e-KYC Verified",
+      "pendingChallans": 0,
+      "licenseStatus": "Active",
+      "registeredDate": "2022-11-05"
+    },
+    {
+      "id": "USR-RJ-77821",
+      "name": "Col. Ratan Singh Rathore",
+      "dlNumber": "RJ-1420180099410",
+      "linkedPlates": [
+        "RJ-14-GA-7711",
+        "RJ-14-CZ-3301"
+      ],
+      "city": "Jaipur",
+      "state": "RJ",
+      "kycStatus": "DigiLocker Verified",
+      "pendingChallans": 0,
+      "licenseStatus": "Active",
+      "registeredDate": "2021-08-19"
+    },
+    {
+      "id": "USR-KA-33209",
+      "name": "Karthik Subramanian",
+      "dlNumber": "KA-0420210066782",
+      "linkedPlates": [
+        "KA-04-E-1011"
+      ],
+      "city": "Bengaluru",
+      "state": "KA",
+      "kycStatus": "Aadhaar e-KYC Verified",
+      "pendingChallans": 2,
+      "licenseStatus": "Flagged / Notice Sent",
+      "registeredDate": "2024-01-10"
+    },
+    {
+      "id": "USR-UP-11983",
+      "name": "Sunil Kumar Maurya",
+      "dlNumber": "UP-1620170044910",
+      "linkedPlates": [
+        "UP-16-BZ-9943"
+      ],
+      "city": "Noida",
+      "state": "UP",
+      "kycStatus": "DigiLocker Verified",
+      "pendingChallans": 1,
+      "licenseStatus": "Active",
+      "registeredDate": "2023-07-22"
+    },
+    {
+      "id": "USR-TN-55201",
+      "name": "Meenakshi Sundaram",
+      "dlNumber": "TN-0120190033109",
+      "linkedPlates": [
+        "TN-01-AX-9912"
+      ],
+      "city": "Chennai",
+      "state": "TN",
+      "kycStatus": "Aadhaar e-KYC Verified",
+      "pendingChallans": 0,
+      "licenseStatus": "Active",
+      "registeredDate": "2022-03-14"
+    }
   ]
 }

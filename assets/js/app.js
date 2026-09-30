@@ -304,6 +304,15 @@ const App = {
       });
     }
 
+    // Commission New Officer Form Submission (Admin Desk)
+    const formCommission = document.getElementById('formCommissionOfficer');
+    if (formCommission) {
+      formCommission.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleCommissionOfficerSubmit();
+      });
+    }
+
     // Search Violations Filter
     const searchViolations = document.getElementById('searchViolations');
     if (searchViolations) {
@@ -330,6 +339,9 @@ const App = {
     this.renderEmergenciesList();
     this.searchAndDisplayCase();
     this.updateCasesBadge();
+    this.renderAdminUsersTable();
+    this.renderAdminComplaintsTable();
+    this.renderAdminOfficersTable();
   },
 
   // =========================================================================
@@ -419,6 +431,10 @@ const App = {
     } else if (tabName === 'vehicle-ratios') {
       if (window.analyticsController) window.analyticsController.renderVehicleRatiosCharts();
     } else if (tabName === 'admin') {
+      this.switchAdminSubView('users');
+      this.renderAdminUsersTable();
+      this.renderAdminComplaintsTable();
+      this.renderAdminOfficersTable();
       this.renderAuditLogsTable();
     }
 
@@ -1445,6 +1461,275 @@ const App = {
     this.renderRoadworksList();
     if (window.mapController) window.mapController.renderConstructionZones();
     this.showToast(`Construction Zone Registered: ${road}`, "success");
+  },
+
+  // =========================================================================
+  // ADMINISTRATION COMMAND FLOW (Users -> Complaints -> Officers -> Analytics -> Monitoring -> Audit)
+  // =========================================================================
+
+  switchAdminSubView(viewKey) {
+    const subViews = ['users', 'complaints', 'officers', 'analytics', 'system', 'audit'];
+    subViews.forEach(v => {
+      const section = document.getElementById(`adminSection${v.charAt(0).toUpperCase() + v.slice(1)}`);
+      const btn = document.getElementById(`btnAdminSub${v.charAt(0).toUpperCase() + v.slice(1)}`);
+      if (section) section.style.display = v === viewKey ? 'block' : 'none';
+      if (btn) {
+        if (v === viewKey) {
+          btn.style.background = '#111827';
+          btn.style.color = '#ffffff';
+          btn.style.borderColor = '#111827';
+        } else {
+          btn.style.background = 'transparent';
+          btn.style.color = '#334155';
+          btn.style.borderColor = '#cbd5e1';
+        }
+      }
+    });
+
+    if (viewKey === 'users') this.renderAdminUsersTable();
+    else if (viewKey === 'complaints') this.renderAdminComplaintsTable();
+    else if (viewKey === 'officers') this.renderAdminOfficersTable();
+    else if (viewKey === 'audit') this.renderAuditLogsTable();
+
+    if (window.lucide) lucide.createIcons();
+  },
+
+  renderAdminUsersTable() {
+    const tbody = document.getElementById('adminUsersTableBody');
+    if (!tbody) return;
+
+    let users = window.trafficDB.getUsers();
+    const query = document.getElementById('adminSearchUsersInput')?.value?.trim().toUpperCase();
+
+    if (query) {
+      users = users.filter(u => 
+        (u.name && u.name.toUpperCase().includes(query)) ||
+        (u.dlNumber && u.dlNumber.toUpperCase().includes(query)) ||
+        (u.id && u.id.toUpperCase().includes(query)) ||
+        (u.city && u.city.toUpperCase().includes(query))
+      );
+    }
+
+    if (users.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">No registered citizen motorists found matching search filter.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = users.map(u => {
+      const isSuspended = u.licenseStatus && u.licenseStatus.includes('Suspended');
+      return `
+        <tr>
+          <td><strong style="color:#111827; font-family:var(--font-mono); font-size:11px;">${u.id}</strong></td>
+          <td><strong>${u.name}</strong></td>
+          <td><span style="font-family:var(--font-mono); font-weight:700; color:#0f172a; font-size:11px;">${u.dlNumber}</span></td>
+          <td>
+            <div style="display:flex; gap:4px; flex-wrap:wrap;">
+              ${(u.linkedPlates || []).map(p => `<span style="background:#111827; color:#fff; font-size:10px; padding:1px 5px; border-radius:2px; font-family:var(--font-mono);">${p}</span>`).join('')}
+            </div>
+          </td>
+          <td>${u.city}, ${u.state}</td>
+          <td><span style="color:#059669; font-weight:600; font-size:11px;">✓ ${u.kycStatus}</span></td>
+          <td>
+            <span style="background:${isSuspended ? '#fef2f2' : '#f0fdf4'}; color:${isSuspended ? '#b91c1c' : '#15803d'}; border:1px solid ${isSuspended ? '#fca5a5' : '#86efac'}; padding:2px 7px; border-radius:3px; font-size:11px; font-weight:700;">
+              ${u.licenseStatus}
+            </span>
+          </td>
+          <td>
+            <button type="button" class="btn-action-primary" style="font-size:10px; padding:3px 8px; background:${isSuspended ? '#f0fdf4' : '#fef2f2'}; border-color:${isSuspended ? '#86efac' : '#fca5a5'}; color:${isSuspended ? '#15803d' : '#b91c1c'};" onclick="App.toggleUserLicense('${u.id}')">
+              ${isSuspended ? '✓ Reinstate License' : '🚫 Suspend DL'}
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  async toggleUserLicense(userId) {
+    const u = await window.trafficDB.toggleUserStatus(userId);
+    if (u) {
+      window.trafficDB.logAudit({
+        user: "Director General (Admin)",
+        role: "ADMINISTRATOR",
+        action: "LICENSE_STATUS_OVERRIDE",
+        details: `Driving license status for ${u.name} (${u.dlNumber}) shifted to ${u.licenseStatus}`
+      });
+      this.renderAdminUsersTable();
+      this.showToast(`Administrative Action: ${u.name}'s License set to [${u.licenseStatus}]`, "info");
+    }
+  },
+
+  renderAdminComplaintsTable() {
+    const tbody = document.getElementById('adminComplaintsTableBody');
+    if (!tbody) return;
+
+    const cases = window.trafficDB.getCases();
+    if (cases.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:18px; color:#64748b;">No complaints currently reported.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = cases.map(c => `
+      <tr>
+        <td><strong style="color:#111827; font-family:var(--font-mono); font-size:11px;">${c.id}</strong></td>
+        <td><span style="background:#f1f5f9; padding:2px 6px; border-radius:3px; font-size:11px; font-weight:600;">${c.category}</span></td>
+        <td>
+          <div>${c.location}</div>
+          <div style="font-size:10px; color:#64748b; font-family:var(--font-mono);">${c.gpsCoords || '28.6250° N, 77.2100° E'}</div>
+        </td>
+        <td><span style="color:#b45309; font-weight:700; font-size:11px;">Priority: ${c.aiClassification ? c.aiClassification.priority : 'HIGH'}</span></td>
+        <td><strong>${c.assignedOfficer ? c.assignedOfficer.name : 'Insp. Rajesh Kumar'}</strong></td>
+        <td><span style="background:#fffbeb; color:#92400e; padding:2px 6px; border-radius:3px; font-size:11px; font-weight:700;">${c.status}</span></td>
+        <td>
+          <div style="display:flex; gap:4px;">
+            <button type="button" class="btn-action-primary" style="font-size:10px; padding:2px 6px; background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;" onclick="App.handleAdminComplaintAction('${c.id}', 'ESCALATE')">
+              ⚡ Escalate
+            </button>
+            <button type="button" class="btn-action-primary" style="font-size:10px; padding:2px 6px; background:#f0fdf4; color:#15803d; border-color:#86efac;" onclick="App.handleAdminComplaintAction('${c.id}', 'ADMIN_CLOSE')">
+              ✓ Close
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  async handleAdminComplaintAction(caseId, action) {
+    if (action === 'ESCALATE') {
+      await window.trafficDB.updateCase(caseId, {
+        status: "Under Review (Escalated to SP Desk)",
+        aiPriority: "CRITICAL"
+      });
+      this.showToast(`Case #${caseId} Escalated to SP Regional Command!`, "success");
+    } else if (action === 'ADMIN_CLOSE') {
+      await window.trafficDB.updateCase(caseId, {
+        status: "Closed",
+        stepIndex: 4,
+        officerDecision: "Closed by Directorate Administrative Override"
+      });
+      this.showToast(`Case #${caseId} marked Closed via Administrative Override.`, "info");
+    }
+    this.renderAdminComplaintsTable();
+    this.renderCasesList();
+    this.searchAndDisplayCase(caseId);
+  },
+
+  renderAdminOfficersTable() {
+    const tbody = document.getElementById('adminOfficersTableBody');
+    if (!tbody) return;
+
+    const officers = window.trafficDB.getOfficers();
+    tbody.innerHTML = officers.map(o => `
+      <tr>
+        <td><span style="background:#111827; color:#fff; font-family:var(--font-mono); font-weight:700; padding:2px 7px; border-radius:3px; font-size:11px;">${o.badgeNumber}</span></td>
+        <td>
+          <strong>${o.name}</strong>
+          <div style="font-size:10px; color:#64748b;">${o.rank}</div>
+        </td>
+        <td><span style="background:#fef3c7; color:#92400e; font-weight:700; padding:2px 6px; border-radius:3px; font-size:11px;">Level ${o.level || 3}</span></td>
+        <td>${o.jurisdiction}</td>
+        <td><span style="font-family:var(--font-mono); font-size:11px; color:#475569;">PIN: ${o.pin || '5050'}</span></td>
+        <td><span style="color:#059669; font-weight:700; font-size:11px;">✓ Commission Active</span></td>
+        <td>
+          <button type="button" class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.displayOfficialDutyPass(${JSON.stringify(o).replace(/"/g, '&quot;')})">
+            🪪 View Duty Pass
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  async handleCommissionOfficerSubmit() {
+    const name = document.getElementById('inNewOffName')?.value.trim();
+    const badge = document.getElementById('inNewOffBadge')?.value.trim().toUpperCase();
+    const rank = document.getElementById('inNewOffRank')?.value;
+    const level = parseInt(document.getElementById('inNewOffLevel')?.value || '3');
+    const pass = document.getElementById('inNewOffPass')?.value.trim();
+    const pin = document.getElementById('inNewOffPin')?.value.trim();
+    const juris = document.getElementById('inNewOffJurisdiction')?.value.trim();
+    const duties = document.getElementById('inNewOffDuties')?.value.trim();
+
+    if (!name || !badge || !pass || !pin || !juris) {
+      this.showToast("Please fill all mandatory officer commission fields.", "error");
+      return;
+    }
+
+    const newOff = {
+      name: name,
+      badgeNumber: badge,
+      rank: rank,
+      level: level,
+      passCode: pass,
+      pin: pin,
+      jurisdiction: juris,
+      clearance: `LEVEL-${level} ENFORCEMENT`,
+      duties: duties || "Radar speed interception & highway patrol deployment",
+      passValidity: "2028-12-31",
+      issuedBy: "Directorate General of Traffic Police (MHA / MoRTH)"
+    };
+
+    await window.trafficDB.commissionOfficer(newOff);
+    this.closeModal('newOfficerModal');
+    this.renderAdminOfficersTable();
+    this.showToast(`✓ Officer Commissioned: ${name} (${badge}) Level ${level}!`, "success");
+  },
+
+  adminBroadcastAlert() {
+    const msg = prompt("Enter National Highway Traffic Emergency Advisory to broadcast across all Gantries & Interceptors:", "⚠️ HEAVY FOG ADVISORY: Speed limits restricted to 40 km/h across all Expressway Corridors. Barricade teams deployed.");
+    if (msg) {
+      const banner = document.getElementById('govtAiSyncMeta');
+      if (banner) banner.innerHTML = `🚨 ACTIVE ADVISORY: <strong>${msg}</strong>`;
+      window.trafficDB.logAudit({
+        user: "Director General (Admin)",
+        role: "ADMINISTRATOR",
+        action: "NATIONAL_ADVISORY_BROADCAST",
+        details: msg
+      });
+      this.showToast("📢 Emergency Advisory Broadcasted to all 1,420 Highway ANPR Gantries!", "success");
+    }
+  },
+
+  adminGantryClamp() {
+    window.trafficDB.logAudit({
+      user: "Director General (Admin)",
+      role: "ADMINISTRATOR",
+      action: "RADAR_SPEED_CLAMP_ENGAGED",
+      details: "Automated optical speed clamp engaged across NHAI Expressways (Max limit capped at 50 km/h)"
+    });
+    this.showToast("⚡ Automated Radar Speed Clamp Activated across all Gantries!", "error");
+  },
+
+  async adminSyncDb() {
+    this.showToast("🔄 Re-syncing National VAHAN & MoRTH Traffic Database...", "info");
+    await window.trafficDB.syncRoadworksWithLiveGovtAI();
+    await window.trafficDB.loadInitialData();
+    this.renderAllViews();
+    this.showToast("✓ National VAHAN 4.0 & MoRTH Registry Database Synced!", "success");
+  },
+
+  exportAuditLogsCsv() {
+    const logs = window.trafficDB.getAuditLogs();
+    if (!logs || logs.length === 0) {
+      this.showToast("No audit logs available to export.");
+      return;
+    }
+    const headers = ["Timestamp", "Authorized Officer", "Action", "Details", "Source IP", "SHA-256 Hash"];
+    const rows = logs.map(l => [
+      `"${l.timestamp}"`,
+      `"${l.user}"`,
+      `"${l.action}"`,
+      `"${(l.details || '').replace(/"/g, '""')}"`,
+      `"${l.ipAddress}"`,
+      `"${l.sha256Hash || ''}"`
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `NATDAMS_Audit_Ledger_${new Date().toISOString().substring(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    this.showToast("⬇️ SHA-256 Cryptographic Audit Ledger exported as CSV.", "success");
   },
 
   openModal(id) {

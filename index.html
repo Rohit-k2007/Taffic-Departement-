@@ -718,69 +718,301 @@
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
-              🛠️ National Directorate Admin Command &amp; Audit Trail
+              🛠️ National Directorate Administration Command Desk
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Manage Officer Hierarchy, System Monitoring, Citizen Complaints, and Cryptographic SHA-256 Audit Logs.
+              Admin Flow: Users (Manage) ➔ Complaints (Review) ➔ Officers (Staff) ➔ Analytics (Data) ➔ System Monitoring ➔ SHA-256 Audit.
             </p>
           </div>
-          <span style="background:#064e3b; color:#10b981; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
-            SYSTEM STATUS: SECURE &amp; COMPLIANT
-          </span>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="background:#064e3b; color:#10b981; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
+              ROOT COMMAND CLEARANCE ACTIVE
+            </span>
+          </div>
+        </div>
+
+        <!-- Live Administration Command Action Toolbar -->
+        <div style="background:#111827; border:1px solid #374151; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; animation:pulse-dot-anim 1s infinite;"></span>
+            <span style="color:#f8fafc; font-size:11px; font-weight:700;">COMMAND DIRECT ACTIONS:</span>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#b45309; border-color:#b45309; color:#fff;" onclick="App.adminBroadcastAlert()">
+              📢 Broadcast Advisory
+            </button>
+            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#dc2626; border-color:#dc2626; color:#fff;" onclick="App.adminGantryClamp()">
+              ⚡ Speed Gantry Clamp
+            </button>
+            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#1e293b; border-color:#475569; color:#f8fafc;" onclick="App.openModal('newOfficerModal')">
+              👮 + Commission Officer
+            </button>
+            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#047857; border-color:#047857; color:#fff;" onclick="App.adminSyncDb()">
+              🔄 Sync National DB
+            </button>
+          </div>
         </div>
 
         <!-- 4-Box Admin Stat Overview -->
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
-          <div class="ratio-stat-card" style="border-top:3px solid #059669;">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">TOTAL CITIZEN USERS</div>
-            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;">2,840,119</div>
-            <div style="font-size:10px; color:#047857;">✓ Pan-India VAHAN Linked</div>
+          <div class="ratio-stat-card" style="border-top:3px solid #059669; cursor:pointer;" onclick="App.switchAdminSubView('users')">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">1. CITIZEN USERS</div>
+            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;" id="adminStatUsersCount">2,840,119</div>
+            <div style="font-size:10px; color:#047857;">✓ Pan-India VAHAN Linked ➔</div>
           </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #b45309;">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">ACTIVE COMPLAINTS</div>
-            <div style="font-size:24px; font-weight:800; color:#b45309; margin:6px 0;">3 Under Review</div>
-            <div style="font-size:10px; color:#b45309;">⚡ Average Resolution: 14 mins</div>
+          <div class="ratio-stat-card" style="border-top:3px solid #b45309; cursor:pointer;" onclick="App.switchAdminSubView('complaints')">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">2. ACTIVE COMPLAINTS</div>
+            <div style="font-size:24px; font-weight:800; color:#b45309; margin:6px 0;" id="adminStatComplaintsCount">3 Under Review</div>
+            <div style="font-size:10px; color:#b45309;">⚡ Review Cases ➔</div>
           </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #111827;">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">OFFICERS COMMISSIONED</div>
-            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;">6 Command Tiers</div>
-            <div style="font-size:10px; color:#64748b;">Levels 1 to 5 Active</div>
+          <div class="ratio-stat-card" style="border-top:3px solid #111827; cursor:pointer;" onclick="App.switchAdminSubView('officers')">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">3. COMMISSIONED STAFF</div>
+            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;" id="adminStatOfficersCount">6 Active Tiers</div>
+            <div style="font-size:10px; color:#64748b;">Manage Police Staff ➔</div>
           </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #dc2626;">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">ACTIVE 112 EMERGENCIES</div>
-            <div style="font-size:24px; font-weight:800; color:#dc2626; margin:6px 0;">2 Dispatched</div>
-            <div style="font-size:10px; color:#dc2626;">Patrol Response: 3.5 mins avg</div>
+          <div class="ratio-stat-card" style="border-top:3px solid #dc2626; cursor:pointer;" onclick="App.switchAdminSubView('analytics')">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">4. TRAFFIC DATA &amp; SYSTEM</div>
+            <div style="font-size:24px; font-weight:800; color:#dc2626; margin:6px 0;">99.8% Online</div>
+            <div style="font-size:10px; color:#dc2626;">Analytics &amp; Monitoring ➔</div>
           </div>
         </div>
 
-        <!-- Audit Logs Table -->
-        <div class="gov-card">
-          <div class="gov-card-header">
-            <div class="card-title-group">
-              <div class="card-title-icon"><i data-lucide="shield"></i></div>
+        <!-- ADMIN FLOWCHART SUB-NAVIGATION TABS (SERIES-WISE 1 to 6) -->
+        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+          <button type="button" class="btn-action-primary active" id="btnAdminSubUsers" style="font-size:11px; padding:6px 12px;" onclick="App.switchAdminSubView('users')">
+            👥 1. Users (Manage Users)
+          </button>
+          <button type="button" class="btn-action-primary" id="btnAdminSubComplaints" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('complaints')">
+            📋 2. Complaints (Review Cases)
+          </button>
+          <button type="button" class="btn-action-primary" id="btnAdminSubOfficers" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('officers')">
+            👮 3. Officers (Manage Staff)
+          </button>
+          <button type="button" class="btn-action-primary" id="btnAdminSubAnalytics" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('analytics')">
+            📊 4. Analytics (Traffic Data)
+          </button>
+          <button type="button" class="btn-action-primary" id="btnAdminSubSystem" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('system')">
+            🖥️ 5. System Monitoring
+          </button>
+          <button type="button" class="btn-action-primary" id="btnAdminSubAudit" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('audit')">
+            📜 6. Audit Logs (SHA-256)
+          </button>
+        </div>
+
+        <!-- =========================================================================
+             SUBVIEW 1: USERS (MANAGE CITIZEN USERS & LICENSES)
+             ========================================================================= -->
+        <div id="adminSectionUsers" class="admin-subview" style="display:block;">
+          <div class="gov-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
               <div>
-                <div class="card-title">Cryptographic SHA-256 Tamper-Proof Audit Trail</div>
-                <div class="card-subtitle">Immutable security ledger tracking every officer login, e-challan, and emergency override</div>
+                <strong style="color:#0a2540; font-size:13px;">👥 Registered Citizen Motorists &amp; Driving Licenses</strong>
+                <div style="font-size:11px; color:#64748b;">Manage public users, DigiLocker/Aadhaar e-KYC status, and administrative driving license suspension</div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="adminSearchUsersInput" class="form-control" placeholder="Search Citizen Name or DL..." style="font-size:11px; padding:5px 10px; width:220px;" oninput="App.renderAdminUsersTable()">
+              </div>
+            </div>
+            <div class="gov-table-wrapper">
+              <table class="gov-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Citizen Name</th>
+                    <th>Driving License (DL)</th>
+                    <th>Linked Vehicle(s)</th>
+                    <th>City / State</th>
+                    <th>KYC Verification</th>
+                    <th>License Status</th>
+                    <th>Administrative Action</th>
+                  </tr>
+                </thead>
+                <tbody id="adminUsersTableBody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             SUBVIEW 2: COMPLAINTS (DIRECT ADMIN CASE REVIEW)
+             ========================================================================= -->
+        <div id="adminSectionComplaints" class="admin-subview" style="display:none;">
+          <div class="gov-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+              <div>
+                <strong style="color:#0a2540; font-size:13px;">📋 Citizen Complaints &amp; Case Review Escalations</strong>
+                <div style="font-size:11px; color:#64748b;">High-level administrative oversight of all reported traffic incidents, evidence, and officer actions</div>
+              </div>
+            </div>
+            <div class="gov-table-wrapper">
+              <table class="gov-table">
+                <thead>
+                  <tr>
+                    <th>Case ID</th>
+                    <th>Category</th>
+                    <th>Location &amp; GPS</th>
+                    <th>AI Classification</th>
+                    <th>Assigned Officer</th>
+                    <th>Current Status</th>
+                    <th>Admin Override</th>
+                  </tr>
+                </thead>
+                <tbody id="adminComplaintsTableBody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             SUBVIEW 3: OFFICERS (MANAGE POLICE STAFF & CLEARANCES)
+             ========================================================================= -->
+        <div id="adminSectionOfficers" class="admin-subview" style="display:none;">
+          <div class="gov-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+              <div>
+                <strong style="color:#0a2540; font-size:13px;">👮 Commissioned Traffic Police Staff &amp; IPS Hierarchy</strong>
+                <div style="font-size:11px; color:#64748b;">Manage clearance tiers (Level 1-5), digital duty passes, camera access scopes, and duty rosters</div>
+              </div>
+              <button type="button" class="btn-action-gold" style="font-size:11px; padding:6px 12px;" onclick="App.openModal('newOfficerModal')">
+                <i data-lucide="user-plus"></i> Commission New Officer
+              </button>
+            </div>
+            <div class="gov-table-wrapper">
+              <table class="gov-table">
+                <thead>
+                  <tr>
+                    <th>Badge Number</th>
+                    <th>Officer Name &amp; Rank</th>
+                    <th>Clearance Tier</th>
+                    <th>Jurisdiction</th>
+                    <th>Camera PIN</th>
+                    <th>Duty Pass Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="adminOfficersTableBody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             SUBVIEW 4: ANALYTICS (NATIONAL TRAFFIC ENFORCEMENT DATA)
+             ========================================================================= -->
+        <div id="adminSectionAnalytics" class="admin-subview" style="display:none;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
+            <div class="ratio-stat-card">
+              <div style="font-size:11px; color:#64748b; font-weight:700;">TOTAL E-CHALLAN REVENUE</div>
+              <div style="font-size:22px; font-weight:800; color:#b45309; margin:4px 0;">₹14,28,40,000</div>
+              <div style="font-size:10px; color:#047857;">88.2% Direct Payment Realization</div>
+            </div>
+            <div class="ratio-stat-card">
+              <div style="font-size:11px; color:#64748b; font-weight:700;">RADAR CONVICTION ACCURACY</div>
+              <div style="font-size:22px; font-weight:800; color:#059669; margin:4px 0;">98.4%</div>
+              <div style="font-size:10px; color:#64748b;">Zero Uncontested ANPR False Positives</div>
+            </div>
+            <div class="ratio-stat-card">
+              <div style="font-size:11px; color:#64748b; font-weight:700;">AVG 112 DISPATCH TIME</div>
+              <div style="font-size:22px; font-weight:800; color:#dc2626; margin:4px 0;">3.2 Mins</div>
+              <div style="font-size:10px; color:#dc2626;">National Highway Standard: &lt; 5 mins</div>
+            </div>
+            <div class="ratio-stat-card">
+              <div style="font-size:11px; color:#64748b; font-weight:700;">VAHAN RECON DATA LINK</div>
+              <div style="font-size:22px; font-weight:800; color:#111827; margin:4px 0;">34.8 Cr Records</div>
+              <div style="font-size:10px; color:#047857;">MoRTH VAHAN 4.0 Live API Connected</div>
+            </div>
+          </div>
+
+          <div class="gov-card">
+            <div style="font-weight:700; color:#0f172a; margin-bottom:8px; font-size:13px;">
+              ⚡ High-Frequency Violation Corridors (Pan-India MoRTH Surveillance)
+            </div>
+            <div style="font-size:12px; color:#334155; line-height:1.6;">
+              1. <strong>NH-48 (Delhi-Jaipur Expressway KM 42-68):</strong> Overspeeding heavy transport vehicles (Avg Speed: 88 km/h in 60 km/h zone).<br/>
+              2. <strong>Outer Ring Road Bengaluru (Agara to Marathahalli):</strong> Helmetless two-wheeler commuting &amp; bus lane violations.<br/>
+              3. <strong>Eastern Express Highway Mumbai (Chedda Nagar Junction):</strong> Lane indiscipline &amp; axle overloading breaches.<br/>
+              4. <strong>Noida-Greater Noida Expressway:</strong> Dense fog tailgating &amp; illegal median stops.
+            </div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             SUBVIEW 5: SYSTEM MONITORING (HARDWARE, LATENCY, SATELLITE & CRYPTO)
+             ========================================================================= -->
+        <div id="adminSectionSystem" class="admin-subview" style="display:none;">
+          <div class="gov-card">
+            <div style="font-weight:700; color:#0a2540; font-size:13px; margin-bottom:12px;">
+              🖥️ Real-Time National Traffic Infrastructure Telemetry
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+              <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:10px;">
+                <div style="font-size:10px; color:#64748b; font-weight:700;">CENTRAL SERVER LATENCY</div>
+                <div style="font-size:18px; font-weight:800; color:#047857; margin:4px 0;">12 ms</div>
+                <div style="font-size:10px; color:#64748b;">HTTP REST Server Healthy</div>
+              </div>
+              <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:10px;">
+                <div style="font-size:10px; color:#64748b; font-weight:700;">ISRO NAVIC SATELLITE UPLINK</div>
+                <div style="font-size:18px; font-weight:800; color:#0284c7; margin:4px 0;">100% (STABLE)</div>
+                <div style="font-size:10px; color:#64748b;">Cartosat-3 / EOS-06 Recon Active</div>
+              </div>
+              <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:10px;">
+                <div style="font-size:10px; color:#64748b; font-weight:700;">OPTICAL ANPR CAMERAS</div>
+                <div style="font-size:18px; font-weight:800; color:#111827; margin:4px 0;">1,420 / 1,422</div>
+                <div style="font-size:10px; color:#047857;">99.85% National Uptime</div>
+              </div>
+              <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:10px;">
+                <div style="font-size:10px; color:#64748b; font-weight:700;">CRYPTOGRAPHIC HASH ENGINE</div>
+                <div style="font-size:18px; font-weight:800; color:#b45309; margin:4px 0;">SHA-256 ACTIVE</div>
+                <div style="font-size:10px; color:#64748b;">Zero Tampered Ledger Entries</div>
               </div>
             </div>
           </div>
-          <div class="gov-table-wrapper">
-            <table class="gov-table">
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>Authorized Officer</th>
-                  <th>Action</th>
-                  <th>Details</th>
-                  <th>Source IP</th>
-                </tr>
-              </thead>
-              <tbody id="auditLogsTableBody">
-                <!-- Injected via JS -->
-              </tbody>
-            </table>
+        </div>
+
+        <!-- =========================================================================
+             SUBVIEW 6: AUDIT LOGS (TAMPER-PROOF CRYPTOGRAPHIC AUDIT TRAIL)
+             ========================================================================= -->
+        <div id="adminSectionAudit" class="admin-subview" style="display:none;">
+          <div class="gov-card">
+            <div class="gov-card-header">
+              <div class="card-title-group">
+                <div class="card-title-icon"><i data-lucide="shield"></i></div>
+                <div>
+                  <div class="card-title">Cryptographic SHA-256 Tamper-Proof Audit Trail</div>
+                  <div class="card-subtitle">Immutable security ledger tracking every officer login, e-challan, and emergency override</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button type="button" class="btn-action-primary" style="font-size:11px;" onclick="App.exportAuditLogsCsv()">
+                  ⬇️ Export Audit Ledger (.CSV)
+                </button>
+              </div>
+            </div>
+            <div class="gov-table-wrapper">
+              <table class="gov-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Authorized Officer / Role</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>Source IP</th>
+                  </tr>
+                </thead>
+                <tbody id="auditLogsTableBody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+
       </section>
 
     </main>
@@ -1001,6 +1233,90 @@
         <div class="modal-footer">
           <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('newRoadworkModal')">Cancel</button>
           <button type="submit" class="btn-action-gold">Register &amp; Plot on GIS Map</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Commission New Police Officer Modal (Admin Desk) -->
+  <div class="modal-backdrop" id="newOfficerModal">
+    <div class="modal-card" style="max-width:540px;">
+      <div class="modal-header" style="background:#111827; color:#fff; border-bottom:2px solid #b45309;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="background:#b45309; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#fff;">
+            <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:800; font-size:14px;">COMMISSION TRAFFIC POLICE OFFICER</div>
+            <div style="font-size:10px; color:#cbd5e1;">Government of India Statutory Enforcement Registry</div>
+          </div>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('newOfficerModal')">&times;</button>
+      </div>
+
+      <form id="formCommissionOfficer">
+        <div class="modal-body" style="padding:18px 20px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div class="form-group">
+              <label class="form-label">Officer Full Name *</label>
+              <input type="text" id="inNewOffName" class="form-control" placeholder="e.g. Anand R. Joshi, IPS" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Official Badge ID *</label>
+              <input type="text" id="inNewOffBadge" class="form-control" placeholder="e.g. TR-INSP-9902" required>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div class="form-group">
+              <label class="form-label">Rank / Designation *</label>
+              <select id="inNewOffRank" class="form-control">
+                <option value="Traffic Inspector (TI) / Station House Officer">Traffic Inspector (TI)</option>
+                <option value="Deputy Commissioner of Police (DCP) / SP Traffic">Deputy Commissioner (DCP / SP)</option>
+                <option value="Sub-Inspector (SI) / Highway Patrol Lead">Sub-Inspector (SI)</option>
+                <option value="Assistant Sub-Inspector / Traffic Warden">Traffic Warden / ASI</option>
+                <option value="Director General of Police (DGP) / Commissioner">DGP / Commissioner</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Clearance Tier Level *</label>
+              <select id="inNewOffLevel" class="form-control">
+                <option value="3">Level 3 - Tactical Enforcement</option>
+                <option value="4">Level 4 - Regional Command</option>
+                <option value="2">Level 2 - Field Patrol</option>
+                <option value="1">Level 1 - Warden Desk</option>
+                <option value="5">Level 5 - Supreme CIP</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div class="form-group">
+              <label class="form-label">Clearance Password *</label>
+              <input type="password" id="inNewOffPass" class="form-control" value="POLICE@2026" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Camera Access PIN (4-Digits) *</label>
+              <input type="password" id="inNewOffPin" class="form-control" maxlength="4" value="8800" required>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:10px;">
+            <label class="form-label">Assigned Enforcement Jurisdiction *</label>
+            <input type="text" id="inNewOffJurisdiction" class="form-control" placeholder="e.g. National Highway 48 &amp; Regional Interceptor Hub" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Primary Operational Duties</label>
+            <input type="text" id="inNewOffDuties" class="form-control" placeholder="e.g. Radar speed interception, VIP escort corridor, accident investigation" value="Radar speed interception, automated ANPR fine verification, highway accident response">
+          </div>
+        </div>
+
+        <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+          <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('newOfficerModal')">Cancel</button>
+          <button type="submit" class="btn-action-gold" style="font-weight:700;">
+            ✓ Issue Commission &amp; Register Officer
+          </button>
         </div>
       </form>
     </div>
