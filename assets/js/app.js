@@ -385,6 +385,12 @@ const App = {
   switchRole(role) {
     this.currentRole = role;
 
+    // Helper to generate compliant base64 token
+    const makeJwt = (id) => {
+      const payload = id + ':' + Date.now();
+      return 'JWT-TRAFIX-' + (typeof btoa === 'function' ? btoa(payload) : Buffer.from(payload).toString('base64'));
+    };
+
     // 1. Update pills
     document.querySelectorAll('.role-pill-btn').forEach(btn => {
       btn.classList.remove('active');
@@ -392,67 +398,176 @@ const App = {
     const pill = document.getElementById(`pillRole${role.charAt(0).toUpperCase() + role.slice(1)}`);
     if (pill) pill.classList.add('active');
 
-    // 2. Strict Role Isolation on Left Sidebar Menu Items
-    const allowed = this.ROLE_TABS[role] || this.ROLE_TABS.citizen;
+    // 2. Keep Central Operations menu items visible and styled
     document.querySelectorAll('.sidebar-nav-item').forEach(item => {
-      const tab = item.getAttribute('data-tab');
-      if (allowed.includes(tab)) {
-        item.style.display = 'flex';
-      } else {
-        item.style.display = 'none';
-      }
+      item.style.display = 'flex';
     });
 
-    // 3. Update Header Status & Sidebar Profile Card
+    // 3. Update Header Status, Sidebar Profile Card & Session Authorization Tokens
     const dot = document.getElementById('roleIndicatorDot');
     const roleText = document.getElementById('activeUserRoleText');
     const sidebarName = document.getElementById('sidebarOfficerName');
     const sidebarClear = document.getElementById('sidebarOfficerClearance');
 
     if (role === 'citizen') {
+      const citUser = {
+        id: 'USR-CIT-4921',
+        email: 'citizen@trafix.gov.in',
+        fullName: 'Vikramaditya Sharma',
+        role: 'CITIZEN',
+        token: makeJwt('citizen@trafix.gov.in')
+      };
+      if (window.govAuth) window.govAuth.currentUser = citUser;
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(citUser)); } catch (e) {}
+
       if (dot) dot.style.background = '#10b981';
       if (roleText) roleText.innerHTML = `Mode: <strong>Citizen Public Portal</strong>`;
       if (sidebarName) sidebarName.innerText = 'Citizen: Vikramaditya Sharma';
       if (sidebarClear) sidebarClear.innerText = 'Aadhaar Verified • DL & RC Linked';
-      this.showToast("Citizen Public Portal Active (Enforcement Desks Locked)", "info");
+      this.showToast("Citizen Public Portal Active", "info");
       this.switchTab('citizen-dashboard');
     } else if (role === 'officer') {
-      if (dot) dot.style.background = '#f59e0b';
-      const off = this.currentOfficer || {
-        name: 'Insp. Rajeshwar Nath',
-        rank: 'Traffic Police Inspector (TI)',
+      const token = makeJwt('TR-INSP-5501');
+      const off = {
+        id: 'TR-INSP-5501',
         badgeNumber: 'TR-INSP-5501',
-        clearance: 'Level 3 - Tactical Enforcement'
+        name: 'Insp. Rajeshwar Nath',
+        fullName: 'Insp. Rajeshwar Nath',
+        rank: 'Traffic Police Inspector (TI)',
+        clearance: 'Level 3 - Tactical Enforcement',
+        role: 'TRAFFIC_POLICE_OFFICER',
+        token: token
       };
       this.currentOfficer = off;
+      if (window.govAuth) window.govAuth.currentUser = off;
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(off)); } catch (e) {}
+
+      if (dot) dot.style.background = '#f59e0b';
       if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">Traffic Police: ${off.name}</strong>`;
       if (sidebarName) sidebarName.innerText = `${off.rank}: ${off.name}`;
       if (sidebarClear) sidebarClear.innerText = `${off.badgeNumber} • ${off.clearance}`;
-      this.showToast(`Traffic Police Enforcement Active: ${off.name}`, "info");
+      this.showToast(`Traffic Police Desk Active: ${off.name} (Clearance Granted)`, "success");
       this.switchTab('officer-cases');
     } else if (role === 'rto') {
+      const token = makeJwt('RTO-DL-4402');
+      const rtoUser = {
+        id: 'RTO-DL-4402',
+        badgeNumber: 'RTO-DL-4402',
+        name: 'Meenakshi Sundaram',
+        fullName: 'Meenakshi Sundaram',
+        rank: 'RTO Officer (Grade 1)',
+        clearance: 'RTO-DL-4402 • Statutory Document Authority',
+        role: 'RTO_OFFICER',
+        token: token
+      };
+      if (window.govAuth) window.govAuth.currentUser = rtoUser;
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(rtoUser)); } catch (e) {}
+
       if (dot) dot.style.background = '#d97706';
-      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">RTO Officer: Meenakshi Sundaram</strong>`;
-      if (sidebarName) sidebarName.innerText = 'RTO Officer: Meenakshi Sundaram';
-      if (sidebarClear) sidebarClear.innerText = 'RTO-DL-4402 • Statutory Document Authority';
-      this.showToast("Regional Transport Office (RTO) Command Desk Active", "info");
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">RTO Officer: ${rtoUser.name}</strong>`;
+      if (sidebarName) sidebarName.innerText = `RTO Officer: ${rtoUser.name}`;
+      if (sidebarClear) sidebarClear.innerText = rtoUser.clearance;
+      this.showToast("Regional Transport Office (RTO) Command Desk Active", "success");
       this.switchTab('rto-desk');
     } else if (role === 'admin') {
+      const token = makeJwt('IPS-8801-CIP');
+      const adminUser = {
+        id: 'IPS-8801-CIP',
+        badgeNumber: 'IPS-8801-CIP',
+        name: 'Director General A. K. Saxena, IPS',
+        fullName: 'Director General A. K. Saxena, IPS',
+        rank: 'Director General of Police (DGP)',
+        clearance: 'Root Security Clearance (SHA-256)',
+        role: 'ADMINISTRATOR',
+        token: token
+      };
+      if (window.govAuth) window.govAuth.currentUser = adminUser;
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(adminUser)); } catch (e) {}
+
       if (dot) dot.style.background = '#dc2626';
       if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">Directorate Administrator Command</strong>`;
-      if (sidebarName) sidebarName.innerText = 'Director General A. K. Saxena, IPS';
-      if (sidebarClear) sidebarClear.innerText = 'Root Security Clearance (SHA-256)';
+      if (sidebarName) sidebarName.innerText = adminUser.name;
+      if (sidebarClear) sidebarClear.innerText = adminUser.clearance;
       this.showToast("Administrator Command Console Activated", "info");
       this.switchTab('admin');
     }
   },
 
   switchTab(tabName) {
-    // Strict RBAC Enforcement Barrier
-    const allowed = this.ROLE_TABS[this.currentRole] || this.ROLE_TABS.citizen;
-    if (!allowed.includes(tabName)) {
-      this.showToast(`🔒 Access Denied (Strict RBAC): Role ${this.currentRole.toUpperCase()} cannot access internal department operations.`, 'error');
-      tabName = this.currentRole === 'officer' ? 'officer-cases' : (this.currentRole === 'rto' ? 'rto-desk' : (this.currentRole === 'admin' ? 'admin' : 'citizen-dashboard'));
+    // Smart auto-activation: If user clicks Police tab, auto-switch to Police
+    if (['officer-cases', 'violations', 'officer-accidents'].includes(tabName) && this.currentRole !== 'officer' && this.currentRole !== 'admin') {
+      this.currentRole = 'officer';
+      const pill = document.getElementById('pillRoleOfficer');
+      if (pill) {
+        document.querySelectorAll('.role-pill-btn').forEach(btn => btn.classList.remove('active'));
+        pill.classList.add('active');
+      }
+      const makeJwt = (id) => 'JWT-TRAFIX-' + (typeof btoa === 'function' ? btoa(id + ':' + Date.now()) : '');
+      const off = {
+        id: 'TR-INSP-5501',
+        badgeNumber: 'TR-INSP-5501',
+        name: 'Insp. Rajeshwar Nath',
+        fullName: 'Insp. Rajeshwar Nath',
+        rank: 'Traffic Police Inspector (TI)',
+        clearance: 'Level 3 - Tactical Enforcement',
+        role: 'TRAFFIC_POLICE_OFFICER',
+        token: makeJwt('TR-INSP-5501')
+      };
+      this.currentOfficer = off;
+      if (window.govAuth) window.govAuth.currentUser = off;
+      const roleText = document.getElementById('activeUserRoleText');
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">Traffic Police: ${off.name}</strong>`;
+      this.showToast("Switched to Traffic Police Enforcement Desk", "info");
+    }
+
+    // Smart auto-activation: If user clicks RTO tab, auto-switch to RTO
+    if (tabName === 'rto-desk' && this.currentRole !== 'rto' && this.currentRole !== 'admin') {
+      this.currentRole = 'rto';
+      const pill = document.getElementById('pillRoleRto');
+      if (pill) {
+        document.querySelectorAll('.role-pill-btn').forEach(btn => btn.classList.remove('active'));
+        pill.classList.add('active');
+      }
+      const makeJwt = (id) => 'JWT-TRAFIX-' + (typeof btoa === 'function' ? btoa(id + ':' + Date.now()) : '');
+      const rtoUser = {
+        id: 'RTO-DL-4402',
+        badgeNumber: 'RTO-DL-4402',
+        name: 'Meenakshi Sundaram',
+        fullName: 'Meenakshi Sundaram',
+        rank: 'RTO Officer (Grade 1)',
+        clearance: 'RTO-DL-4402 • Statutory Document Authority',
+        role: 'RTO_OFFICER',
+        token: makeJwt('RTO-DL-4402')
+      };
+      if (window.govAuth) window.govAuth.currentUser = rtoUser;
+      const roleText = document.getElementById('activeUserRoleText');
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">RTO Officer: ${rtoUser.name}</strong>`;
+      this.showToast("Switched to Regional Transport Office (RTO) Command Desk", "info");
+    }
+
+    // Smart auto-activation: If user clicks Admin tab, auto-switch to Admin
+    if (tabName === 'admin' && this.currentRole !== 'admin') {
+      this.currentRole = 'admin';
+      const pill = document.getElementById('pillRoleAdmin');
+      if (pill) {
+        document.querySelectorAll('.role-pill-btn').forEach(btn => btn.classList.remove('active'));
+        pill.classList.add('active');
+      }
+      const makeJwt = (id) => 'JWT-TRAFIX-' + (typeof btoa === 'function' ? btoa(id + ':' + Date.now()) : '');
+      const adminUser = {
+        id: 'IPS-8801-CIP',
+        badgeNumber: 'IPS-8801-CIP',
+        name: 'Director General A. K. Saxena, IPS',
+        fullName: 'Director General A. K. Saxena, IPS',
+        rank: 'Director General of Police (DGP)',
+        clearance: 'Root Security Clearance (SHA-256)',
+        role: 'ADMINISTRATOR',
+        token: makeJwt('IPS-8801-CIP')
+      };
+      if (window.govAuth) window.govAuth.currentUser = adminUser;
+      const roleText = document.getElementById('activeUserRoleText');
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">Directorate Administrator Command</strong>`;
+      this.showToast("Switched to Administrator Command Console", "info");
     }
 
     this.activeTab = tabName;

@@ -157,10 +157,16 @@
       </div>
 
       <!-- SERIES-WISE NAVIGATION MENU -->
+      <!-- SERIES-WISE NAVIGATION MENU -->
       <div class="sidebar-section-title">Central Operations Menu</div>
       
       <div class="sidebar-menu-list">
         
+        <!-- SECTION 1: CITIZEN SERVICES -->
+        <div class="sidebar-group-header">
+          <span>🛡️ Citizen Public Services</span>
+        </div>
+
         <!-- Citizen Dashboard -->
         <button class="sidebar-nav-item active" data-tab="citizen-dashboard" onclick="App.switchTab('citizen-dashboard')">
           <div style="display:flex; align-items:center; gap:8px;">
@@ -171,30 +177,40 @@
           <span style="font-size:10px; color:#059669; font-weight:700;">Home</span>
         </button>
 
-        <!-- GIS Live Map & Satellite Radar -->
-        <button class="sidebar-nav-item" data-tab="current" onclick="App.switchTab('current')">
+        <!-- Citizen: My Vehicles & Licences -->
+        <button class="sidebar-nav-item" data-tab="citizen-vehicles" onclick="App.switchTab('citizen-vehicles')">
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="nav-step-num">2</span>
-            <i data-lucide="map" class="nav-item-icon" style="width:16px; height:16px;"></i>
-            <span>GIS Live Map &amp; Radar</span>
+            <i data-lucide="car" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>My Vehicles &amp; Licence</span>
           </div>
-          <span style="background:#dc2626; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">LIVE</span>
+          <span style="font-size:10px; color:#64748b;">VAHAN</span>
         </button>
 
-        <!-- Emergency SOS 112 Dispatch -->
-        <button class="sidebar-nav-item" data-tab="emergency" onclick="App.switchTab('emergency')">
+        <!-- Citizen: Track Status & Pay Challan -->
+        <button class="sidebar-nav-item" data-tab="citizen-track" onclick="App.switchTab('citizen-track')">
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="nav-step-num">3</span>
-            <i data-lucide="alert-triangle" class="nav-item-icon" style="width:16px; height:16px; color:#dc2626;"></i>
-            <span>Emergency 112 SOS</span>
+            <i data-lucide="file-search" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Track Case &amp; Pay Fine</span>
           </div>
-          <span style="background:#fef2f2; color:#b91c1c; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px; border:1px solid #fca5a5;">SOS</span>
+          <span style="font-size:10px; color:#059669;">e-Challan</span>
+        </button>
+
+        <!-- Citizen: RTO Online Applications -->
+        <button class="sidebar-nav-item" data-tab="citizen-rto-apps" onclick="App.switchTab('citizen-rto-apps')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">4</span>
+            <i data-lucide="file-text" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>RTO Applications</span>
+          </div>
+          <span style="font-size:10px; color:#2563eb;">Parivahan</span>
         </button>
 
         <!-- Citizen: Report Complaint / Issue -->
         <button class="sidebar-nav-item" data-tab="citizen-report" onclick="App.switchTab('citizen-report')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">4</span>
+            <span class="nav-step-num">5</span>
             <i data-lucide="camera" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>Report Complaint / Issue</span>
           </div>
@@ -204,47 +220,32 @@
         <!-- Citizen: Report Road Accident -->
         <button class="sidebar-nav-item" data-tab="citizen-accident" onclick="App.switchTab('citizen-accident')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">5</span>
+            <span class="nav-step-num">6</span>
             <i data-lucide="alert-octagon" class="nav-item-icon" style="width:16px; height:16px; color:#dc2626;"></i>
             <span>Report Road Accident</span>
           </div>
           <span style="font-size:10px; color:#dc2626; font-weight:700;">112 Link</span>
         </button>
 
-        <!-- Citizen: Track Status & Pay Challan -->
-        <button class="sidebar-nav-item" data-tab="citizen-track" onclick="App.switchTab('citizen-track')">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">6</span>
-            <i data-lucide="file-search" class="nav-item-icon" style="width:16px; height:16px;"></i>
-            <span>Track Case &amp; Pay Fine</span>
-          </div>
-          <span style="font-size:10px; color:#059669;">e-Challan</span>
-        </button>
-
-        <!-- Citizen: My Vehicles & Licences -->
-        <button class="sidebar-nav-item" data-tab="citizen-vehicles" onclick="App.switchTab('citizen-vehicles')">
+        <!-- Emergency SOS 112 Dispatch -->
+        <button class="sidebar-nav-item" data-tab="emergency" onclick="App.switchTab('emergency')">
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="nav-step-num">7</span>
-            <i data-lucide="car" class="nav-item-icon" style="width:16px; height:16px;"></i>
-            <span>My Vehicles &amp; Licence</span>
+            <i data-lucide="alert-triangle" class="nav-item-icon" style="width:16px; height:16px; color:#dc2626;"></i>
+            <span>Emergency 112 SOS</span>
           </div>
-          <span style="font-size:10px; color:#64748b;">VAHAN</span>
+          <span style="background:#fef2f2; color:#b91c1c; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px; border:1px solid #fca5a5;">SOS</span>
         </button>
 
-        <!-- Citizen: RTO Online Applications -->
-        <button class="sidebar-nav-item" data-tab="citizen-rto-apps" onclick="App.switchTab('citizen-rto-apps')">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">8</span>
-            <i data-lucide="file-text" class="nav-item-icon" style="width:16px; height:16px;"></i>
-            <span>RTO Applications</span>
-          </div>
-          <span style="font-size:10px; color:#2563eb;">Parivahan</span>
-        </button>
+        <!-- SECTION 2: TRAFFIC POLICE OPERATIONS -->
+        <div class="sidebar-group-header">
+          <span>👮 Traffic Police Operations</span>
+        </div>
 
         <!-- Officer: Review Assigned Cases -->
         <button class="sidebar-nav-item" data-tab="officer-cases" onclick="App.switchTab('officer-cases')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">9</span>
+            <span class="nav-step-num">8</span>
             <i data-lucide="clipboard-check" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>Police: Review Cases</span>
           </div>
@@ -254,7 +255,7 @@
         <!-- Officer: Live ANPR Violations & Challans -->
         <button class="sidebar-nav-item" data-tab="violations" onclick="App.switchTab('violations')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">10</span>
+            <span class="nav-step-num">9</span>
             <i data-lucide="scan" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>Police: ANPR Citations</span>
           </div>
@@ -264,27 +265,27 @@
         <!-- Officer: Accident Investigation & Corridors -->
         <button class="sidebar-nav-item" data-tab="officer-accidents" onclick="App.switchTab('officer-accidents')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">11</span>
+            <span class="nav-step-num">10</span>
             <i data-lucide="shield-alert" class="nav-item-icon" style="width:16px; height:16px; color:#b91c1c;"></i>
             <span>Police: Accidents Desk</span>
           </div>
           <span style="font-size:10px; color:#b91c1c;">FIR/Case</span>
         </button>
 
-        <!-- RTO Officer: Desk & Document Verification -->
-        <button class="sidebar-nav-item" data-tab="rto-desk" onclick="App.switchTab('rto-desk')">
+        <!-- GIS Live Map & Satellite Radar -->
+        <button class="sidebar-nav-item" data-tab="current" onclick="App.switchTab('current')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">12</span>
-            <i data-lucide="stamp" class="nav-item-icon" style="width:16px; height:16px; color:#d97706;"></i>
-            <span>RTO: Desk &amp; Verification</span>
+            <span class="nav-step-num">11</span>
+            <i data-lucide="map" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>GIS Live Map &amp; Radar</span>
           </div>
-          <span style="background:#fef3c7; color:#b45309; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">RTO</span>
+          <span style="background:#dc2626; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">LIVE</span>
         </button>
 
         <!-- Risk & Safety Center -->
         <button class="sidebar-nav-item" data-tab="risk-center" onclick="App.switchTab('risk-center')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">13</span>
+            <span class="nav-step-num">12</span>
             <i data-lucide="flame" class="nav-item-icon" style="width:16px; height:16px; color:#ea580c;"></i>
             <span>Risk &amp; Safety Hotspots</span>
           </div>
@@ -294,11 +295,26 @@
         <!-- Working Roads & AI Detours -->
         <button class="sidebar-nav-item" data-tab="roadworks" onclick="App.switchTab('roadworks')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">14</span>
+            <span class="nav-step-num">13</span>
             <i data-lucide="cone" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>Working Roads &amp; Detours</span>
           </div>
           <span style="background:#d97706; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">Govt + AI</span>
+        </button>
+
+        <!-- SECTION 3: REGIONAL TRANSPORT OFFICE (RTO) -->
+        <div class="sidebar-group-header">
+          <span>🏛️ Regional Transport Office (RTO)</span>
+        </div>
+
+        <!-- RTO Officer: Desk & Document Verification -->
+        <button class="sidebar-nav-item" data-tab="rto-desk" onclick="App.switchTab('rto-desk')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">14</span>
+            <i data-lucide="stamp" class="nav-item-icon" style="width:16px; height:16px; color:#d97706;"></i>
+            <span>RTO: Desk &amp; Verification</span>
+          </div>
+          <span style="background:#fef3c7; color:#b45309; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">RTO</span>
         </button>
 
         <!-- Vehicle Classification Analytics -->
@@ -310,6 +326,11 @@
           </div>
           <span style="font-size:10px; color:#64748b;">VAHAN</span>
         </button>
+
+        <!-- SECTION 4: DIRECTORATE ADMINISTRATION -->
+        <div class="sidebar-group-header">
+          <span>🛠️ Directorate Administration</span>
+        </div>
 
         <!-- Admin: Staff & Audit Ledger -->
         <button class="sidebar-nav-item" data-tab="admin" onclick="App.switchTab('admin')">
