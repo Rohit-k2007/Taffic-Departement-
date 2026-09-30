@@ -1,84 +1,92 @@
 /**
- * NATDAMS - Government Authentication & Security Subsystem
+ * NATDAMS - Government Traffic Police & RTO Authentication Subsystem
  * Implements Role-Based Access Control (RBAC), 2FA Verification, and Session Vault
+ * 4 Government Core Roles:
+ * 1. CITIZEN
+ * 2. TRAFFIC_POLICE_OFFICER
+ * 3. RTO_OFFICER
+ * 4. ADMINISTRATOR
  */
 
 const ROLES = {
-  SUPER_ADMIN: {
-    key: 'SUPER_ADMIN',
-    name: 'Director General / Commissioner',
-    clearance: 'LEVEL-5 TOP SECRET / GOV CIP',
+  ADMINISTRATOR: {
+    key: 'ADMINISTRATOR',
+    name: 'Traffic Department Administrator',
+    clearance: 'LEVEL-4 NATIONAL ROOT COMMAND',
     badgeClass: 'role-badge-super',
-    allowedTabs: ['current', 'previous', 'future', 'citizen', 'security', 'signals'],
+    allowedTabs: ['current', 'emergency', 'citizen-report', 'citizen-track', 'officer-cases', 'violations', 'roadworks', 'vehicle-ratios', 'admin', 'rto-desk', 'risk-center', 'officer-accidents'],
     permissions: [
-      'ISSUE_CHALLAN', 'WAIVE_CHALLAN', 'OVERRIDE_SIGNALS', 'GREEN_CORRIDOR',
-      'AI_PARAM_EDIT', 'SYSTEM_AUDIT_VIEW', 'EXPORT_DATA', 'SECURITY_KEYS_MANAGE'
+      'MANAGE_USERS', 'MANAGE_OFFICERS', 'MANAGE_DEPARTMENTS', 'MANAGE_CHALLANS',
+      'VIEW_ANALYTICS', 'VIEW_AUDIT_LOGS', 'CONFIGURE_SETTINGS', 'BROADCAST_ADVISORY'
     ]
   },
-  TRAFFIC_OFFICER: {
-    key: 'TRAFFIC_OFFICER',
-    name: 'Senior Enforcement Officer',
-    clearance: 'LEVEL-3 ENFORCEMENT DESK',
+  TRAFFIC_POLICE_OFFICER: {
+    key: 'TRAFFIC_POLICE_OFFICER',
+    name: 'Traffic Police Officer',
+    clearance: 'LEVEL-3 ENFORCEMENT & INVESTIGATION',
     badgeClass: 'role-badge-officer',
-    allowedTabs: ['current', 'previous', 'signals', 'citizen'],
+    allowedTabs: ['current', 'emergency', 'officer-cases', 'violations', 'risk-center', 'officer-accidents', 'roadworks'],
     permissions: [
-      'ISSUE_CHALLAN', 'OVERRIDE_SIGNALS', 'REPORT_INCIDENT', 'LOOKUP_VEHICLE'
+      'VIEW_ASSIGNED_CASES', 'VERIFY_COMPLAINTS', 'RECORD_VIOLATION', 'CREATE_CHALLAN',
+      'INVESTIGATION_NOTES', 'ASSIGN_PRIORITY', 'CLOSE_CASES', 'GENERATE_REPORTS'
     ]
   },
-  DATA_ANALYST: {
-    key: 'DATA_ANALYST',
-    name: 'Traffic Engineer & Data Scientist',
-    clearance: 'LEVEL-2 ANALYTICS DESK',
-    badgeClass: 'role-badge-analyst',
-    allowedTabs: ['current', 'previous', 'future'],
+  RTO_OFFICER: {
+    key: 'RTO_OFFICER',
+    name: 'RTO Officer (Regional Transport Office)',
+    clearance: 'LEVEL-2 REGISTRATION & LICENCING DESK',
+    badgeClass: 'role-badge-rto',
+    allowedTabs: ['rto-desk', 'current', 'vehicle-ratios'],
     permissions: [
-      'RUN_AI_SIMULATION', 'EXPORT_DATA', 'VIEW_STATISTICS', 'PLAN_MAINTENANCE'
+      'MANAGE_VEHICLE_RECORDS', 'MANAGE_LICENCE_RECORDS', 'VERIFY_DOCUMENTS',
+      'PROCESS_APPLICATIONS', 'VIEW_FITNESS_INSURANCE', 'APPROVE_REJECT_APPLICATIONS'
     ]
   },
-  CITIZEN_PORTAL: {
-    key: 'CITIZEN_PORTAL',
+  CITIZEN: {
+    key: 'CITIZEN',
     name: 'Public Citizen / Motorist',
-    clearance: 'LEVEL-1 PUBLIC CITIZEN',
+    clearance: 'LEVEL-1 PUBLIC CITIZEN ACCESS',
     badgeClass: 'role-badge-citizen',
-    allowedTabs: ['citizen', 'current'],
+    allowedTabs: ['citizen-report', 'citizen-track', 'citizen-accident', 'citizen-vehicles', 'citizen-rto-apps', 'current', 'emergency'],
     permissions: [
-      'VIEW_OWN_CHALLAN', 'PAY_FINE', 'DISPUTE_CHALLAN', 'VIEW_ROAD_ADVISORIES'
+      'SUBMIT_COMPLAINT', 'REPORT_ACCIDENT', 'VIEW_CHALLANS', 'PAY_CHALLAN',
+      'VIEW_VEHICLES', 'VIEW_LICENCE', 'SUBMIT_RTO_APPLICATION', 'GIVE_FEEDBACK'
     ]
   }
 };
 
 const DEMO_USERS = {
   admin: {
-    username: 'director.general',
-    pass: 'GovSecure@2026',
-    role: 'SUPER_ADMIN',
+    username: 'admin.demo',
+    pass: 'Admin@2026',
+    role: 'ADMINISTRATOR',
     name: 'Dr. V. K. Malhotra, IPS',
     idNumber: 'IPS-7701-HQ',
     station: 'Central Traffic Command & Control HQ'
   },
   officer: {
-    username: 'officer.rawat',
+    username: 'officer.demo',
     pass: 'Patrol@2026',
-    role: 'TRAFFIC_OFFICER',
+    role: 'TRAFFIC_POLICE_OFFICER',
     name: 'Inspector Sanjay Rawat',
     idNumber: 'TR-9041-DEL',
-    station: 'Ring Road Traffic Police Post'
+    station: 'Ring Road Traffic Police Division'
   },
-  analyst: {
-    username: 'analyst.neha',
-    pass: 'UrbanAI@2026',
-    role: 'DATA_ANALYST',
-    name: 'Neha Roy, M.Tech (IIT)',
-    idNumber: 'MORTH-ENG-441',
-    station: 'National Traffic Data & AI Center'
+  rto: {
+    username: 'rto.demo',
+    pass: 'RTO@2026',
+    role: 'RTO_OFFICER',
+    name: 'Sunil Verma, ARTO',
+    idNumber: 'RTO-DEL-01',
+    station: 'Regional Transport Office, Sarai Kale Khan'
   },
   citizen: {
-    username: 'citizen.public',
+    username: 'citizen.demo',
     pass: 'Citizen@2026',
-    role: 'CITIZEN_PORTAL',
+    role: 'CITIZEN',
     name: 'Vikramaditya Sharma',
     idNumber: 'AADHAAR-XXXX-4921',
-    station: 'Registered Motorist'
+    station: 'Citizen Resident (Delhi NCT)'
   }
 };
 
@@ -103,11 +111,11 @@ class AuthController {
           this.logout(false);
         }
       } else {
-        // Default to SUPER_ADMIN so user can test the app immediately with full glory
-        this.loginAs('admin');
+        // Default to citizen for realistic public entrance
+        this.loginAs('citizen');
       }
     } catch (e) {
-      this.loginAs('admin');
+      this.loginAs('citizen');
     }
   }
 
@@ -124,8 +132,8 @@ class AuthController {
   }
 
   loginAs(userKey) {
-    const profile = DEMO_USERS[userKey] || DEMO_USERS.admin;
-    const roleDef = ROLES[profile.role] || ROLES.SUPER_ADMIN;
+    const profile = DEMO_USERS[userKey] || DEMO_USERS.citizen;
+    const roleDef = ROLES[profile.role] || ROLES.CITIZEN;
 
     const expiresAt = new Date(Date.now() + 4 * 60 * 60 * 1000); // 4 hours session
     const sessionData = {
@@ -151,6 +159,8 @@ class AuthController {
         user: `${this.currentUser.name} (${this.currentUser.idNumber})`,
         role: this.currentUser.roleKey,
         action: 'AUTHENTICATION_SUCCESS_MFA_PASSED',
+        entityType: 'AUTH_SESSION',
+        entityId: profile.username,
         details: `Session established on secure Gov gateway [Role: ${roleDef.name}]`
       });
     }
@@ -166,6 +176,8 @@ class AuthController {
         user: `${this.currentUser.name} (${this.currentUser.idNumber})`,
         role: this.currentUser.roleKey,
         action: 'USER_LOGOUT',
+        entityType: 'AUTH_SESSION',
+        entityId: this.currentUser.username,
         details: 'User terminated active government session'
       });
     }

@@ -1341,7 +1341,10 @@
       "severity": "Critical",
       "officerBadge": "TR-ENF-1000",
       "evidenceImage": "",
-      "ipAddress": "10.115.149.99"
+      "ipAddress": "10.115.149.99",
+      "paymentStatus": "PAID",
+      "paidAt": "2026-09-30 04:30:51",
+      "paymentReference": "PAY-UPI-507360"
     },
     {
       "id": "CH-2026-10073",
@@ -2393,90 +2396,452 @@
   ],
   "users": [
     {
-      "id": "USR-DL-98201",
-      "name": "Vikramaditya Singhania",
-      "dlNumber": "DL-0420190089211",
-      "linkedPlates": [
-        "DL-01-AB-4921",
-        "HR-26-DK-2004"
-      ],
-      "city": "New Delhi",
+      "id": "USR-ADMIN-01",
+      "fullName": "Director General A. K. Saxena, IPS",
+      "email": "admin@natdams.gov.in",
+      "phone": "+91 98100 00001",
+      "passwordHash": "Admin@2026",
+      "role": "ADMIN",
+      "departmentId": "DEP-TP-DEL-01",
+      "status": "ACTIVE",
+      "badge": "IPS-8801-CIP"
+    },
+    {
+      "id": "USR-POLICE-01",
+      "fullName": "Inspector Rajeshwar Nath",
+      "email": "officer.police@natdams.gov.in",
+      "phone": "+91 98110 55001",
+      "passwordHash": "Police@2026",
+      "role": "POLICE_OFFICER",
+      "departmentId": "DEP-TP-DEL-01",
+      "status": "ACTIVE",
+      "badge": "TR-INSP-5501"
+    },
+    {
+      "id": "USR-RTO-01",
+      "fullName": "RTO Officer Meenakshi Sundaram",
+      "email": "officer.rto@natdams.gov.in",
+      "phone": "+91 98120 77001",
+      "passwordHash": "Rto@2026",
+      "role": "RTO_OFFICER",
+      "departmentId": "DEP-RTO-DEL-01",
+      "status": "ACTIVE",
+      "badge": "RTO-DL-4402"
+    },
+    {
+      "id": "USR-CITIZEN-01",
+      "fullName": "Demo Citizen Vikramaditya",
+      "email": "citizen@natdams.gov.in",
+      "phone": "+91 98101 23456",
+      "passwordHash": "Citizen@2026",
+      "role": "CITIZEN",
+      "departmentId": null,
+      "status": "ACTIVE",
+      "badge": null
+    },
+    {
+      "id": "USR-CITIZEN-02",
+      "fullName": "Demo Citizen Ananya Sharma",
+      "email": "ananya.sharma@example.com",
+      "phone": "+91 98200 45678",
+      "passwordHash": "Citizen@2026",
+      "role": "CITIZEN",
+      "departmentId": null,
+      "status": "ACTIVE",
+      "badge": null
+    }
+  ],
+  "departments": [
+    {
+      "id": "DEP-TP-DEL-01",
+      "name": "Delhi Traffic Police Headquarters",
+      "type": "TRAFFIC_POLICE",
+      "district": "New Delhi",
       "state": "DL",
-      "kycStatus": "Aadhaar e-KYC Verified",
-      "pendingChallans": 1,
-      "licenseStatus": "Active",
-      "registeredDate": "2023-04-12"
+      "officeAddress": "Police Headquarters, ITO, New Delhi 110002",
+      "contactNumber": "011-23010101",
+      "status": "ACTIVE"
     },
     {
-      "id": "USR-MH-44120",
-      "name": "Ananya Deshmukh",
-      "dlNumber": "MH-0120200055412",
-      "linkedPlates": [
-        "MH-02-CP-8802"
-      ],
-      "city": "Mumbai",
-      "state": "MH",
-      "kycStatus": "Aadhaar e-KYC Verified",
-      "pendingChallans": 0,
-      "licenseStatus": "Active",
-      "registeredDate": "2022-11-05"
+      "id": "DEP-RTO-DEL-01",
+      "name": "Regional Transport Office (RTO) North Zone",
+      "type": "RTO",
+      "district": "North Delhi",
+      "state": "DL",
+      "officeAddress": "Mall Road Transport Authority, Delhi 110054",
+      "contactNumber": "011-23812000",
+      "status": "ACTIVE"
     },
     {
-      "id": "USR-RJ-77821",
-      "name": "Col. Ratan Singh Rathore",
-      "dlNumber": "RJ-1420180099410",
-      "linkedPlates": [
-        "RJ-14-GA-7711",
-        "RJ-14-CZ-3301"
-      ],
-      "city": "Jaipur",
+      "id": "DEP-TP-RJ-01",
+      "name": "Jaipur City Traffic Police Commissionerate",
+      "type": "TRAFFIC_POLICE",
+      "district": "Jaipur",
       "state": "RJ",
-      "kycStatus": "DigiLocker Verified",
-      "pendingChallans": 0,
-      "licenseStatus": "Active",
-      "registeredDate": "2021-08-19"
+      "officeAddress": "Government Hostel Circle, MI Road, Jaipur 302001",
+      "contactNumber": "0141-2385100",
+      "status": "ACTIVE"
     },
     {
-      "id": "USR-KA-33209",
-      "name": "Karthik Subramanian",
-      "dlNumber": "KA-0420210066782",
-      "linkedPlates": [
-        "KA-04-E-1011"
-      ],
-      "city": "Bengaluru",
-      "state": "KA",
-      "kycStatus": "Aadhaar e-KYC Verified",
-      "pendingChallans": 2,
-      "licenseStatus": "Flagged / Notice Sent",
-      "registeredDate": "2024-01-10"
+      "id": "DEP-RTO-RJ-01",
+      "name": "Regional Transport Office (RTO) Jaipur Central",
+      "type": "RTO",
+      "district": "Jaipur",
+      "state": "RJ",
+      "officeAddress": "Jhalana Doongri Transport Bhavan, Jaipur 302004",
+      "contactNumber": "0141-2706500",
+      "status": "ACTIVE"
+    }
+  ],
+  "citizens": [
+    {
+      "id": "CIT-01",
+      "userId": "USR-CITIZEN-01",
+      "fullName": "Demo Citizen Vikramaditya",
+      "aadhaarMasked": "XXXX-XXXX-4921",
+      "address": "B-42, Vasant Kunj Sector C",
+      "city": "New Delhi",
+      "district": "South West Delhi",
+      "state": "DL",
+      "pincode": "110070",
+      "emergencyContact": "+91 98111 22334",
+      "kycStatus": "VERIFIED"
     },
     {
-      "id": "USR-UP-11983",
-      "name": "Sunil Kumar Maurya",
-      "dlNumber": "UP-1620170044910",
-      "linkedPlates": [
-        "UP-16-BZ-9943"
-      ],
-      "city": "Noida",
-      "state": "UP",
-      "kycStatus": "DigiLocker Verified",
-      "pendingChallans": 1,
-      "licenseStatus": "Active",
-      "registeredDate": "2023-07-22"
+      "id": "CIT-02",
+      "userId": "USR-CITIZEN-02",
+      "fullName": "Demo Citizen Ananya Sharma",
+      "aadhaarMasked": "XXXX-XXXX-8820",
+      "address": "Flat 12, Malabar Hill Crest",
+      "city": "Mumbai",
+      "district": "Mumbai South",
+      "state": "MH",
+      "pincode": "400006",
+      "emergencyContact": "+91 98222 33445",
+      "kycStatus": "VERIFIED"
+    }
+  ],
+  "vehicles": [
+    {
+      "id": "VEH-01",
+      "registrationNumber": "DL-01-AB-4921",
+      "ownerId": "CIT-01",
+      "ownerName": "Demo Citizen Vikramaditya",
+      "vehicleType": "4_WHEELER",
+      "make": "Tata Motors",
+      "model": "Nexon EV Empowered",
+      "fuelType": "ELECTRIC",
+      "color": "Pristine White",
+      "manufactureYear": 2023,
+      "registrationDate": "2023-04-12",
+      "registrationExpiry": "2038-04-11",
+      "fitnessExpiry": "2038-04-11",
+      "insuranceExpiry": "2027-04-10",
+      "insurancePolicyNo": "NEW-IND-884210",
+      "pucExpiry": "2027-04-10",
+      "rtoCode": "DL-01",
+      "status": "ACTIVE"
     },
     {
-      "id": "USR-TN-55201",
-      "name": "Meenakshi Sundaram",
-      "dlNumber": "TN-0120190033109",
-      "linkedPlates": [
-        "TN-01-AX-9912"
-      ],
-      "city": "Chennai",
-      "state": "TN",
-      "kycStatus": "Aadhaar e-KYC Verified",
-      "pendingChallans": 0,
-      "licenseStatus": "Active",
-      "registeredDate": "2022-03-14"
+      "id": "VEH-02",
+      "registrationNumber": "HR-26-DK-2004",
+      "ownerId": "CIT-01",
+      "ownerName": "Demo Citizen Vikramaditya",
+      "vehicleType": "2_WHEELER",
+      "make": "Bajaj Auto",
+      "model": "Pulsar NS 200",
+      "fuelType": "PETROL",
+      "color": "Matte Black",
+      "manufactureYear": 2022,
+      "registrationDate": "2022-08-19",
+      "registrationExpiry": "2037-08-18",
+      "fitnessExpiry": "2037-08-18",
+      "insuranceExpiry": "2026-08-15",
+      "insurancePolicyNo": "BAJ-ALL-110294",
+      "pucExpiry": "2026-08-15",
+      "rtoCode": "HR-26",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "VEH-03",
+      "registrationNumber": "MH-02-CP-8802",
+      "ownerId": "CIT-02",
+      "ownerName": "Demo Citizen Ananya Sharma",
+      "vehicleType": "4_WHEELER",
+      "make": "Hyundai",
+      "model": "Creta 1.5 SX",
+      "fuelType": "DIESEL",
+      "color": "Titan Grey",
+      "manufactureYear": 2021,
+      "registrationDate": "2021-11-05",
+      "registrationExpiry": "2036-11-04",
+      "fitnessExpiry": "2036-11-04",
+      "insuranceExpiry": "2026-11-01",
+      "insurancePolicyNo": "ICICI-LOM-99201",
+      "pucExpiry": "2026-11-01",
+      "rtoCode": "MH-02",
+      "status": "ACTIVE"
+    }
+  ],
+  "drivingLicences": [
+    {
+      "id": "DL-01",
+      "citizenId": "CIT-01",
+      "licenceNumber": "DL-0420190089211",
+      "holderName": "Demo Citizen Vikramaditya",
+      "phone": "+91 98101 23456",
+      "issueDate": "2019-05-10",
+      "expiryDate": "2039-05-09",
+      "licenceType": "LMV / MCWG",
+      "bloodGroup": "O+VE",
+      "issuingRto": "RTO North Delhi (DL-01)",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "DL-02",
+      "citizenId": "CIT-02",
+      "licenceNumber": "MH-0120200055412",
+      "holderName": "Demo Citizen Ananya Sharma",
+      "phone": "+91 98200 45678",
+      "issueDate": "2020-02-14",
+      "expiryDate": "2040-02-13",
+      "licenceType": "LMV",
+      "bloodGroup": "B+VE",
+      "issuingRto": "RTO Mumbai Central (MH-01)",
+      "status": "ACTIVE"
+    }
+  ],
+  "accidents": [
+    {
+      "id": "ACC-423",
+      "accidentNumber": "ACC-2026-68",
+      "status": "INVESTIGATION",
+      "reportedAt": "2026-09-30 04:30:51",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "assignedOfficerName": "Inspector Rajeshwar Nath",
+      "accidentType": "Rear-end crash",
+      "severity": "Moderate",
+      "vehiclesInvolved": 2,
+      "casualties": 0,
+      "locationAddress": "Ring Road Expressway Pillar 42",
+      "locationLat": 28.62,
+      "locationLng": 77.215
+    },
+    {
+      "id": "ACC-475",
+      "accidentNumber": "ACC-2026-70",
+      "status": "INVESTIGATION",
+      "reportedAt": "2026-09-30 04:29:26",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "assignedOfficerName": "Inspector Rajeshwar Nath",
+      "accidentType": "Rear-end crash",
+      "severity": "Moderate",
+      "vehiclesInvolved": 2,
+      "casualties": 0,
+      "locationAddress": "Ring Road Expressway Pillar 42",
+      "locationLat": 28.62,
+      "locationLng": 77.215
+    },
+    {
+      "id": "ACC-101",
+      "accidentNumber": "ACC-2026-01",
+      "reportedBy": "USR-CITIZEN-01",
+      "locationLat": 28.5412,
+      "locationLng": 77.0125,
+      "locationAddress": "Dwarka Expressway Link KM 4.5",
+      "accidentType": "COLLISION",
+      "severity": "SERIOUS",
+      "description": "Two commercial freight carriers collided due to abrupt braking in dense morning fog.",
+      "casualties": 1,
+      "vehiclesInvolved": 2,
+      "status": "INVESTIGATION",
+      "reportedAt": "2026-09-30 08:52:10",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "assignedOfficerName": "Inspector Rajeshwar Nath",
+      "investigationFindings": "CCTV footage retrieved. Interceptor PCR 04 coordinated ambulance transfer to Safdarjung Hospital.",
+      "greenCorridorActive": false
+    },
+    {
+      "id": "ACC-102",
+      "accidentNumber": "ACC-2026-02",
+      "reportedBy": "USR-CITIZEN-02",
+      "locationLat": 28.5833,
+      "locationLng": 77.25,
+      "locationAddress": "Sarai Kale Khan to AIIMS Trauma Centre Corridor",
+      "accidentType": "COLLISION",
+      "severity": "CRITICAL",
+      "description": "Emergency green corridor escort needed for critical patient transfer.",
+      "casualties": 0,
+      "vehiclesInvolved": 1,
+      "status": "RESOLVED",
+      "reportedAt": "2026-09-30 08:58:00",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "assignedOfficerName": "Inspector Rajeshwar Nath",
+      "investigationFindings": "Green corridor successfully created. Transit completed in 8.5 minutes across 11 junctions.",
+      "greenCorridorActive": true
+    }
+  ],
+  "riskZones": [
+    {
+      "id": "RZ-01",
+      "zoneName": "NH-48 Jaipur Highway Blind Curve",
+      "location": "NH-48 Delhi-Jaipur Corridor KM 42.8",
+      "latitude": 28.3842,
+      "longitude": 76.9421,
+      "riskLevel": "CRITICAL",
+      "riskType": "ACCIDENT_HOTSPOT",
+      "incidentCount": 28,
+      "lastIncident": "2026-09-29 22:15:00",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "recommendedAction": "Install rumble strips, high-lumen solar blinkers & calibrate automatic ANPR radar",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RZ-02",
+      "zoneName": "Barapullah Elevated Gantry Loop",
+      "location": "Ring Road Flyover Approach Gate 04",
+      "latitude": 28.5862,
+      "longitude": 77.241,
+      "riskLevel": "HIGH",
+      "riskType": "SPEED_VIOLATION",
+      "incidentCount": 44,
+      "lastIncident": "2026-09-30 08:10:00",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "recommendedAction": "Deploy stationary speed interceptor unit during peak hours (08:00 - 11:00)",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RZ-03",
+      "zoneName": "Dwarka Expressway Metro Pier Crossing",
+      "location": "Dwarka Sector 21 Junction",
+      "latitude": 28.5521,
+      "longitude": 77.0583,
+      "riskLevel": "MEDIUM",
+      "riskType": "CONGESTION",
+      "incidentCount": 19,
+      "lastIncident": "2026-09-30 09:00:00",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "recommendedAction": "Optimize traffic signal cycle time to 90 seconds during evening rush",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "RZ-04",
+      "zoneName": "Dhaula Kuan Central Roundabout",
+      "location": "Dhaula Kuan Army Public School Zone",
+      "latitude": 28.5912,
+      "longitude": 77.1601,
+      "riskLevel": "LOW",
+      "riskType": "SCHOOL_ZONE",
+      "incidentCount": 6,
+      "lastIncident": "2026-09-25 14:15:00",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "recommendedAction": "Traffic warden deployment for pedestrian crossing safety during school hours",
+      "status": "ACTIVE"
+    }
+  ],
+  "rtoApplications": [
+    {
+      "id": "RTO-APP-33",
+      "applicationNumber": "RTO-DL-2026-83530",
+      "status": "APPROVED",
+      "submittedAt": "2026-09-30 04:30:51",
+      "reviewedBy": "OFF-RTO-01",
+      "applicationType": "Fitness Certificate",
+      "targetEntityId": "DL-01-AB-4921",
+      "citizenName": "E2E Test Motorist",
+      "phone": "+91 98111 22334",
+      "remarks": "E2E Verified and Approved",
+      "reviewedAt": "2026-09-30 04:30:51"
+    },
+    {
+      "id": "RTO-APP-13",
+      "applicationNumber": "RTO-DL-2026-11565",
+      "status": "APPROVED",
+      "submittedAt": "2026-09-30 04:29:26",
+      "reviewedBy": "OFF-RTO-01",
+      "applicationType": "Fitness Certificate",
+      "targetEntityId": "DL-01-AB-4921",
+      "citizenName": "E2E Test Motorist",
+      "phone": "+91 98111 22334",
+      "remarks": "E2E Verified and Approved",
+      "reviewedAt": "2026-09-30 04:29:26"
+    },
+    {
+      "id": "RTO-APP-01",
+      "citizenId": "CIT-01",
+      "applicantName": "Demo Citizen Vikramaditya",
+      "applicationType": "LICENCE_RENEWAL",
+      "applicationNumber": "RTO-DL-2026-90412",
+      "vehicleId": null,
+      "status": "UNDER_REVIEW",
+      "submittedAt": "2026-09-28 10:15:00",
+      "reviewedBy": "OFF-RTO-01",
+      "reviewedAt": "2026-09-29 11:30:00",
+      "remarks": "Medical fitness form-1A verified. Biometric scheduled at Mall Road RTO."
+    },
+    {
+      "id": "RTO-APP-02",
+      "citizenId": "CIT-01",
+      "applicantName": "Demo Citizen Vikramaditya",
+      "applicationType": "TRANSFER_OF_OWNERSHIP",
+      "applicationNumber": "RTO-DL-2026-88120",
+      "vehicleId": "VEH-01",
+      "status": "DOCUMENTS_VERIFIED",
+      "submittedAt": "2026-09-26 15:40:00",
+      "reviewedBy": "OFF-RTO-01",
+      "reviewedAt": "2026-09-28 16:00:00",
+      "remarks": "Form 29 and 30 uploaded with bank NOC. Ready for final RC endorsement."
+    },
+    {
+      "id": "RTO-APP-03",
+      "citizenId": "CIT-02",
+      "applicantName": "Demo Citizen Ananya Sharma",
+      "applicationType": "NEW_REGISTRATION",
+      "applicationNumber": "RTO-MH-2026-77319",
+      "vehicleId": "VEH-03",
+      "status": "APPROVED",
+      "submittedAt": "2026-09-24 09:20:00",
+      "reviewedBy": "OFF-RTO-01",
+      "reviewedAt": "2026-09-25 14:10:00",
+      "remarks": "High Security Registration Plate (HSRP) issued and fitted."
+    }
+  ],
+  "notifications": [
+    {
+      "id": "NOTIF-01",
+      "userId": "USR-CITIZEN-01",
+      "title": "Complaint Status Updated",
+      "message": "Your complaint CASE-2026-801 is now under active officer investigation.",
+      "notificationType": "COMPLAINT_UPDATE",
+      "isRead": false,
+      "createdAt": "2026-09-30 08:35:00"
+    },
+    {
+      "id": "NOTIF-02",
+      "userId": "USR-CITIZEN-01",
+      "title": "e-Challan Notice Issued",
+      "message": "e-Challan #CH-2026-90124 of ₹2,000 issued for vehicle DL-01-AB-4921 under Section 183(2).",
+      "notificationType": "CHALLAN_ISSUED",
+      "isRead": false,
+      "createdAt": "2026-09-28 14:25:00"
+    },
+    {
+      "id": "NOTIF-03",
+      "userId": "USR-CITIZEN-01",
+      "title": "RTO Application Verified",
+      "message": "Your Licence Renewal Application RTO-DL-2026-90412 has been verified by the RTO Authority.",
+      "notificationType": "RTO_UPDATE",
+      "isRead": true,
+      "createdAt": "2026-09-29 11:30:00"
+    },
+    {
+      "id": "NOTIF-04",
+      "userId": "USR-POLICE-01",
+      "title": "New Priority Incident Assigned",
+      "message": "Accident Case ACC-2026-01 on Dwarka Expressway assigned to your unit.",
+      "notificationType": "EMERGENCY_ALERT",
+      "isRead": false,
+      "createdAt": "2026-09-30 08:52:10"
     }
   ]
 }

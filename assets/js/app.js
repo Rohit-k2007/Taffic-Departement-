@@ -324,6 +324,24 @@ const App = {
       filterVehicleType.addEventListener('change', () => this.renderViolationsTable());
     }
 
+    // Citizen Accident Reporting Form Submission
+    const formAccident = document.getElementById('formCitizenAccident');
+    if (formAccident) {
+      formAccident.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleAccidentReportSubmit();
+      });
+    }
+
+    // Citizen RTO Online Application Form Submission
+    const formRtoApp = document.getElementById('formCitizenRtoApp');
+    if (formRtoApp) {
+      formRtoApp.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleCitizenRtoAppSubmit();
+      });
+    }
+
     // Real-time Event listeners
     window.addEventListener('traffic-tick', (e) => this.handleTrafficTick(e.detail));
     window.addEventListener('anpr-detection', (e) => this.handleAnprDetection(e.detail));
@@ -342,10 +360,16 @@ const App = {
     this.renderAdminUsersTable();
     this.renderAdminComplaintsTable();
     this.renderAdminOfficersTable();
+    this.renderCitizenDashboard();
+    this.renderCitizenVehicles();
+    this.renderCitizenRtoApps();
+    this.renderOfficerAccidentsTable();
+    this.renderRtoDesk();
+    this.renderRiskZonesTable();
   },
 
   // =========================================================================
-  // ROLE SWITCHER & SIDEBAR FLOW NAVIGATION
+  // ROLE SWITCHER & SIDEBAR FLOW NAVIGATION (4 OFFICIAL GOVT ROLES)
   // =========================================================================
 
   switchRole(role) {
@@ -366,28 +390,35 @@ const App = {
 
     if (role === 'citizen') {
       if (dot) dot.style.background = '#10b981';
-      if (roleText) roleText.innerHTML = `Mode: <strong>Citizen Public Portal</strong>`;
-      if (sidebarName) sidebarName.innerText = 'Citizen Guest Portal';
-      if (sidebarClear) sidebarClear.innerText = 'Public Access Clearance';
+      if (roleText) roleText.innerHTML = `Role: <strong>Citizen Public Portal (Vikramaditya Sharma)</strong>`;
+      if (sidebarName) sidebarName.innerText = 'Citizen: Vikramaditya Sharma';
+      if (sidebarClear) sidebarClear.innerText = 'Aadhaar Verified • DL & RC Linked';
       this.showToast("Switched to Citizen Public Portal Mode", "info");
-      this.switchTab('citizen-report');
+      this.switchTab('citizen-dashboard');
     } else if (role === 'officer') {
       if (dot) dot.style.background = '#f59e0b';
       const off = this.currentOfficer || {
         name: 'Insp. Rajesh Kumar',
-        rank: 'Traffic Inspector (ANPR Lead)',
+        rank: 'Traffic Police Inspector (ANPR Lead)',
         badgeNumber: 'TR-INSP-5501',
         clearance: 'Level 3 - Tactical Enforcement'
       };
       this.currentOfficer = off;
-      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">Officer: ${off.name} (${off.badgeNumber})</strong>`;
+      if (roleText) roleText.innerHTML = `Role: <strong style="color:#b45309;">Traffic Police Officer: ${off.name}</strong>`;
       if (sidebarName) sidebarName.innerText = `${off.rank}: ${off.name}`;
       if (sidebarClear) sidebarClear.innerText = `${off.badgeNumber} • ${off.clearance}`;
-      this.showToast(`Officer Enforcement Mode Active: ${off.name}`, "info");
+      this.showToast(`Traffic Police Enforcement Active: ${off.name}`, "info");
       this.switchTab('officer-cases');
+    } else if (role === 'rto') {
+      if (dot) dot.style.background = '#d97706';
+      if (roleText) roleText.innerHTML = `Role: <strong style="color:#b45309;">RTO Officer: Sunil Verma (RTO-DEL-01)</strong>`;
+      if (sidebarName) sidebarName.innerText = 'RTO Verification Officer: Sunil Verma';
+      if (sidebarClear) sidebarClear.innerText = 'RTO-DEL-01 • Statutory Document Authority';
+      this.showToast("Regional Transport Office (RTO) Command Desk Active", "info");
+      this.switchTab('rto-desk');
     } else if (role === 'admin') {
       if (dot) dot.style.background = '#dc2626';
-      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">National Command Administrator</strong>`;
+      if (roleText) roleText.innerHTML = `Role: <strong style="color:#dc2626;">Traffic Department Administrator</strong>`;
       if (sidebarName) sidebarName.innerText = 'Director General / System Admin';
       if (sidebarClear) sidebarClear.innerText = 'Root Security Clearance (SHA-256)';
       this.showToast("Administrator Command Console Activated", "info");
@@ -416,7 +447,23 @@ const App = {
       target.classList.add('active');
     }
 
-    if (tabName === 'current') {
+    if (tabName === 'citizen-dashboard') {
+      this.renderCitizenDashboard();
+    } else if (tabName === 'citizen-accident') {
+      // Auto-pin accident form coordinates
+      const gpsEl = document.getElementById('accGps');
+      if (gpsEl) gpsEl.value = "28.5910° N, 77.1620° E";
+    } else if (tabName === 'citizen-vehicles') {
+      this.renderCitizenVehicles();
+    } else if (tabName === 'citizen-rto-apps') {
+      this.renderCitizenRtoApps();
+    } else if (tabName === 'officer-accidents') {
+      this.renderOfficerAccidentsTable();
+    } else if (tabName === 'rto-desk') {
+      this.renderRtoDesk();
+    } else if (tabName === 'risk-center') {
+      this.renderRiskZonesTable();
+    } else if (tabName === 'current') {
       if (window.mapController) window.mapController.refresh();
     } else if (tabName === 'emergency') {
       this.renderEmergenciesList();
@@ -1760,7 +1807,636 @@ const App = {
       toast.style.opacity = '0';
       setTimeout(() => toast.remove(), 250);
     }, 3500);
+  },
+
+  // =========================================================================
+  // CITIZEN DASHBOARD & QUICK SERVICES (SECTION 6)
+  // =========================================================================
+
+  renderCitizenDashboard() {
+    const cases = window.trafficDB.getCases();
+    const active = cases.filter(c => c.status !== 'Closed').length;
+    const resolved = cases.filter(c => c.status === 'Closed').length;
+    const violations = window.trafficDB.getViolations();
+    const pendingChallans = violations.filter(v => v.status !== 'Paid').length;
+    const vehicles = window.trafficDB.getVehicles();
+
+    const activeEl = document.getElementById('citStatActiveComplaints');
+    if (activeEl) activeEl.innerText = `${active} Active`;
+
+    const resEl = document.getElementById('citStatResolvedComplaints');
+    if (resEl) resEl.innerText = `${resolved} Closed`;
+
+    const challanEl = document.getElementById('citStatPendingChallans');
+    if (challanEl) challanEl.innerText = `${pendingChallans} Unpaid`;
+
+    const vehEl = document.getElementById('citStatRegisteredVehicles');
+    if (vehEl) vehEl.innerText = `${vehicles.length || 2} Vehicles`;
+
+    // Render Department Notifications
+    const notifsContainer = document.getElementById('citNotificationsList');
+    if (notifsContainer) {
+      const notifs = window.trafficDB.getNotifications();
+      if (!notifs || notifs.length === 0) {
+        notifsContainer.innerHTML = `<div style="font-size:11px; color:#64748b;">No active department alerts.</div>`;
+      } else {
+        notifsContainer.innerHTML = notifs.slice(0, 4).map(n => `
+          <div style="background:#f8fafc; border-left:3px solid ${n.notificationType === 'ALERT' ? '#dc2626' : '#059669'}; padding:8px 10px; border-radius:0 4px 4px 0; font-size:11px;">
+            <div style="font-weight:700; color:#0f172a; display:flex; justify-content:space-between;">
+              <span>${n.title}</span>
+              <span style="font-size:9px; color:#64748b;">${n.createdAt || 'Live'}</span>
+            </div>
+            <div style="color:#334155; margin-top:2px;">${n.message}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Render Recent Activity Timeline
+    const actContainer = document.getElementById('citRecentActivityList');
+    if (actContainer) {
+      const rtoApps = window.trafficDB.getRtoApplications();
+      const recentCases = cases.slice(0, 2);
+      const recentApps = rtoApps.slice(0, 2);
+
+      let html = '';
+      recentCases.forEach(c => {
+        html += `
+          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:8px 10px; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong>${c.id}</strong> • <span style="color:#64748b;">${c.category}</span>
+              <div style="font-size:10px; color:#64748b;">Status: <span style="font-weight:700; color:#b45309;">${c.status}</span></div>
+            </div>
+            <button class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.switchTab('citizen-track')">Track</button>
+          </div>
+        `;
+      });
+      recentApps.forEach(a => {
+        html += `
+          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:8px 10px; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong>${a.applicationNumber || a.id}</strong> • <span style="color:#2563eb;">${a.applicationType}</span>
+              <div style="font-size:10px; color:#64748b;">Status: <span style="font-weight:700; color:#059669;">${a.status}</span></div>
+            </div>
+            <button class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.switchTab('citizen-rto-apps')">View</button>
+          </div>
+        `;
+      });
+      actContainer.innerHTML = html || `<div style="font-size:11px; color:#64748b;">No recent activity records.</div>`;
+    }
+  },
+
+  // =========================================================================
+  // ACCIDENT REPORTING & EMERGENCY MANAGEMENT (SECTION 11)
+  // =========================================================================
+
+  async handleAccidentReportSubmit() {
+    const type = document.getElementById('accType').value;
+    const severity = document.getElementById('accSeverity').value;
+    const vehiclesCount = parseInt(document.getElementById('accVehiclesCount').value) || 1;
+    const casualties = parseInt(document.getElementById('accCasualties').value) || 0;
+    const location = document.getElementById('accLocation').value;
+    const greenCorridor = document.getElementById('accGreenCorridor').value;
+    const description = document.getElementById('accDescription').value;
+
+    const accidentData = {
+      accidentType: type,
+      severity: severity,
+      vehiclesInvolved: vehiclesCount,
+      casualties: casualties,
+      locationAddress: location,
+      locationLat: 28.5910,
+      locationLng: 77.1620,
+      description: description,
+      reportedBy: "Vikramaditya Sharma (Citizen)",
+      greenCorridorRequested: greenCorridor === 'YES',
+      status: "REPORTED",
+      reportedAt: new Date().toISOString().replace('T', ' ').substring(0, 19)
+    };
+
+    const saved = await window.trafficDB.addAccident(accidentData);
+
+    // If Green Corridor requested, trigger Emergency 112 dispatch
+    if (greenCorridor === 'YES') {
+      window.trafficDB.triggerEmergency({
+        type: 'Medical',
+        location: location,
+        callerPhone: '+91 98101 23456',
+        details: `Ambulance Priority Corridor: ${type} - ${casualties} casualties reported`
+      });
+    }
+
+    // Log cryptographic audit
+    window.trafficDB.logAudit({
+      user: "Vikramaditya Sharma (Citizen)",
+      role: "CITIZEN",
+      action: "ACCIDENT_CASE_FILED",
+      entityType: "ACCIDENT",
+      entityId: saved.accidentNumber || saved.id,
+      details: `${type} at ${location} [Severity: ${severity}, Casualties: ${casualties}]`
+    });
+
+    this.showToast(`🚨 Accident Case Registered: [${saved.accidentNumber || saved.id}] • 112 Unit Dispatched!`, "success");
+    
+    // Switch to tracking or officer desk
+    this.renderOfficerAccidentsTable();
+    this.switchTab('officer-accidents');
+  },
+
+  renderOfficerAccidentsTable() {
+    const tbody = document.getElementById('officerAccidentsTableBody');
+    if (!tbody) return;
+
+    const severityFilter = document.getElementById('filterAccidentSeverity');
+    const selectedSeverity = severityFilter ? severityFilter.value : 'ALL';
+    const accidents = window.trafficDB.getAccidents(selectedSeverity);
+
+    if (accidents.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:16px; color:#64748b;">No accident incident cases found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = accidents.map(a => {
+      const isCritical = a.severity === 'Critical';
+      const isSerious = a.severity === 'Serious';
+      const sevClass = isCritical ? 'badge-risk-critical' : (isSerious ? 'badge-risk-high' : 'badge-risk-medium');
+
+      return `
+        <tr>
+          <td><strong style="font-family:var(--font-mono);">${a.accidentNumber || a.id}</strong></td>
+          <td><strong>${a.accidentType}</strong></td>
+          <td><span class="${sevClass}">${a.severity}</span></td>
+          <td><strong style="color:${a.casualties > 0 ? '#dc2626' : '#059669'};">${a.casualties} Persons</strong></td>
+          <td>${a.vehiclesInvolved} Vehicles</td>
+          <td>
+            <div style="font-weight:600;">${a.locationAddress || a.location}</div>
+            <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">${a.locationLat || 28.5910}, ${a.locationLng || 77.1620}</span>
+          </td>
+          <td><span class="badge-rto-${a.status === 'RESOLVED' || a.status === 'CLOSED' ? 'approved' : 'review'}">${a.status}</span></td>
+          <td><span style="font-size:11px; font-weight:700;">${a.assignedOfficerId || 'OFF-DEL-01'}</span></td>
+          <td>
+            <div style="display:flex; gap:4px;">
+              ${a.status !== 'CLOSED' ? `
+                <button class="btn-action-primary" style="font-size:10px; padding:3px 6px; background:#047857; color:#fff;" onclick="App.closeAccidentCase('${a.id || a.accidentNumber}')">
+                  ✓ Close Case
+                </button>
+              ` : `
+                <span style="font-size:10px; color:#059669; font-weight:700;">Resolved</span>
+              `}
+              <button class="btn-action-primary" style="font-size:10px; padding:3px 6px;" onclick="App.locateRiskZoneOnMap(${a.locationLat || 28.5910}, ${a.locationLng || 77.1620}, '${a.accidentType}', '${a.severity}')">
+                📍 Map
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  closeAccidentCase(id) {
+    const acc = (window.trafficDB.accidents || []).find(a => a.id === id || a.accidentNumber === id);
+    if (acc) {
+      acc.status = 'CLOSED';
+      acc.resolvedAt = new Date().toISOString();
+      window.trafficDB.logAudit({
+        user: "Traffic Police Officer (OFF-DEL-01)",
+        role: "TRAFFIC_POLICE_OFFICER",
+        action: "ACCIDENT_CASE_CLOSED",
+        entityType: "ACCIDENT",
+        entityId: id,
+        details: "Field investigation concluded and road clearance certified."
+      });
+      this.showToast(`Accident Case ${id} marked Resolved & Closed.`, "success");
+      this.renderOfficerAccidentsTable();
+    }
+  },
+
+  // =========================================================================
+  // CITIZEN VEHICLES & LICENCES (SECTION 15 & 16)
+  // =========================================================================
+
+  renderCitizenVehicles() {
+    this.searchCitizenVehicleProfile('DL-01-AB-4921');
+  },
+
+  searchCitizenVehicleProfile(queryPlate = null) {
+    const input = document.getElementById('citVehSearchPlate');
+    const plate = queryPlate || (input ? input.value.trim().toUpperCase() : 'DL-01-AB-4921');
+    const veh = window.trafficDB.getVehicleByPlate(plate) || {
+      registrationNumber: plate,
+      ownerName: "Vikramaditya Sharma",
+      make: "Honda",
+      model: "City 1.5L i-VTEC",
+      fuelType: "Petrol / Hybrid",
+      manufactureYear: 2022,
+      registrationExpiry: "2037-03-14",
+      fitnessExpiry: "2037-03-14",
+      insuranceExpiry: "2027-03-12",
+      status: "ACTIVE"
+    };
+
+    const plateEl = document.getElementById('citVehPlate');
+    if (plateEl) plateEl.innerText = veh.registrationNumber;
+
+    const ownerEl = document.getElementById('citVehOwner');
+    if (ownerEl) ownerEl.innerText = veh.ownerName || "Vikramaditya Sharma";
+
+    const makeEl = document.getElementById('citVehMake');
+    if (makeEl) makeEl.innerText = `${veh.make} ${veh.model}`;
+
+    const fuelEl = document.getElementById('citVehFuel');
+    if (fuelEl) fuelEl.innerText = `${veh.fuelType} (${veh.manufactureYear || 2022})`;
+
+    const fitEl = document.getElementById('citVehFitness');
+    if (fitEl) fitEl.innerText = `${veh.fitnessExpiry} (Valid)`;
+
+    const insEl = document.getElementById('citVehInsurance');
+    if (insEl) insEl.innerText = `${veh.insuranceExpiry} (Active)`;
+
+    // Render Challan History for this vehicle
+    const tbody = document.getElementById('citChallanHistoryTableBody');
+    if (tbody) {
+      const violations = window.trafficDB.getViolations();
+      const vehViolations = violations.filter(v => v.plateNumber === plate || v.plate === plate || v.plateNumber === 'DL-01-AB-4921');
+
+      if (vehViolations.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:12px; color:#059669; font-weight:700;">✓ No pending challans or violations on this vehicle.</td></tr>`;
+      } else {
+        tbody.innerHTML = vehViolations.map(v => `
+          <tr>
+            <td><strong style="font-family:var(--font-mono);">${v.id}</strong></td>
+            <td><strong>${v.violationType || v.type}</strong></td>
+            <td>${v.location}</td>
+            <td><strong style="color:#b45309;">₹${v.fineAmount || v.fine || 1000}</strong></td>
+            <td>
+              <span class="badge-rto-${v.status === 'Paid' ? 'approved' : 'rejected'}">
+                ${v.status || 'Pending'}
+              </span>
+            </td>
+            <td>
+              ${v.status === 'Paid' ? `
+                <button class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.showReceiptForPaidChallan('${v.id}')">
+                  Receipt
+                </button>
+              ` : `
+                <button class="btn-action-gold" style="font-size:10px; padding:3px 8px;" onclick="App.openPayChallanModal('${v.id}')">
+                  💳 Pay Now
+                </button>
+              `}
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+  },
+
+  // =========================================================================
+  // CITIZEN RTO APPLICATIONS (SECTION 17)
+  // =========================================================================
+
+  async handleCitizenRtoAppSubmit() {
+    const type = document.getElementById('rtoAppType').value;
+    const targetId = document.getElementById('rtoAppTargetId').value.trim().toUpperCase();
+    const citizenName = document.getElementById('rtoAppCitizenName').value;
+    const phone = document.getElementById('rtoAppPhone').value;
+
+    const newApp = {
+      citizenId: "CIT-01",
+      citizenName: citizenName,
+      phone: phone,
+      applicationType: type,
+      targetEntityId: targetId,
+      status: "UNDER_REVIEW",
+      remarks: "Application received. Verification pending with RTO Officer."
+    };
+
+    const created = await window.trafficDB.addRtoApplication(newApp);
+
+    window.trafficDB.logAudit({
+      user: citizenName,
+      role: "CITIZEN",
+      action: "RTO_APPLICATION_SUBMITTED",
+      entityType: "RTO_APPLICATION",
+      entityId: created.applicationNumber || created.id,
+      details: `${type} for ${targetId}`
+    });
+
+    this.showToast(`✓ RTO Application Submitted: [${created.applicationNumber || created.id}]`, "success");
+    this.renderCitizenRtoApps();
+    this.renderRtoDesk();
+  },
+
+  renderCitizenRtoApps() {
+    const tbody = document.getElementById('citRtoAppsTableBody');
+    if (!tbody) return;
+
+    const apps = window.trafficDB.getRtoApplications();
+    if (apps.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:12px; color:#64748b;">No RTO applications submitted yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = apps.map(a => `
+      <tr>
+        <td><strong style="font-family:var(--font-mono);">${a.applicationNumber || a.id}</strong></td>
+        <td><strong>${a.applicationType}</strong></td>
+        <td><strong style="color:#b45309;">${a.targetEntityId || a.vehicleId || 'DL-01-AB-4921'}</strong></td>
+        <td>${(a.submittedAt || '2026-09-30').substring(0, 10)}</td>
+        <td>
+          <span class="badge-rto-${a.status === 'APPROVED' ? 'approved' : (a.status === 'REJECTED' ? 'rejected' : 'review')}">
+            ${a.status}
+          </span>
+        </td>
+        <td style="font-size:11px; color:#334155;">${a.remarks || 'Awaiting statutory verification'}</td>
+      </tr>
+    `).join('');
+  },
+
+  // =========================================================================
+  // SIMULATED E-CHALLAN PAYMENT GATEWAY (SECTION 14)
+  // =========================================================================
+
+  activePayingChallanId: null,
+
+  openPayChallanModal(challanId) {
+    const violations = window.trafficDB.getViolations();
+    const v = violations.find(item => item.id === challanId) || {
+      id: challanId,
+      plateNumber: 'DL-01-AB-4921',
+      violationType: 'Speed Violation (>80 km/h)',
+      fineAmount: 2000
+    };
+
+    this.activePayingChallanId = challanId;
+
+    const idEl = document.getElementById('payModalChallanId');
+    if (idEl) idEl.innerText = v.id;
+
+    const plateEl = document.getElementById('payModalPlate');
+    if (plateEl) plateEl.innerText = v.plateNumber || v.plate || 'DL-01-AB-4921';
+
+    const vioEl = document.getElementById('payModalViolation');
+    if (vioEl) vioEl.innerText = v.violationType || v.type || 'Traffic Violation';
+
+    const amtEl = document.getElementById('payModalAmount');
+    if (amtEl) amtEl.innerText = `₹${v.fineAmount || v.fine || 2000}`;
+
+    this.openModal('payChallanModal');
+  },
+
+  async confirmChallanPayment() {
+    if (!this.activePayingChallanId) return;
+    const challanId = this.activePayingChallanId;
+
+    const res = await window.trafficDB.payChallan(challanId);
+    this.closeModal('payChallanModal');
+
+    // Populate official printable receipt
+    const rNum = document.getElementById('receiptNum');
+    if (rNum) rNum.innerText = res.receipt || ("BHARAT-REC-" + Math.floor(100000 + Math.random() * 900000));
+
+    const rChallan = document.getElementById('receiptChallanId');
+    if (rChallan) rChallan.innerText = challanId;
+
+    const rTime = document.getElementById('receiptTime');
+    if (rTime) rTime.innerText = new Date().toISOString().replace('T', ' ').substring(0, 19) + " IST";
+
+    const rRef = document.getElementById('receiptGatewayRef');
+    if (rRef) rRef.innerText = "PAY-UPI-" + Math.floor(100000 + Math.random() * 900000);
+
+    // Log Cryptographic Audit
+    window.trafficDB.logAudit({
+      user: "Vikramaditya Sharma (Citizen)",
+      role: "CITIZEN",
+      action: "CHALLAN_ONLINE_PAYMENT_COMPLETED",
+      entityType: "CHALLAN",
+      entityId: challanId,
+      details: `Payment authorized via Bharat UPI [Receipt: ${rNum ? rNum.innerText : 'VERIFIED'}]`
+    });
+
+    this.showToast(`✓ e-Challan ${challanId} Paid Successfully! Bharat Receipt Generated.`, "success");
+
+    // Open receipt modal
+    this.openModal('challanReceiptModal');
+
+    // Refresh views
+    this.renderViolationsTable();
+    this.searchCitizenVehicleProfile();
+    this.renderCitizenDashboard();
+  },
+
+  showReceiptForPaidChallan(challanId) {
+    const v = window.trafficDB.violations.find(item => item.id === challanId);
+    const rNum = document.getElementById('receiptNum');
+    if (rNum) rNum.innerText = (v && v.receiptNumber) || "BHARAT-REC-904128";
+
+    const rChallan = document.getElementById('receiptChallanId');
+    if (rChallan) rChallan.innerText = challanId;
+
+    this.openModal('challanReceiptModal');
+  },
+
+  // =========================================================================
+  // RTO OFFICER DESK & DOCUMENT VERIFICATION (SECTION 8 & 17)
+  // =========================================================================
+
+  activeReviewAppId: null,
+
+  renderRtoDesk() {
+    const apps = window.trafficDB.getRtoApplications();
+    const pending = apps.filter(a => a.status === 'UNDER_REVIEW' || a.status === 'SUBMITTED').length;
+
+    const statPending = document.getElementById('rtoStatPendingVerifications');
+    if (statPending) statPending.innerText = `${pending} Applications`;
+
+    const tbody = document.getElementById('rtoApplicationsDeskTableBody');
+    if (!tbody) return;
+
+    if (apps.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:16px; color:#64748b;">No applications in queue.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = apps.map(a => `
+      <tr>
+        <td><strong style="font-family:var(--font-mono);">${a.applicationNumber || a.id}</strong></td>
+        <td><strong>${a.citizenName || 'Vikramaditya Sharma'}</strong></td>
+        <td><span style="color:#b45309; font-weight:700;">${a.applicationType}</span></td>
+        <td><strong style="font-family:var(--font-mono);">${a.targetEntityId || a.vehicleId || 'DL-01-AB-4921'}</strong></td>
+        <td>
+          <span style="font-size:10px; background:#f1f5f9; padding:2px 6px; border-radius:3px;">
+            📄 Form 29/30 &bull; Aadhaar e-KYC
+          </span>
+        </td>
+        <td>${(a.submittedAt || '2026-09-30').substring(0, 10)}</td>
+        <td>
+          <span class="badge-rto-${a.status === 'APPROVED' ? 'approved' : (a.status === 'REJECTED' ? 'rejected' : 'review')}">
+            ${a.status}
+          </span>
+        </td>
+        <td>
+          ${a.status === 'UNDER_REVIEW' || a.status === 'SUBMITTED' ? `
+            <button class="btn-action-primary" style="font-size:10px; padding:3px 8px; background:#b45309; color:#fff;" onclick="App.openRtoReviewModal('${a.id || a.applicationNumber}')">
+              Review &amp; Verify
+            </button>
+          ` : `
+            <span style="font-size:10px; color:#059669; font-weight:700;">Processed</span>
+          `}
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  openRtoReviewModal(appId) {
+    const apps = window.trafficDB.getRtoApplications();
+    const app = apps.find(a => a.id === appId || a.applicationNumber === appId);
+    if (!app) return;
+
+    this.activeReviewAppId = appId;
+
+    const numEl = document.getElementById('rtoReviewAppNum');
+    if (numEl) numEl.innerText = app.applicationNumber || app.id;
+
+    const citEl = document.getElementById('rtoReviewCitizen');
+    if (citEl) citEl.innerText = app.citizenName || 'Vikramaditya Sharma';
+
+    const typeEl = document.getElementById('rtoReviewType');
+    if (typeEl) typeEl.innerText = app.applicationType;
+
+    const tarEl = document.getElementById('rtoReviewTarget');
+    if (tarEl) tarEl.innerText = app.targetEntityId || app.vehicleId || 'DL-01-AB-4921';
+
+    this.openModal('rtoReviewModal');
+  },
+
+  async saveRtoReviewDecision() {
+    if (!this.activeReviewAppId) return;
+    const appId = this.activeReviewAppId;
+    const decision = document.getElementById('rtoReviewDecision').value;
+    const remarks = document.getElementById('rtoReviewRemarks').value;
+
+    await window.trafficDB.updateRtoApplication(appId, {
+      status: decision,
+      remarks: remarks
+    });
+
+    window.trafficDB.logAudit({
+      user: "Sunil Verma, ARTO (RTO-DEL-01)",
+      role: "RTO_OFFICER",
+      action: `RTO_APPLICATION_${decision}`,
+      entityType: "RTO_APPLICATION",
+      entityId: appId,
+      details: remarks
+    });
+
+    this.closeModal('rtoReviewModal');
+    this.showToast(`✓ Application ${appId} statutory decision recorded: ${decision}`, "success");
+
+    this.renderRtoDesk();
+    this.renderCitizenRtoApps();
+  },
+
+  handleRtoLookup() {
+    const input = document.getElementById('rtoLookupInput');
+    const val = input ? input.value.trim().toUpperCase() : 'DL-01-AB-4921';
+    const veh = window.trafficDB.getVehicleByPlate(val);
+    const lic = window.trafficDB.getLicenceByNumber(val);
+
+    const box = document.getElementById('rtoLookupResultBox');
+    if (!box) return;
+
+    if (veh) {
+      box.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:13px; color:#0f172a;">🚗 VAHAN RC RECORD FOUND: ${veh.registrationNumber}</strong>
+          <span class="badge-rto-approved">${veh.status}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+          <div>Owner: <strong>${veh.ownerName}</strong></div>
+          <div>Make/Model: <strong>${veh.make} ${veh.model}</strong></div>
+          <div>Fuel Type: <strong>${veh.fuelType}</strong></div>
+          <div>Fitness Expiry: <strong style="color:#059669;">${veh.fitnessExpiry}</strong></div>
+          <div>Insurance Expiry: <strong style="color:#059669;">${veh.insuranceExpiry}</strong></div>
+          <div>RTO Division: <strong>${veh.issuingRto || 'RTO-DL-01 (Delhi)'}</strong></div>
+        </div>
+      `;
+    } else if (lic) {
+      box.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:13px; color:#0f172a;">🪪 SARATHI DL RECORD FOUND: ${lic.licenceNumber}</strong>
+          <span class="badge-rto-approved">${lic.status}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+          <div>Citizen: <strong>${lic.citizenName}</strong></div>
+          <div>Class: <strong>${lic.licenceType}</strong></div>
+          <div>Issuing RTO: <strong>${lic.issuingRto}</strong></div>
+          <div>Validity: <strong style="color:#059669;">${lic.expiryDate}</strong></div>
+          <div>Emergency Contact: <strong>+91 98101 23456</strong></div>
+          <div>Blood Group: <strong>B+</strong></div>
+        </div>
+      `;
+    } else {
+      box.innerHTML = `<div style="color:#dc2626;">✕ No VAHAN or Sarathi registration record matching "${val}".</div>`;
+    }
+  },
+
+  // =========================================================================
+  // RISK & SAFETY CENTER (SECTION 10)
+  // =========================================================================
+
+  renderRiskZonesTable() {
+    const tbody = document.getElementById('riskZonesTableBody');
+    if (!tbody) return;
+
+    const filter = document.getElementById('filterRiskLevel');
+    const selectedLevel = filter ? filter.value : 'ALL';
+    const zones = window.trafficDB.getRiskZones(selectedLevel);
+
+    if (zones.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:16px; color:#64748b;">No high-risk zones recorded under selected filter.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = zones.map(z => {
+      let badgeClass = 'badge-risk-low';
+      if (z.riskLevel === 'CRITICAL') badgeClass = 'badge-risk-critical';
+      else if (z.riskLevel === 'HIGH') badgeClass = 'badge-risk-high';
+      else if (z.riskLevel === 'MEDIUM') badgeClass = 'badge-risk-medium';
+
+      return `
+        <tr>
+          <td><strong style="font-family:var(--font-mono);">${z.id}</strong></td>
+          <td>
+            <strong>${z.zoneName}</strong>
+            <div style="font-size:10px; color:#64748b;">${z.location}</div>
+          </td>
+          <td><span class="${badgeClass}">${z.riskLevel}</span></td>
+          <td>
+            <strong style="color:#b45309;">${z.riskType}</strong>
+            <div style="font-size:10px; color:#64748b;">${z.description || ''}</div>
+          </td>
+          <td><strong style="color:#dc2626; font-size:13px;">${z.incidentCount} Incidents</strong></td>
+          <td><span style="font-family:var(--font-mono); font-size:10px;">${(z.createdAt || '2026-09-30').substring(0, 10)}</span></td>
+          <td><strong>${z.assignedOfficerId || 'OFF-DEL-01'}</strong></td>
+          <td style="font-size:11px; color:#334155;">${z.recommendedAction || 'Enhanced Radar Patrol'}</td>
+          <td>
+            <button class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.locateRiskZoneOnMap(${z.latitude}, ${z.longitude}, '${z.zoneName}', '${z.riskLevel}')">
+              📍 Locate
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  locateRiskZoneOnMap(lat, lng, name, level) {
+    this.switchTab('current');
+    if (window.mapController) {
+      window.mapController.flyToLocation(lat, lng, 15);
+      this.showToast(`📍 Focused GIS Map on ${level} Hazard Zone: ${name}`, "info");
+    }
   }
 };
 
 window.App = App;
+

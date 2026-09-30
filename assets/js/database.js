@@ -1,14 +1,17 @@
 /**
  * NATDAMS - Official Data Repository & API Client Engine
+ * Government Traffic Police & RTO Management System
  * Integrates live backend REST API with offline LocalStorage fallback
- * Supports Pan-India States, Districts, Roadworks, Vehicle Ratios, and Officer Passes.
+ * Manages 15 Core Relational Entities: Users, Officers, Citizens, Vehicles,
+ * Licences, Complaints, Accidents, Violations, Challans, Evidence, Risk Zones,
+ * RTO Applications, Notifications, and Audit Trails.
  */
 
 class TrafficDatabase {
   constructor() {
     this.apiBase = window.location.origin;
-    this.selectedState = 'DL', 'RJ', 'pj';
-    this.selectedDistrict = 'DL-ND', 'RJ-JPR', 'pj';
+    this.selectedState = 'DL';
+    this.selectedDistrict = 'DL-ND';
     this.states = [];
     this.roadworks = [];
     this.vehicleRatios = null;
@@ -17,6 +20,16 @@ class TrafficDatabase {
     this.auditLogs = [];
     this.cases = [];
     this.emergencies = [];
+    this.departments = [];
+    this.vehicles = [];
+    this.licences = [];
+    this.accidents = [];
+    this.riskZones = [];
+    this.rtoApplications = [];
+    this.notifications = [];
+    this.analytics = null;
+    this.users = [];
+    this.vahanData = null;
   }
 
   async loadInitialData() {
@@ -42,7 +55,7 @@ class TrafficDatabase {
         this.vehicleRatios = data.data || null;
       }
 
-      // 4. Fetch Violations
+      // 4. Fetch Violations / Challans
       const resViolations = await fetch(`${this.apiBase}/api/violations`);
       if (resViolations.ok) {
         const data = await resViolations.json();
@@ -63,7 +76,7 @@ class TrafficDatabase {
         this.auditLogs = data.logs || [];
       }
 
-      // 7. Fetch Citizen Cases Queue
+      // 7. Fetch Citizen Complaints / Cases Queue
       const resCases = await fetch(`${this.apiBase}/api/cases`);
       if (resCases.ok) {
         const data = await resCases.json();
@@ -77,18 +90,74 @@ class TrafficDatabase {
         this.emergencies = data.emergencies || [];
       }
 
-      // 9. Fetch Citizen Users Registry (Admin Management)
+      // 9. Fetch Users Registry
       const resUsers = await fetch(`${this.apiBase}/api/users`);
       if (resUsers.ok) {
         const data = await resUsers.json();
         this.users = data.users || [];
       }
 
-      // 10. Fetch VAHAN Vehicle Registrations (1995-2026 Official Dataset)
+      // 10. Fetch VAHAN Vehicle Registrations (1995-2026 Dataset)
       const resVahan = await fetch(`${this.apiBase}/api/vahan-registrations`);
       if (resVahan.ok) {
         const data = await resVahan.json();
         this.vahanData = data.data || null;
+      }
+
+      // 11. Fetch Departments
+      const resDepts = await fetch(`${this.apiBase}/api/departments`);
+      if (resDepts.ok) {
+        const data = await resDepts.json();
+        this.departments = data.departments || [];
+      }
+
+      // 12. Fetch Vehicles Registry
+      const resVehicles = await fetch(`${this.apiBase}/api/vehicles`);
+      if (resVehicles.ok) {
+        const data = await resVehicles.json();
+        this.vehicles = data.vehicles || [];
+      }
+
+      // 13. Fetch Driving Licences
+      const resLicences = await fetch(`${this.apiBase}/api/licences`);
+      if (resLicences.ok) {
+        const data = await resLicences.json();
+        this.licences = data.licences || [];
+      }
+
+      // 14. Fetch Accidents Registry
+      const resAccidents = await fetch(`${this.apiBase}/api/accidents`);
+      if (resAccidents.ok) {
+        const data = await resAccidents.json();
+        this.accidents = data.accidents || [];
+      }
+
+      // 15. Fetch Risk Zones Hotspots
+      const resRisk = await fetch(`${this.apiBase}/api/risk-zones`);
+      if (resRisk.ok) {
+        const data = await resRisk.json();
+        this.riskZones = data.riskZones || [];
+      }
+
+      // 16. Fetch RTO Applications
+      const resRto = await fetch(`${this.apiBase}/api/rto-applications`);
+      if (resRto.ok) {
+        const data = await resRto.json();
+        this.rtoApplications = data.applications || [];
+      }
+
+      // 17. Fetch Notifications
+      const resNotifs = await fetch(`${this.apiBase}/api/notifications`);
+      if (resNotifs.ok) {
+        const data = await resNotifs.json();
+        this.notifications = data.notifications || [];
+      }
+
+      // 18. Fetch Analytics
+      const resAnalytics = await fetch(`${this.apiBase}/api/analytics`);
+      if (resAnalytics.ok) {
+        const data = await resAnalytics.json();
+        this.analytics = data.metrics || null;
       }
 
     } catch (e) {
@@ -96,6 +165,7 @@ class TrafficDatabase {
     }
   }
 
+  // --- VAHAN & STATES ---
   getVahanData() {
     return this.vahanData;
   }
@@ -117,6 +187,11 @@ class TrafficDatabase {
     const s = this.getStateByCode(stateCode);
     if (!s) return null;
     return s.districts.find(d => d.id === distId);
+  }
+
+  // --- DEPARTMENTS ---
+  getDepartments() {
+    return this.departments || [];
   }
 
   // --- ROADWORKS (Construction & Working Roads) ---
@@ -181,7 +256,67 @@ class TrafficDatabase {
     return this.vehicleRatios;
   }
 
-  // --- VIOLATIONS ---
+  // --- VEHICLES REGISTRY ---
+  getVehicles(query = null) {
+    if (!query) return this.vehicles || [];
+    const q = query.trim().toUpperCase();
+    return (this.vehicles || []).filter(v =>
+      (v.registrationNumber && v.registrationNumber.toUpperCase().includes(q)) ||
+      (v.make && v.make.toUpperCase().includes(q)) ||
+      (v.model && v.model.toUpperCase().includes(q)) ||
+      (v.ownerName && v.ownerName.toUpperCase().includes(q))
+    );
+  }
+
+  getVehicleByPlate(plate) {
+    if (!plate) return null;
+    const clean = plate.trim().toUpperCase().replace(/[\s-]/g, '');
+    return (this.vehicles || []).find(v => 
+      v.registrationNumber.replace(/[\s-]/g, '').toUpperCase() === clean
+    );
+  }
+
+  async addVehicle(vehData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/vehicles`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(vehData)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        this.vehicles.unshift(result.vehicle);
+        return result.vehicle;
+      }
+    } catch (e) { }
+    const fallback = Object.assign({
+      id: "VEH-" + Math.floor(10 + Math.random() * 90),
+      createdAt: new Date().toISOString().replace('T', ' ').substring(0, 19)
+    }, vehData);
+    this.vehicles.unshift(fallback);
+    return fallback;
+  }
+
+  // --- DRIVING LICENCES ---
+  getLicences(query = null) {
+    if (!query) return this.licences || [];
+    const q = query.trim().toUpperCase();
+    return (this.licences || []).filter(l =>
+      (l.licenceNumber && l.licenceNumber.toUpperCase().includes(q)) ||
+      (l.citizenName && l.citizenName.toUpperCase().includes(q)) ||
+      (l.phone && l.phone.includes(q))
+    );
+  }
+
+  getLicenceByNumber(licNum) {
+    if (!licNum) return null;
+    const clean = licNum.trim().toUpperCase().replace(/[\s-]/g, '');
+    return (this.licences || []).find(l => 
+      l.licenceNumber.replace(/[\s-]/g, '').toUpperCase() === clean
+    );
+  }
+
+  // --- VIOLATIONS & CHALLANS ---
   getViolations(stateCode = null, districtId = null) {
     let list = this.violations;
     if (stateCode && stateCode !== 'ALL') {
@@ -210,6 +345,37 @@ class TrafficDatabase {
       this.violations.unshift(vData);
       return vData;
     }
+  }
+
+  async payChallan(challanId) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/challans/${challanId}/pay`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const v = this.violations.find(item => item.id === challanId);
+        if (v) {
+          v.status = "Paid";
+          v.paymentStatus = "PAID";
+          v.paidAt = new Date().toISOString();
+          v.receiptNumber = data.receipt;
+        }
+        return data;
+      }
+    } catch (e) { }
+
+    // Fallback simulation
+    const item = this.violations.find(v => v.id === challanId);
+    if (item) {
+      item.status = "Paid";
+      item.paymentStatus = "PAID";
+      item.paidAt = new Date().toISOString();
+      item.receiptNumber = "PAY-UPI-" + Math.floor(100000 + Math.random() * 900000);
+      return { success: true, challan: item, receipt: item.receiptNumber };
+    }
+    return { success: false, message: "Challan record not found" };
   }
 
   async updateViolationStatus(id, newStatus) {
@@ -256,6 +422,10 @@ class TrafficDatabase {
       });
       return await res.json();
     } catch (e) {
+      return { success: false, message: "Officer pass verification service offline" };
+    }
+  }
+
   async commissionOfficer(officerData) {
     try {
       const res = await fetch(`${this.apiBase}/api/officers`, {
@@ -300,14 +470,16 @@ class TrafficDatabase {
     return this.auditLogs;
   }
 
-  async logAudit({ user, role, action, details }) {
+  async logAudit({ user, role, action, entityType = "SYSTEM", entityId = "N/A", details = "" }) {
     const entry = {
       id: "SEC-LOG-" + Math.floor(1000 + Math.random() * 9000),
       timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
       user: user || "Authorized Officer",
       role: role || "OFFICER",
       action: action || "SYSTEM_EVENT",
-      details: details || "",
+      entityType: entityType,
+      entityId: entityId,
+      details: details,
       ipAddress: "10.42." + Math.floor(1 + Math.random() * 90) + "." + Math.floor(1 + Math.random() * 254),
       sha256Hash: this.pseudoSha256(action + details + Date.now())
     };
@@ -322,7 +494,7 @@ class TrafficDatabase {
     return entry;
   }
 
-  // --- CASES & CITIZEN REPORTS ---
+  // --- CASES & CITIZEN COMPLAINTS ---
   getCases(status = null) {
     if (!status || status === 'ALL') return this.cases || [];
     return (this.cases || []).filter(c => c.status === status);
@@ -390,6 +562,121 @@ class TrafficDatabase {
       return item;
     }
     return null;
+  }
+
+  // --- ACCIDENT MANAGEMENT ---
+  getAccidents(severity = null) {
+    if (!severity || severity === 'ALL') return this.accidents || [];
+    return (this.accidents || []).filter(a => a.severity === severity);
+  }
+
+  async addAccident(accData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/accidents`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(accData)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        this.accidents.unshift(result.accident);
+        return result.accident;
+      }
+    } catch (e) { }
+
+    const fallback = Object.assign({
+      id: "ACC-2026-" + Math.floor(1000 + Math.random() * 9000),
+      accidentNumber: "ACC-DL-2026-" + Math.floor(1000 + Math.random() * 9000),
+      status: "REPORTED",
+      reportedAt: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      assignedOfficerId: "OFF-DEL-01"
+    }, accData);
+    this.accidents.unshift(fallback);
+    return fallback;
+  }
+
+  // --- RISK & SAFETY CENTER ---
+  getRiskZones(riskLevel = null) {
+    if (!riskLevel || riskLevel === 'ALL') return this.riskZones || [];
+    return (this.riskZones || []).filter(r => r.riskLevel === riskLevel);
+  }
+
+  // --- RTO APPLICATION MODULE ---
+  getRtoApplications(status = null) {
+    if (!status || status === 'ALL') return this.rtoApplications || [];
+    return (this.rtoApplications || []).filter(a => a.status === status);
+  }
+
+  async addRtoApplication(appData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/rto-applications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(appData)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        this.rtoApplications.unshift(result.application);
+        return result.application;
+      }
+    } catch (e) { }
+
+    const fallback = Object.assign({
+      id: "RTO-APP-" + Math.floor(10 + Math.random() * 90),
+      applicationNumber: "RTO-DL-2026-" + Math.floor(10000 + Math.random() * 90000),
+      status: "UNDER_REVIEW",
+      submittedAt: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      reviewedBy: "OFF-RTO-01"
+    }, appData);
+    this.rtoApplications.unshift(fallback);
+    return fallback;
+  }
+
+  async updateRtoApplication(id, patch) {
+    const item = (this.rtoApplications || []).find(a => a.id === id || a.applicationNumber === id);
+    if (item) {
+      Object.assign(item, patch, { reviewedAt: new Date().toISOString().replace('T', ' ').substring(0, 19) });
+      try {
+        fetch(`${this.apiBase}/api/rto-applications/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(patch)
+        });
+      } catch (e) { }
+      return item;
+    }
+    return null;
+  }
+
+  // --- NOTIFICATIONS ---
+  getNotifications(userId = null) {
+    if (!userId) return this.notifications || [];
+    return (this.notifications || []).filter(n => n.userId === userId || n.userId === 'ALL');
+  }
+
+  async markNotificationRead(id) {
+    const n = (this.notifications || []).find(item => item.id === id);
+    if (n) {
+      n.isRead = true;
+      try {
+        fetch(`${this.apiBase}/api/notifications/${id}/read`, { method: 'PUT' });
+      } catch (e) { }
+      return n;
+    }
+    return null;
+  }
+
+  // --- ANALYTICS ---
+  async getAnalytics() {
+    try {
+      const res = await fetch(`${this.apiBase}/api/analytics`);
+      if (res.ok) {
+        const data = await res.json();
+        this.analytics = data.metrics;
+        return this.analytics;
+      }
+    } catch (e) { }
+    return this.analytics;
   }
 
   // --- EMERGENCY 112 DISPATCH ---

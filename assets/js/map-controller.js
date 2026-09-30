@@ -78,6 +78,8 @@ class MapController {
       this.renderCorridors();
       this.renderPatrolUnits();
       this.renderConstructionZones();
+      this.renderRiskHotspots();
+      this.renderAccidentsOnMap();
       this.isInitialized = true;
 
       setTimeout(() => {
@@ -547,6 +549,68 @@ class MapController {
     if (this.map) {
       this.map.setView([this.currentLat, this.currentLng], this.currentZoom);
     }
+  }
+
+  renderRiskHotspots() {
+    if (!this.map || !window.trafficDB) return;
+    const zones = window.trafficDB.getRiskZones();
+
+    zones.forEach(z => {
+      const isCrit = z.riskLevel === 'CRITICAL';
+      const isHigh = z.riskLevel === 'HIGH';
+      const color = isCrit ? '#dc2626' : (isHigh ? '#ea580c' : '#d97706');
+
+      const circle = L.circle([z.latitude, z.longitude], {
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.25,
+        radius: isCrit ? 350 : (isHigh ? 280 : 200),
+        weight: 2
+      }).addTo(this.map);
+
+      circle.bindPopup(`
+        <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12px; color:#0f172a; max-width:240px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <strong style="color:${color};">${z.riskLevel} RISK ZONE</strong>
+            <span style="font-size:10px; font-weight:700;">${z.incidentCount} Crashes</span>
+          </div>
+          <strong style="font-size:13px;">${z.zoneName}</strong>
+          <div style="font-size:11px; color:#64748b; margin:2px 0;">${z.location}</div>
+          <div style="font-size:11px; margin-top:4px;"><strong>Reason:</strong> ${z.description || z.riskType}</div>
+          <div style="font-size:11px; color:#15803d; margin-top:4px;"><strong>Directive:</strong> ${z.recommendedAction}</div>
+        </div>
+      `);
+      this.markerLayers.push(circle);
+    });
+  }
+
+  renderAccidentsOnMap() {
+    if (!this.map || !window.trafficDB) return;
+    const accidents = window.trafficDB.getAccidents();
+
+    accidents.forEach(a => {
+      const lat = a.locationLat || (this.currentLat - 0.004);
+      const lng = a.locationLng || (this.currentLng + 0.007);
+
+      const icon = L.divIcon({
+        html: `<div style="background:#dc2626; color:#fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; font-size:13px; box-shadow:0 2px 6px rgba(0,0,0,0.4); animation:pulse-dot-anim 1.2s infinite;">💥</div>`,
+        className: 'accident-marker-pin',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      });
+
+      const marker = L.marker([lat, lng], { icon: icon }).addTo(this.map);
+      marker.bindPopup(`
+        <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12px; color:#0f172a;">
+          <strong style="color:#b91c1c;">🚨 ACCIDENT INCIDENT: ${a.accidentNumber || a.id}</strong><br/>
+          <strong>${a.accidentType}</strong> (${a.severity})<br/>
+          <span>Location: ${a.locationAddress || a.location}</span><br/>
+          <span style="color:#dc2626; font-weight:700;">Casualties: ${a.casualties} Persons &bull; ${a.vehiclesInvolved} Vehicles</span><br/>
+          <span style="font-size:10px; color:#64748b;">Status: ${a.status}</span>
+        </div>
+      `);
+      this.markerLayers.push(marker);
+    });
   }
 
   refresh() {
