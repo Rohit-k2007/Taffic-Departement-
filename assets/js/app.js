@@ -578,10 +578,10 @@ const App = {
           document.querySelectorAll('.role-pill-btn').forEach(btn => btn.classList.remove('active'));
           pill.classList.add('active');
         }
+        const roleText = document.getElementById('activeUserRoleText');
+        if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">Directorate Administrator Command</strong>`;
+        this.showToast("Switched to Administrator Command Console", "info");
       }
-    }
-      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">Directorate Administrator Command</strong>`;
-      this.showToast("Switched to Administrator Command Console", "info");
     }
 
     this.activeTab = tabName;

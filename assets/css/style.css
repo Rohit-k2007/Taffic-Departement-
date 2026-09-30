@@ -70,7 +70,7 @@
   --transition-fast: 150ms ease;
 }
 
-/* Optional Dark Theme (High contrast Charcoal mode - No Blue) */
+/* Optional white theme  (High contrast Charcoal mode - No Blue) */
 [data-theme="dark"] {
   --bg-primary: #0a0e14;
   --bg-surface: #111827;
