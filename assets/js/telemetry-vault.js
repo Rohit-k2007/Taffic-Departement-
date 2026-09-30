@@ -388,17 +388,17 @@
 
     // Realistic vehicle models & categories
     const VEHICLE_MODELS = [
-      { model: "Mahindra Scorpio-N (Pearl White)", class: "Cars & SUVs (4-Wheelers)", icon: "🚙", speed: 58, fuel: "Diesel BS-VI" },
-      { model: "Tata Nexon EV Max (Signature Teal)", class: "Electric SUV (Clean Mobility)", icon: "⚡", speed: 52, fuel: "Pure Electric" },
-      { model: "Maruti Suzuki Dzire (Silky Silver)", class: "Cars & SUVs (4-Wheelers)", icon: "🚕", speed: 54, fuel: "CNG / Petrol" },
-      { model: "Hyundai Creta SX (Titan Grey)", class: "Cars & SUVs (4-Wheelers)", icon: "🚙", speed: 64, fuel: "Petrol MPFi" },
-      { model: "Royal Enfield Classic 350 (Stealth Black)", class: "Bikes & Two-Wheelers", icon: "🏍️", speed: 44, fuel: "Petrol 349cc" },
-      { model: "TVS Jupiter 125 (Starlight Blue)", class: "Bikes & Two-Wheelers", icon: "🛵", speed: 38, fuel: "Petrol 124cc" },
-      { model: "Ashok Leyland 2820 Multi-Axle Hauler", class: "Heavy Trucks & Multi-Axle Commercials", icon: "🚛", speed: 42, fuel: "Heavy Diesel" },
-      { model: "Tata Signa 4825.TK Tipper", class: "Heavy Trucks & Multi-Axle Commercials", icon: "🚛", speed: 36, fuel: "Heavy Diesel" },
-      { model: "Volvo 9600 Multi-Axle Luxury Coach", class: "Buses & Public Passenger Carriers", icon: "🚌", speed: 68, fuel: "Intercity Diesel" },
-      { model: "Bajaj Compact RE (Green & Yellow)", class: "Auto-Rickshaws, E-Rickshaws & LCVs", icon: "🛺", speed: 32, fuel: "Green CNG" },
-      { model: "Mahindra Treo Zor E-Cargo", class: "Auto-Rickshaws, E-Rickshaws & LCVs", icon: "⚡", speed: 28, fuel: "Electric 48V" }
+      { model: "Mahindra Scorpio-N (Pearl White)", class: "Cars & SUVs (4-Wheelers)", icon: "", speed: 58, fuel: "Diesel BS-VI" },
+      { model: "Tata Nexon EV Max (Signature Teal)", class: "Electric SUV (Clean Mobility)", icon: "", speed: 52, fuel: "Pure Electric" },
+      { model: "Maruti Suzuki Dzire (Silky Silver)", class: "Cars & SUVs (4-Wheelers)", icon: "", speed: 54, fuel: "CNG / Petrol" },
+      { model: "Hyundai Creta SX (Titan Grey)", class: "Cars & SUVs (4-Wheelers)", icon: "", speed: 64, fuel: "Petrol MPFi" },
+      { model: "Royal Enfield Classic 350 (Stealth Black)", class: "Bikes & Two-Wheelers", icon: "️", speed: 44, fuel: "Petrol 349cc" },
+      { model: "TVS Jupiter 125 (Starlight Blue)", class: "Bikes & Two-Wheelers", icon: "", speed: 38, fuel: "Petrol 124cc" },
+      { model: "Ashok Leyland 2820 Multi-Axle Hauler", class: "Heavy Trucks & Multi-Axle Commercials", icon: "", speed: 42, fuel: "Heavy Diesel" },
+      { model: "Tata Signa 4825.TK Tipper", class: "Heavy Trucks & Multi-Axle Commercials", icon: "", speed: 36, fuel: "Heavy Diesel" },
+      { model: "Volvo 9600 Multi-Axle Luxury Coach", class: "Buses & Public Passenger Carriers", icon: "", speed: 68, fuel: "Intercity Diesel" },
+      { model: "Bajaj Compact RE (Green & Yellow)", class: "Auto-Rickshaws, E-Rickshaws & LCVs", icon: "", speed: 32, fuel: "Green CNG" },
+      { model: "Mahindra Treo Zor E-Cargo", class: "Auto-Rickshaws, E-Rickshaws & LCVs", icon: "", speed: 28, fuel: "Electric 48V" }
     ];
 
     const modelObj = VEHICLE_MODELS[h % VEHICLE_MODELS.length];

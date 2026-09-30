@@ -153,7 +153,7 @@ const App = {
         owner: "Registered Vehicle Owner",
         makeModel: "Sedan (4-Wheeler)",
         class: "Cars & SUVs (4-Wheelers)",
-        icon: "🚗",
+        icon: "car",
         districtName: "National Highway Corridor",
         corridor: "State Arterial Road",
         stateCode: "DL",
@@ -195,7 +195,7 @@ const App = {
 
     if (showToastAlert) {
       this.switchTab('current');
-      this.showToast(`🛰️ NavIC GPS Locked: [${v.plate}] Owner: ${v.owner} (${v.districtName})`, "success");
+      this.showToast(`NavIC GPS Locked: [${v.plate}] Owner: ${v.owner} (${v.districtName})`, "success");
     }
   },
 
@@ -234,13 +234,13 @@ const App = {
         const btnText = document.getElementById('satBtnText');
         if (btnText) {
           btnText.innerText = isSat
-            ? "🗺️ Disconnect Satellite (Switch to Vector Map)"
-            : "🛰️ Connect Satellite Surveillance (ISRO Link)";
+            ? "Disconnect Satellite (Switch to Vector Map)"
+            : "Connect Satellite Surveillance (ISRO Link)";
         }
         btnSat.style.background = isSat ? "#0284c7" : "#0f3057";
         btnSat.style.color = "#ffffff";
         this.showToast(isSat
-          ? "🛰️ ISRO Cartosat-3 / EOS-06 Earth Observation Satellite Feed Connected! (0.28m HD)"
+          ? "ISRO Cartosat-3 / EOS-06 Earth Observation Satellite Feed Connected! (0.28m HD)"
           : "Switched back to Standard Vector Cartography", isSat ? "success" : "info");
       });
     }
@@ -526,14 +526,14 @@ const App = {
     this.openModal('officerPassModal');
     this.switchLoginPortalTab(targetRole);
     const roleNames = { police: 'Traffic Police', rto: 'Regional Transport Office (RTO)', admin: 'Directorate Administrator' };
-    this.showToast(`🔒 Restricted Department Access: Enter ${roleNames[targetRole] || targetRole} credentials & verify 2FA OTP to proceed.`, "warning");
+    this.showToast(`Restricted Department Access: Enter ${roleNames[targetRole] || targetRole} credentials & verify 2FA OTP to proceed.`, "warning");
   },
 
   switchTab(tabName) {
     // Strict RBAC Gate: Citizen cannot access internal Police desk without OTP
     if (['officer-cases', 'violations', 'officer-accidents'].includes(tabName)) {
       if (this.currentRole === 'citizen' && !this.isOfficerVerified('police')) {
-        this.showToast("🔒 Restricted Access: Citizen cannot view Police Operations without 2FA OTP clearance.", "warning");
+        this.showToast("Restricted Access: Citizen cannot view Police Operations without 2FA OTP clearance.", "warning");
         this.openSecurityGate('police');
         return;
       }
@@ -550,7 +550,7 @@ const App = {
     // Strict RBAC Gate: Citizen cannot access RTO Desk without OTP
     if (tabName === 'rto-desk') {
       if (this.currentRole === 'citizen' && !this.isOfficerVerified('rto')) {
-        this.showToast("🔒 Restricted Access: Citizen cannot view RTO Officer Desk without 2FA OTP clearance.", "warning");
+        this.showToast("Restricted Access: Citizen cannot view RTO Officer Desk without 2FA OTP clearance.", "warning");
         this.openSecurityGate('rto');
         return;
       }
@@ -567,7 +567,7 @@ const App = {
     // Strict RBAC Gate: Citizen cannot access Directorate Admin Console without OTP
     if (tabName === 'admin') {
       if (this.currentRole === 'citizen' && !this.isOfficerVerified('admin')) {
-        this.showToast("🔒 Restricted Access: Citizen cannot view Directorate Command Console without 2FA OTP clearance.", "warning");
+        this.showToast("Restricted Access: Citizen cannot view Directorate Command Console without 2FA OTP clearance.", "warning");
         this.openSecurityGate('admin');
         return;
       }
@@ -771,28 +771,28 @@ const App = {
     const plateRegex = /^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{1,4}$/;
     if (plateRegex.test(clean) || clean.startsWith('RJ') || clean.startsWith('DL') || clean.startsWith('MH') || clean.startsWith('KA') || clean.startsWith('HR')) {
       if (clean.startsWith('RJ-54') || clean.startsWith('RJ54')) {
-        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">✓ Matched Vehicle Plate: ${clean} (DTO Pipar City, Jodhpur Division)</span>`;
+        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">Matched Vehicle Plate: ${clean} (DTO Pipar City, Jodhpur Division)</span>`;
       } else if (clean.startsWith('DL-01') || clean.startsWith('DL01')) {
-        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">✓ Matched Vehicle Plate: ${clean} (Mall Road RTO, North Delhi)</span>`;
+        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">Matched Vehicle Plate: ${clean} (Mall Road RTO, North Delhi)</span>`;
       } else {
-        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">✓ Matched Vehicle Plate: ${clean} (National VAHAN Registry)</span>`;
+        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">Matched Vehicle Plate: ${clean} (National VAHAN Registry)</span>`;
       }
       return;
     }
 
     // Email detection
     if (val.includes('@')) {
-      feedback.innerHTML = `<span style="color:#2563eb; font-weight:700;">✓ Matched Email Identity: ${val.trim()}</span>`;
+      feedback.innerHTML = `<span style="color:#2563eb; font-weight:700;">Matched Email Identity: ${val.trim()}</span>`;
       return;
     }
 
     // Officer / Admin / Terminal ID
     if (clean.startsWith('TR-') || clean.startsWith('IPS-') || clean.startsWith('RTO-') || clean.startsWith('OFF-')) {
-      feedback.innerHTML = `<span style="color:#b45309; font-weight:700;">✓ Matched Official Department Badge: ${clean}</span>`;
+      feedback.innerHTML = `<span style="color:#b45309; font-weight:700;">Matched Official Department Badge: ${clean}</span>`;
       return;
     }
 
-    feedback.innerHTML = `<span style="color:#334155; font-weight:600;">✓ Identifier Entered: ${val.trim()}</span>`;
+    feedback.innerHTML = `<span style="color:#334155; font-weight:600;">Identifier Entered: ${val.trim()}</span>`;
   },
 
   validateAppPassword(val) {
@@ -860,7 +860,7 @@ const App = {
       CONTROL_ROOM: 'Regional Transport Office & CCTV Signals'
     };
 
-    if (titleEl) titleEl.innerText = `✓ Selected Role: ${roleLabels[role] || role}`;
+    if (titleEl) titleEl.innerText = `Selected Role: ${roleLabels[role] || role}`;
     if (subEl) subEl.innerText = `Ready for secure 2FA authentication & immediate app dashboard clearance.`;
   },
 
@@ -919,7 +919,7 @@ const App = {
       }
     }
 
-    this.showToast(`📱 Official SMS & Email OTP dispatched: ${generatedOtp}`, "info");
+    this.showToast(`Official SMS & Email OTP dispatched: ${generatedOtp}`, "info");
 
     // 30s Countdown
     if (btn && btnText) {
@@ -967,9 +967,9 @@ const App = {
 
     if (verified) {
       this.appOtpVerified = true;
-      if (titleEl) titleEl.innerText = `✓ 2FA Security OTP Verified Successfully!`;
+      if (titleEl) titleEl.innerText = `2FA Security OTP Verified Successfully!`;
       if (subEl) subEl.innerText = `Identity confirmed. Click 'VERIFY & ACCESS THE APP' below.`;
-      this.showToast("✓ OTP verified successfully.", "success");
+      this.showToast("OTP verified successfully.", "success");
     } else {
       this.showToast("Invalid or expired OTP. Please click Send OTP.", "error");
     }
@@ -1069,7 +1069,7 @@ const App = {
         if (window.govAuth) window.govAuth.currentUser = Object.assign({}, data.user, { token: data.token });
         try { localStorage.setItem('gov_auth_session', JSON.stringify(Object.assign({}, data.user, { token: data.token }))); } catch (e) {}
 
-        this.showToast(`✓ Access Granted: Welcome ${data.user.fullName || data.user.name || idVal}!`, "success");
+        this.showToast(`Access Granted: Welcome ${data.user.fullName || data.user.name || idVal}!`, "success");
         return;
       } else {
         this.showToast(`Login Failed: ${data.message || 'Check credentials & OTP'}`, "error");
@@ -1094,7 +1094,7 @@ const App = {
         this.closeModal('appLoginModal');
         this.switchRole('citizen');
       }
-      this.showToast(`✓ Access Granted as ${role}!`, "success");
+      this.showToast(`Access Granted as ${role}!`, "success");
     }
   },
 
@@ -1143,7 +1143,7 @@ const App = {
       const parsed = window.parseVehicleNumber(cleaned);
       if (parsed && (parsed.valid || parsed.rtoMatched)) {
         if (feedbackEl) {
-          feedbackEl.innerHTML = `✓ Matched RTO: <strong>${parsed.district || parsed.authority}</strong> (${parsed.state} • ${parsed.stateCode}-${parsed.rtoCode})`;
+          feedbackEl.innerHTML = `Matched RTO: <strong>${parsed.district || parsed.authority}</strong> (${parsed.state} • ${parsed.stateCode}-${parsed.rtoCode})`;
           feedbackEl.style.color = '#047857';
         }
         if (bannerText) {
@@ -1194,7 +1194,7 @@ const App = {
       }
     }
 
-    this.showToast(`📱 Official SMS & Email OTP dispatched: ${generatedOtp}`, "info");
+    this.showToast(`Official SMS & Email OTP dispatched: ${generatedOtp}`, "info");
 
     // Countdown timer for 30s
     if (btn && btnText) {
@@ -1247,10 +1247,10 @@ const App = {
       this.citizenVerified = true;
       if (card) {
         card.className = "verified-status-card verified";
-        if (title) title.innerText = "✓ VAHAN & Aadhaar Verified Citizen";
+        if (title) title.innerText = "VAHAN & Aadhaar Verified Citizen";
         if (subtitle) subtitle.innerText = `Motorist identity confirmed for ${veh} via OTP. Ready to login.`;
       }
-      this.showToast("✓ Identity & 2FA OTP Verified Successfully", "success");
+      this.showToast("Identity & 2FA OTP Verified Successfully", "success");
     } else {
       if (card) {
         card.className = "verified-status-card unverified";
@@ -1301,7 +1301,7 @@ const App = {
         try { localStorage.setItem('gov_auth_session', JSON.stringify(userWithVeh)); } catch (e) { }
         this.closeModal('officerPassModal');
         this.switchRole('citizen');
-        this.showToast(`✓ Welcome: Motorist ${vehicleNumber} Authenticated`, "success");
+        this.showToast(`Welcome: Motorist ${vehicleNumber} Authenticated`, "success");
       } else {
         this.showToast(`Login Failed: ${data.message}`, "error");
       }
@@ -1342,7 +1342,7 @@ const App = {
     if (bannerText) {
       bannerText.innerHTML = `Security OTP <strong>${generatedOtp}</strong> sent to verified ${dept.toUpperCase()} device (${identifier})`;
     }
-    this.showToast(`🔒 Officer 2FA Security OTP Dispatched: ${generatedOtp}`, "info");
+    this.showToast(`Officer 2FA Security OTP Dispatched: ${generatedOtp}`, "info");
   },
 
   verifyOfficerSecurityOtp(dept = 'police') {
@@ -1354,7 +1354,7 @@ const App = {
       this.verifiedOfficerRoles[dept] = true;
       const statusCard = document.getElementById(`${dept}VerifiedStatus`);
       if (statusCard) statusCard.className = "verified-status-card verified";
-      this.showToast(`✓ Official 2FA OTP Verified for ${dept.toUpperCase()}`, "success");
+      this.showToast(`Official 2FA OTP Verified for ${dept.toUpperCase()}`, "success");
     } else {
       this.showToast("Invalid 2FA OTP. Please check the 6-digit code.", "error");
     }
@@ -1466,7 +1466,7 @@ const App = {
         }
         this.closeModal('officerPassModal');
         this.switchRole('rto');
-        this.showToast("✓ Authenticated: Regional Transport Office Statutory Portal (2FA Verified)", "success");
+        this.showToast("Authenticated: Regional Transport Office Statutory Portal (2FA Verified)", "success");
       } else {
         this.showToast(`RTO Auth Failed: ${data.message}`, "error");
       }
@@ -1498,7 +1498,7 @@ const App = {
         }
         this.closeModal('officerPassModal');
         this.switchRole('admin');
-        this.showToast("✓ Authenticated: Directorate Administrator Command (2FA Verified)", "success");
+        this.showToast("Authenticated: Directorate Administrator Command (2FA Verified)", "success");
       } else {
         this.showToast(`Admin Auth Failed: ${data.message}`, "error");
       }
@@ -1524,7 +1524,7 @@ const App = {
       details: `Successful Level 1-5 Duty Pass Verification. Camera Scope: ${cameraScope}`
     });
 
-    this.showToast(`✓ Officer Authenticated: ${officer.rank} (${officer.clearance}) - Camera Feed Access PIN Verified!`, "success");
+    this.showToast(`Officer Authenticated: ${officer.rank} (${officer.clearance}) - Camera Feed Access PIN Verified!`, "success");
     this.switchTab('officer-cases');
   },
 
@@ -1552,7 +1552,7 @@ const App = {
     if (headerBtn) {
       headerBtn.innerHTML = `
         <i data-lucide="shield-check" style="color:#10b981;"></i>
-        <span>✓ ${officer.rank.split(' ')[0]}: ${officer.name.split(' ')[0]} (${officer.badgeNumber})</span>
+        <span>${officer.rank.split(' ')[0]}: ${officer.name.split(' ')[0]} (${officer.badgeNumber})</span>
       `;
       headerBtn.style.background = '#064e3b';
       headerBtn.style.borderColor = '#059669';
@@ -1573,7 +1573,7 @@ const App = {
     const offsetLng = (Math.random() * 0.02 - 0.01).toFixed(4);
     const finalGps = `${(lat + parseFloat(offsetLat)).toFixed(4)}° N, ${(lng + parseFloat(offsetLng)).toFixed(4)}° E`;
     if (coordsEl) coordsEl.value = finalGps;
-    this.showToast(`📍 GPS Coordinates Locked via NavIC Satellite (${finalGps})`, "success");
+    this.showToast(`GPS Coordinates Locked via NavIC Satellite (${finalGps})`, "success");
   },
 
   async handleCitizenReportSubmit() {
@@ -1637,7 +1637,7 @@ const App = {
     this.switchTab('citizen-track');
     this.searchAndDisplayCase(saved.id);
 
-    this.showToast(`✓ Case #${saved.id} Submitted! AI Classified as [${aiPriority} PRIORITY] & assigned to Officer.`, "success");
+    this.showToast(`Case #${saved.id} Submitted! AI Classified as [${aiPriority} PRIORITY] & assigned to Officer.`, "success");
   },
 
   // =========================================================================
@@ -1687,7 +1687,7 @@ const App = {
             ${c.location}
           </div>
           <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); margin-top:2px;">
-            📍 GPS: ${c.gpsCoords || '28.6250° N, 77.2100° E'} • Reported: ${c.dateTime}
+            GPS: ${c.gpsCoords || '28.6250° N, 77.2100° E'} • Reported: ${c.dateTime}
           </div>
         </div>
 
@@ -1732,17 +1732,17 @@ const App = {
         
         <!-- Column 1: Citizen Description & Evidence -->
         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:10px 12px; font-size:11px;">
-          <div style="font-weight:700; color:#0f172a; margin-bottom:4px;">📝 Citizen Statement &amp; Evidence</div>
+          <div style="font-weight:700; color:#0f172a; margin-bottom:4px;">Citizen Statement &amp; Evidence</div>
           <div style="color:#334155; line-height:1.5;">${c.description}</div>
           <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-            <span style="background:#111827; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px;">📷 Photo Evidence Attached</span>
-            <span style="color:#059669; font-size:10px;">✓ SHA-256 Integrity Verified</span>
+            <span style="background:#111827; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px;">[PHOTO] Photo Evidence Attached</span>
+            <span style="color:#059669; font-size:10px;">SHA-256 Integrity Verified</span>
           </div>
         </div>
 
         <!-- Column 2: AI Pre-Processing & Officer Action -->
         <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:4px; padding:10px 12px; font-size:11px;">
-          <div style="font-weight:700; color:#14532d; margin-bottom:4px;">🤖 AI Processing &amp; Officer Action Status</div>
+          <div style="font-weight:700; color:#14532d; margin-bottom:4px;">AI Processing &amp; Officer Action Status</div>
           <div style="color:#166534; line-height:1.4;">
             • <strong>AI Priority:</strong> <span style="font-weight:800;">${c.aiClassification ? c.aiClassification.priority : 'HIGH'}</span><br/>
             • <strong>Risk Assessment:</strong> ${c.aiClassification ? c.aiClassification.risk : 'Vehicle Breach'}<br/>
@@ -1758,7 +1758,7 @@ const App = {
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <div>
             <div style="font-weight:700; color:#92400e; font-size:12px;">
-              ⭐ Citizen Feedback &amp; Service Rating
+              Citizen Feedback &amp; Service Rating
             </div>
             <div style="font-size:10px; color:#78350f;">
               Help the Traffic Department improve by rating the response speed and resolution of this case.
@@ -1767,16 +1767,16 @@ const App = {
 
           ${c.feedbackRating ? `
             <div style="background:#fff; border:1px solid #f59e0b; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:700; color:#b45309;">
-              ✓ You Rated: ${'⭐'.repeat(c.feedbackRating)} (${c.feedbackRating} / 5 Stars)
+              You Rated: ${'★'.repeat(c.feedbackRating)} (${c.feedbackRating} / 5 Stars)
             </div>
           ` : `
             <div style="display:flex; gap:6px; align-items:center;">
               <div style="display:flex; gap:2px; font-size:18px; cursor:pointer;" id="starRatingContainer">
-                <span onclick="App.submitCaseRating('${c.id}', 1)">⭐</span>
-                <span onclick="App.submitCaseRating('${c.id}', 2)">⭐</span>
-                <span onclick="App.submitCaseRating('${c.id}', 3)">⭐</span>
-                <span onclick="App.submitCaseRating('${c.id}', 4)">⭐</span>
-                <span onclick="App.submitCaseRating('${c.id}', 5)">⭐</span>
+                <span onclick="App.submitCaseRating('${c.id}', 1)">★</span>
+                <span onclick="App.submitCaseRating('${c.id}', 2)">★</span>
+                <span onclick="App.submitCaseRating('${c.id}', 3)">★</span>
+                <span onclick="App.submitCaseRating('${c.id}', 4)">★</span>
+                <span onclick="App.submitCaseRating('${c.id}', 5)">★</span>
               </div>
               <span style="font-size:11px; color:#92400e; font-weight:600;">(Click stars to submit rating)</span>
             </div>
@@ -1831,7 +1831,7 @@ const App = {
               </div>
               <div style="font-weight:800; color:#0a2540; font-size:13px;">${c.location}</div>
               <div style="font-size:11px; color:#64748b; font-family:var(--font-mono);">
-                📍 ${c.gpsCoords || '28.6250° N, 77.2100° E'} • Logged: ${c.dateTime}
+                ${c.gpsCoords || '28.6250° N, 77.2100° E'} • Logged: ${c.dateTime}
               </div>
             </div>
 
@@ -1855,7 +1855,7 @@ const App = {
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
               ${!isActionTaken ? `
                 <button class="btn-action-primary" style="font-size:11px; padding:4px 8px; background:#f0fdf4; border-color:#86efac; color:#15803d;" onclick="App.handleOfficerCaseAction('${c.id}', 'VALIDATE')">
-                  ✓ Valid Report
+                  Valid Report
                 </button>
                 <button class="btn-action-primary" style="font-size:11px; padding:4px 8px; background:#fef2f2; border-color:#fca5a5; color:#b91c1c;" onclick="App.handleOfficerCaseAction('${c.id}', 'REJECT')">
                   ✗ Reject / Info
@@ -1872,7 +1872,7 @@ const App = {
                     Close Case &amp; Notify Citizen
                   </button>
                 ` : `
-                  <span style="font-size:11px; color:#059669; font-weight:700;">✓ Case Closed (Feedback Recorded)</span>
+                  <span style="font-size:11px; color:#059669; font-weight:700;">Case Closed (Feedback Recorded)</span>
                 `}
               `}
             </div>
@@ -1994,7 +1994,7 @@ const App = {
     }, 1000);
 
     this.renderEmergenciesList();
-    this.showToast(`🚨 112 SOS Dispatched: ${type} Team en route to ${locName}!`, "error");
+    this.showToast(`112 SOS Dispatched: ${type} Team en route to ${locName}!`, "error");
   },
 
   resolveCurrentEmergency() {
@@ -2007,7 +2007,7 @@ const App = {
     }
 
     this.renderEmergenciesList();
-    this.showToast("✓ Emergency Incident Handled & Marked Resolved.", "success");
+    this.showToast("Emergency Incident Handled & Marked Resolved.", "success");
   },
 
   renderEmergenciesList() {
@@ -2060,13 +2060,13 @@ const App = {
     item.innerHTML = `
       <div>
         <div style="font-weight:700; color:${isCritical ? '#353232ff' : '#cad9d5ff'};">
-          ${isCritical ? '⚠️ OVERSPEED DETECTION' : '✓ PLATE RECORDED'} [${event.plate}]
+          ${isCritical ? 'OVERSPEED DETECTION' : 'PLATE RECORDED'} [${event.plate}]
         </div>
         <div style="color:#111827; font-size:11px; margin-top:2px;">
           <strong>${event.ownerName || 'Registered Vehicle Owner'}</strong> • <span style="color:#64748b;">${event.vehicleType}</span>
         </div>
         <div style="color:#64748b; font-size:10px; margin-top:1px;">
-          📍 ${event.location || event.camera} • Speed: <strong>${event.speed} km/h</strong> (Limit: ${event.speedLimit}) • IP: <span style="font-family:var(--font-mono); color:#334155;">${event.ipAddress || '164.100.24.11'}</span>
+          ${event.location || event.camera} • Speed: <strong>${event.speed} km/h</strong> (Limit: ${event.speedLimit}) • IP: <span style="font-family:var(--font-mono); color:#334155;">${event.ipAddress || '164.100.24.11'}</span>
         </div>
       </div>
       <div style="text-align:right;">
@@ -2175,7 +2175,7 @@ const App = {
     this.switchTab('current');
     if (window.mapController) {
       window.mapController.searchAreaAndFindRoute(query);
-      this.showToast(`🔍 Searching accurate route for: "${query}" via Google Maps & ISRO Satellite`);
+      this.showToast(`Searching accurate route for: "${query}" via Google Maps & ISRO Satellite`);
     }
   },
 
@@ -2194,7 +2194,7 @@ const App = {
       if (window.mapController) {
         window.mapController.renderConstructionZones();
       }
-      this.showToast("✓ Live Sync: NHAI Data Lake, MoRTH Bhoomi Rashi & Google Mobility AI Synchronized!");
+      this.showToast("Live Sync: NHAI Data Lake, MoRTH Bhoomi Rashi & Google Mobility AI Synchronized!");
     }
 
     if (btnText) btnText.innerText = origText;
@@ -2223,10 +2223,10 @@ const App = {
           <div>
             <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:4px;">
               <span class="construction-badge" style="background:#111827; color:#f8fafc; font-size:10px; font-weight:800; padding:2px 7px; border-radius:3px;">
-                🚧 ${rw.id}
+                ${rw.id}
               </span>
               <span style="background:#f1f5f9; color:#0f172a; font-weight:700; font-size:11px; padding:2px 7px; border-radius:3px; border:1px solid #cbd5e1;">
-                🏛️ ${rw.govAgency || 'MoRTH / NHAI Regional Division'}
+                ${rw.govAgency || 'MoRTH / NHAI Regional Division'}
               </span>
               <span style="background:${isSevere ? '#fef2f2' : '#f0fdf4'}; color:${isSevere ? '#b91c1c' : '#15803d'}; font-weight:700; font-size:11px; padding:2px 7px; border-radius:3px; border:1px solid ${isSevere ? '#fca5a5' : '#86efac'};">
                 ${rw.status || 'Active (In Progress)'}
@@ -2243,7 +2243,7 @@ const App = {
               Target Completion: <strong style="color:#0f172a;">${rw.targetCompletion}</strong>
             </div>
             <div style="font-size:10px; color:#059669; font-family:var(--font-mono); margin-top:3px;">
-              ✓ ${rw.lastSyncedGovt || 'Live Telemetry Synced'}
+              ${rw.lastSyncedGovt || 'Live Telemetry Synced'}
             </div>
           </div>
         </div>
@@ -2265,7 +2265,7 @@ const App = {
 
         <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:8px 10px; font-size:11px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <div>
-            <span style="font-weight:700; color:#0f172a;">⚡ Google Mobility AI Telemetry:</span>
+            <span style="font-weight:700; color:#0f172a;">Google Mobility AI Telemetry:</span>
             <span style="background:${isSevere ? '#dc2626' : '#d97706'}; color:#fff; font-weight:800; padding:1px 6px; border-radius:3px; font-size:10px; margin-left:4px;">
               ${rw.googleCongestionIndex || 65}% CONGESTION INDEX
             </span>
@@ -2278,18 +2278,18 @@ const App = {
         </div>
 
         <div style="background:#fffbeb; border:1px solid #fef3c7; padding:9px 11px; border-radius:4px; font-size:11px; color:#92400e; margin-bottom:10px; line-height:1.5;">
-          <div>⚠️ <strong>Traffic Restriction:</strong> ${rw.laneImpact} (${rw.speedLimitReduction})</div>
-          <div>↪️ <strong>Designated Diversion Route:</strong> ${rw.diversionRoute}</div>
-          ${rw.aiOptimalDetour ? `<div style="margin-top:4px; color:#047857;">💡 <strong>Google AI Optimal Detour:</strong> ${rw.aiOptimalDetour}</div>` : ''}
-          ${rw.safetyBarricades ? `<div style="margin-top:2px; color:#64748b;">🛡️ <strong>Safety Barricades:</strong> ${rw.safetyBarricades}</div>` : ''}
+          <div><strong>Traffic Restriction:</strong> ${rw.laneImpact} (${rw.speedLimitReduction})</div>
+          <div><strong>Designated Diversion Route:</strong> ${rw.diversionRoute}</div>
+          ${rw.aiOptimalDetour ? `<div style="margin-top:4px; color:#047857;"><strong>Google AI Optimal Detour:</strong> ${rw.aiOptimalDetour}</div>` : ''}
+          ${rw.safetyBarricades ? `<div style="margin-top:2px; color:#64748b;"><strong>Safety Barricades:</strong> ${rw.safetyBarricades}</div>` : ''}
         </div>
 
         <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
           <a href="${gmapsSearchUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="padding:4px 10px; font-size:11px; text-decoration:none;">
-            🗺️ Open Corridor in Google Maps
+            Open Corridor in Google Maps
           </a>
           <a href="${gmapsSatUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="padding:4px 10px; font-size:11px; background:#b45309; border-color:#b45309; color:#fff; text-decoration:none;">
-            🛰️ Verify with Google Satellite
+            Verify with Google Satellite
           </a>
         </div>
       </div>
@@ -2385,7 +2385,7 @@ const App = {
             Fleet Momentum: <strong style="color:#047857;">${c.trend}</strong>
           </div>
           <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:6px 8px; border-radius:4px; font-size:10px; color:#334155;">
-            ⚡ <strong>Clean EV Penetration:</strong> ${c.evShare}
+            <strong>Clean EV Penetration:</strong> ${c.evShare}
           </div>
         </div>
       `).join('');
@@ -2504,7 +2504,7 @@ const App = {
             </div>
           </td>
           <td>${u.city}, ${u.state}</td>
-          <td><span style="color:#059669; font-weight:600; font-size:11px;">✓ ${u.kycStatus}</span></td>
+          <td><span style="color:#059669; font-weight:600; font-size:11px;">${u.kycStatus}</span></td>
           <td>
             <span style="background:${isSuspended ? '#fef2f2' : '#f0fdf4'}; color:${isSuspended ? '#b91c1c' : '#15803d'}; border:1px solid ${isSuspended ? '#fca5a5' : '#86efac'}; padding:2px 7px; border-radius:3px; font-size:11px; font-weight:700;">
               ${u.licenseStatus}
@@ -2512,7 +2512,7 @@ const App = {
           </td>
           <td>
             <button type="button" class="btn-action-primary" style="font-size:10px; padding:3px 8px; background:${isSuspended ? '#f0fdf4' : '#fef2f2'}; border-color:${isSuspended ? '#86efac' : '#fca5a5'}; color:${isSuspended ? '#15803d' : '#b91c1c'};" onclick="App.toggleUserLicense('${u.id}')">
-              ${isSuspended ? '✓ Reinstate License' : '🚫 Suspend DL'}
+              ${isSuspended ? 'Reinstate License' : 'Suspend DL'}
             </button>
           </td>
         </tr>
@@ -2558,10 +2558,10 @@ const App = {
         <td>
           <div style="display:flex; gap:4px;">
             <button type="button" class="btn-action-primary" style="font-size:10px; padding:2px 6px; background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;" onclick="App.handleAdminComplaintAction('${c.id}', 'ESCALATE')">
-              ⚡ Escalate
+              Escalate
             </button>
             <button type="button" class="btn-action-primary" style="font-size:10px; padding:2px 6px; background:#f0fdf4; color:#15803d; border-color:#86efac;" onclick="App.handleAdminComplaintAction('${c.id}', 'ADMIN_CLOSE')">
-              ✓ Close
+              Close
             </button>
           </div>
         </td>
@@ -2604,10 +2604,10 @@ const App = {
         <td><span style="background:#fef3c7; color:#92400e; font-weight:700; padding:2px 6px; border-radius:3px; font-size:11px;">Level ${o.level || 3}</span></td>
         <td>${o.jurisdiction}</td>
         <td><span style="font-family:var(--font-mono); font-size:11px; color:#475569;">PIN: ${o.pin || '5050'}</span></td>
-        <td><span style="color:#059669; font-weight:700; font-size:11px;">✓ Commission Active</span></td>
+        <td><span style="color:#059669; font-weight:700; font-size:11px;">Commission Active</span></td>
         <td>
           <button type="button" class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.displayOfficialDutyPass(${JSON.stringify(o).replace(/"/g, '&quot;')})">
-            🪪 View Duty Pass
+            View Duty Pass
           </button>
         </td>
       </tr>
@@ -2646,21 +2646,21 @@ const App = {
     await window.trafficDB.commissionOfficer(newOff);
     this.closeModal('newOfficerModal');
     this.renderAdminOfficersTable();
-    this.showToast(`✓ Officer Commissioned: ${name} (${badge}) Level ${level}!`, "success");
+    this.showToast(`Officer Commissioned: ${name} (${badge}) Level ${level}!`, "success");
   },
 
   adminBroadcastAlert() {
-    const msg = prompt("Enter National Highway Traffic Emergency Advisory to broadcast across all Gantries & Interceptors:", "⚠️ HEAVY FOG ADVISORY: Speed limits restricted to 40 km/h across all Expressway Corridors. Barricade teams deployed.");
+    const msg = prompt("Enter National Highway Traffic Emergency Advisory to broadcast across all Gantries & Interceptors:", "HEAVY FOG ADVISORY: Speed limits restricted to 40 km/h across all Expressway Corridors. Barricade teams deployed.");
     if (msg) {
       const banner = document.getElementById('govtAiSyncMeta');
-      if (banner) banner.innerHTML = `🚨 ACTIVE ADVISORY: <strong>${msg}</strong>`;
+      if (banner) banner.innerHTML = `ACTIVE ADVISORY: <strong>${msg}</strong>`;
       window.trafficDB.logAudit({
         user: "Director General (Admin)",
         role: "ADMINISTRATOR",
         action: "NATIONAL_ADVISORY_BROADCAST",
         details: msg
       });
-      this.showToast("📢 Emergency Advisory Broadcasted to all 1,420 Highway ANPR Gantries!", "success");
+      this.showToast("Emergency Advisory Broadcasted to all 1,420 Highway ANPR Gantries!", "success");
     }
   },
 
@@ -2671,15 +2671,15 @@ const App = {
       action: "RADAR_SPEED_CLAMP_ENGAGED",
       details: "Automated optical speed clamp engaged across NHAI Expressways (Max limit capped at 50 km/h)"
     });
-    this.showToast("⚡ Automated Radar Speed Clamp Activated across all Gantries!", "error");
+    this.showToast("Automated Radar Speed Clamp Activated across all Gantries!", "error");
   },
 
   async adminSyncDb() {
-    this.showToast("🔄 Re-syncing National VAHAN & MoRTH Traffic Database...", "info");
+    this.showToast("Re-syncing National VAHAN & MoRTH Traffic Database...", "info");
     await window.trafficDB.syncRoadworksWithLiveGovtAI();
     await window.trafficDB.loadInitialData();
     this.renderAllViews();
-    this.showToast("✓ National VAHAN 4.0 & MoRTH Registry Database Synced!", "success");
+    this.showToast("National VAHAN 4.0 & MoRTH Registry Database Synced!", "success");
   },
 
   exportAuditLogsCsv() {
@@ -2705,7 +2705,7 @@ const App = {
     document.body.appendChild(link);
     link.click();
     link.remove();
-    this.showToast("⬇️ SHA-256 Cryptographic Audit Ledger exported as CSV.", "success");
+    this.showToast("SHA-256 Cryptographic Audit Ledger exported as CSV.", "success");
   },
 
   openModal(id) {
@@ -2955,7 +2955,7 @@ const App = {
       details: `${type} at ${location} [Severity: ${severity}, Casualties: ${casualties}]`
     });
 
-    this.showToast(`🚨 Accident Case Registered: [${saved.accidentNumber || saved.id}] • 112 Unit Dispatched!`, "success");
+    this.showToast(`Accident Case Registered: [${saved.accidentNumber || saved.id}] • 112 Unit Dispatched!`, "success");
 
     // Switch to tracking or officer desk
     this.renderOfficerAccidentsTable();
@@ -2997,13 +2997,13 @@ const App = {
             <div style="display:flex; gap:4px;">
               ${a.status !== 'CLOSED' ? `
                 <button class="btn-action-primary" style="font-size:10px; padding:3px 6px; background:#047857; color:#fff;" onclick="App.closeAccidentCase('${a.id || a.accidentNumber}')">
-                  ✓ Close Case
+                  Close Case
                 </button>
               ` : `
                 <span style="font-size:10px; color:#059669; font-weight:700;">Resolved</span>
               `}
               <button class="btn-action-primary" style="font-size:10px; padding:3px 6px;" onclick="App.locateRiskZoneOnMap(${a.locationLat || 28.5910}, ${a.locationLng || 77.1620}, '${a.accidentType}', '${a.severity}')">
-                📍 Map
+                Map
               </button>
             </div>
           </td>
@@ -3115,13 +3115,13 @@ const App = {
       const off = window.rtoMaster[stateCode].offices[rtoCode];
       badgeContainer.innerHTML = `
         <div class="trafix-status-badge status-badge-verified">
-          <span>✓ Verified: ${off.district} • ${off.authority}</span>
+          <span>Verified: ${off.district} • ${off.authority}</span>
         </div>
       `;
     } else if (rtoCode) {
       badgeContainer.innerHTML = `
         <div class="trafix-status-badge status-badge-unverified">
-          <span>⚠ RTO code not verified in Registry</span>
+          <span>[ALERT] RTO code not verified in Registry</span>
         </div>
       `;
     }
@@ -3195,13 +3195,13 @@ const App = {
       if (result.rtoMatched) {
         badgeContainer.innerHTML = `
           <div class="trafix-status-badge status-badge-verified">
-            <span>✓ Verified: ${result.district} • ${result.authority}</span>
+            <span>Verified: ${result.district} • ${result.authority}</span>
           </div>
         `;
       } else {
         badgeContainer.innerHTML = `
           <div class="trafix-status-badge status-badge-unverified">
-            <span>⚠ RTO code not verified in Registry</span>
+            <span>[ALERT] RTO code not verified in Registry</span>
           </div>
         `;
       }
@@ -3220,7 +3220,7 @@ const App = {
 
     if (serviceId === 'vahan') {
       this.searchCitizenVehicleProfile(plate);
-      this.showToast(`🚗 VAHAN: Loaded Registration Certificate & Specs for ${plate}`, "info");
+      this.showToast(`VAHAN: Loaded Registration Certificate & Specs for ${plate}`, "info");
       const card = document.getElementById('citVehicleProfileCard');
       if (card) card.scrollIntoView({ behavior: 'smooth' });
     } else if (serviceId === 'echallan') {
@@ -3228,19 +3228,19 @@ const App = {
       const searchInput = document.getElementById('citTrackQuery');
       if (searchInput) searchInput.value = plate;
       this.searchAndDisplayCase(plate);
-      this.showToast(`📄 e-Challan: Checking pending traffic citations for ${plate}`, "info");
+      this.showToast(`e-Challan: Checking pending traffic citations for ${plate}`, "info");
     } else if (serviceId === 'state_portal') {
       let url = 'https://parivahan.gov.in';
       if (window.rtoMaster && res.stateCode && window.rtoMaster[res.stateCode] && window.rtoMaster[res.stateCode].portalUrl) {
         url = window.rtoMaster[res.stateCode].portalUrl;
       }
-      this.showToast(`🏛️ Opening ${res.state || 'State'} Official Parivahan Transport Portal...`, "info");
+      this.showToast(`Opening ${res.state || 'State'} Official Parivahan Transport Portal...`, "info");
       window.open(url, '_blank');
     } else if (serviceId === 'rc_services') {
       this.switchTab('citizen-rto-apps');
       const targetInput = document.getElementById('rtoAppTargetId');
       if (targetInput) targetInput.value = plate;
-      this.showToast(`📑 RTO Application Desk: Vehicle ${plate} pre-selected for RC Services`, "info");
+      this.showToast(`RTO Application Desk: Vehicle ${plate} pre-selected for RC Services`, "info");
     }
   },
 
@@ -3324,7 +3324,7 @@ const App = {
       }
 
       if (vehViolations.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:12px; color:#059669; font-weight:700;">✓ No pending challans or violations on this vehicle.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:12px; color:#059669; font-weight:700;">No pending challans or violations on this vehicle.</td></tr>`;
       } else {
         tbody.innerHTML = vehViolations.map(v => `
           <tr>
@@ -3344,7 +3344,7 @@ const App = {
                 </button>
               ` : `
                 <button class="btn-action-gold" style="font-size:10px; padding:4px 10px; font-weight:800; background:#059669; border-color:#059669; color:#fff;" onclick="App.openPayChallanModal('${v.id}')">
-                  💳 Pay via PhonePe / Paytm / GPay
+                  Pay via PhonePe / Paytm / GPay
                 </button>
               `}
             </td>
@@ -3389,7 +3389,7 @@ const App = {
     if (vehViolations.length === 0) {
       container.innerHTML = `
         <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:16px; text-align:center;">
-          <div style="font-size:24px; margin-bottom:4px;">🎉</div>
+          <div style="font-size:24px; margin-bottom:4px;"></div>
           <div style="font-weight:800; color:#15803d; font-size:14px;">No Pending Challans Found for ${plate}</div>
           <div style="font-size:11px; color:#166534; margin-top:2px;">All traffic citations have been settled or this vehicle has zero recorded violations.</div>
         </div>
@@ -3403,7 +3403,7 @@ const App = {
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
             <span style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">${v.id}</span>
             <span style="background:${v.status === 'Paid' ? '#f0fdf4' : '#fef2f2'}; color:${v.status === 'Paid' ? '#15803d' : '#b91c1c'}; border:1px solid ${v.status === 'Paid' ? '#bbf7d0' : '#fca5a5'}; padding:2px 8px; border-radius:3px; font-size:10px; font-weight:800;">
-              ${v.status === 'Paid' ? '✓ PAID' : '⚠ PENDING PAYMENT'}
+              ${v.status === 'Paid' ? 'PAID' : '[ALERT] PENDING PAYMENT'}
             </span>
           </div>
           <div style="font-size:12px; font-weight:700; color:#0f172a;">${v.violationType || v.type}</div>
@@ -3418,11 +3418,11 @@ const App = {
           <div>
             ${v.status === 'Paid' ? `
               <button class="btn-action-primary" style="padding:6px 12px; font-size:11px;" onclick="App.showReceiptForPaidChallan('${v.id}')">
-                📄 View Receipt
+                View Receipt
               </button>
             ` : `
               <button class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:800; padding:8px 16px; font-size:12px;" onclick="App.openPayChallanModal('${v.id}')">
-                💳 Pay via PhonePe / Paytm / GPay
+                Pay via PhonePe / Paytm / GPay
               </button>
             `}
           </div>
@@ -3464,7 +3464,7 @@ const App = {
       details: `${type} for ${targetId} uploaded directly to ${targetOffice}`
     });
 
-    this.showToast(`✓ Uploaded directly to ${targetOffice}! Application No: [${created.applicationNumber || created.id}]`, "success");
+    this.showToast(`Uploaded directly to ${targetOffice}! Application No: [${created.applicationNumber || created.id}]`, "success");
     this.renderCitizenRtoApps();
     this.renderRtoDesk();
   },
@@ -3563,7 +3563,7 @@ const App = {
       window.location.href = deepLink;
     } catch (e) { }
 
-    this.showToast(`🚀 Opening ${appName} for e-Challan payment of ₹${amount}. Click Confirm after authorization.`, "info");
+    this.showToast(`Opening ${appName} for e-Challan payment of ₹${amount}. Click Confirm after authorization.`, "info");
   },
 
   async confirmChallanPayment() {
@@ -3596,7 +3596,7 @@ const App = {
       details: `Payment authorized via Bharat UPI [Receipt: ${rNum ? rNum.innerText : 'VERIFIED'}]`
     });
 
-    this.showToast(`✓ e-Challan ${challanId} Paid Successfully! Bharat Receipt Generated.`, "success");
+    this.showToast(`e-Challan ${challanId} Paid Successfully! Bharat Receipt Generated.`, "success");
 
     // Open receipt modal
     this.openModal('challanReceiptModal');
@@ -3648,7 +3648,7 @@ const App = {
         <td><strong style="font-family:var(--font-mono);">${a.targetEntityId || a.vehicleId || 'DL-01-AB-4921'}</strong></td>
         <td>
           <span style="font-size:10px; background:#f1f5f9; padding:2px 6px; border-radius:3px;">
-            📄 Form 29/30 &bull; Aadhaar e-KYC
+            Form 29/30 &bull; Aadhaar e-KYC
           </span>
         </td>
         <td>${(a.submittedAt || '2026-09-30').substring(0, 10)}</td>
@@ -3713,7 +3713,7 @@ const App = {
     });
 
     this.closeModal('rtoReviewModal');
-    this.showToast(`✓ Application ${appId} statutory decision recorded: ${decision}`, "success");
+    this.showToast(`Application ${appId} statutory decision recorded: ${decision}`, "success");
 
     this.renderRtoDesk();
     this.renderCitizenRtoApps();
@@ -3731,7 +3731,7 @@ const App = {
     if (veh) {
       box.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="font-size:13px; color:#0f172a;">🚗 VAHAN RC RECORD FOUND: ${veh.registrationNumber}</strong>
+          <strong style="font-size:13px; color:#0f172a;">VAHAN RC RECORD FOUND: ${veh.registrationNumber}</strong>
           <span class="badge-rto-approved">${veh.status}</span>
         </div>
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
@@ -3746,7 +3746,7 @@ const App = {
     } else if (lic) {
       box.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <strong style="font-size:13px; color:#0f172a;">🪪 SARATHI DL RECORD FOUND: ${lic.licenceNumber}</strong>
+          <strong style="font-size:13px; color:#0f172a;">SARATHI DL RECORD FOUND: ${lic.licenceNumber}</strong>
           <span class="badge-rto-approved">${lic.status}</span>
         </div>
         <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
@@ -3804,7 +3804,7 @@ const App = {
           <td style="font-size:11px; color:#334155;">${z.recommendedAction || 'Enhanced Radar Patrol'}</td>
           <td>
             <button class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.locateRiskZoneOnMap(${z.latitude}, ${z.longitude}, '${z.zoneName}', '${z.riskLevel}')">
-              📍 Locate
+              Locate
             </button>
           </td>
         </tr>
@@ -3816,7 +3816,7 @@ const App = {
     this.switchTab('current');
     if (window.mapController) {
       window.mapController.flyToLocation(lat, lng, 15);
-      this.showToast(`📍 Focused GIS Map on ${level} Hazard Zone: ${name}`, "info");
+      this.showToast(`Focused GIS Map on ${level} Hazard Zone: ${name}`, "info");
     }
   },
 
@@ -3901,7 +3901,7 @@ const App = {
     if (addrEl) addrEl.value = "Plot 42, Civil Lines Road, Near High Court Junction, Pipar City, Jodhpur - 342601";
 
     this.recalculateDlFee();
-    this.showToast("⚡ Sample Applicant Particulars Loaded", "info");
+    this.showToast("Sample Applicant Particulars Loaded", "info");
   },
 
   async handleDrivingLicenceApply(event) {
@@ -3951,13 +3951,13 @@ const App = {
 
       if (data.success && data.application) {
         const appNo = data.application.applicationNumber;
-        this.showToast(`✓ Driving Licence Application Registered: ${appNo}`, "success");
+        this.showToast(`Driving Licence Application Registered: ${appNo}`, "success");
 
         const slotAppInput = document.getElementById('inSlotAppNumber');
         if (slotAppInput) slotAppInput.value = appNo;
         const feedback = document.getElementById('slotAppLookupFeedback');
         if (feedback) {
-          feedback.innerHTML = `✓ Matched Applicant: ${applicantName} • Classes: ${vehicleClasses.join(', ')}`;
+          feedback.innerHTML = `Matched Applicant: ${applicantName} • Classes: ${vehicleClasses.join(', ')}`;
         }
 
         this.switchDlServiceTab('slot');
@@ -3971,7 +3971,7 @@ const App = {
       const slotAppInput = document.getElementById('inSlotAppNumber');
       if (slotAppInput) slotAppInput.value = randomAppNo;
       this.switchDlServiceTab('slot');
-      this.showToast(`✓ Application Recorded (${randomAppNo})`, "success");
+      this.showToast(`Application Recorded (${randomAppNo})`, "success");
     }
   },
 
@@ -4001,7 +4001,7 @@ const App = {
           ${isSunday ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>
           <div style="font-weight:800; font-size:12px;">${dayName}, ${dayNum} ${monthName}</div>
           <div style="font-size:9.5px; margin-top:2px; ${isSunday ? 'color:#dc2626;' : (i % 2 === 0 ? 'color:#15803d;' : 'color:#b45309;')}">
-            ${isSunday ? 'Sunday Closed' : (i % 2 === 0 ? '✓ Available' : '⚡ 6 Slots Left')}
+            ${isSunday ? 'Sunday Closed' : (i % 2 === 0 ? 'Available' : '6 Slots Left')}
           </div>
         </button>
       `;
@@ -4064,16 +4064,16 @@ const App = {
       if (data.success && data.applications && data.applications.length > 0) {
         const app = data.applications[0];
         if (feedback) {
-          feedback.innerHTML = `✓ Verified: <strong>${app.applicantName}</strong> • RTO: ${app.rtoOffice} • Classes: ${(app.vehicleClasses || []).join(', ')}`;
+          feedback.innerHTML = `Verified: <strong>${app.applicantName}</strong> • RTO: ${app.rtoOffice} • Classes: ${(app.vehicleClasses || []).join(', ')}`;
         }
         this.showToast(`Application Found for ${app.applicantName}`, "success");
       } else {
         if (feedback) {
-          feedback.innerHTML = `✓ Matched Reference: <strong>${val}</strong> (Ready for Slot Scheduling)`;
+          feedback.innerHTML = `Matched Reference: <strong>${val}</strong> (Ready for Slot Scheduling)`;
         }
       }
     } catch (e) {
-      if (feedback) feedback.innerHTML = `✓ Ready for scheduling for ${val}`;
+      if (feedback) feedback.innerHTML = `Ready for scheduling for ${val}`;
     }
   },
 
@@ -4109,7 +4109,7 @@ const App = {
       const data = await res.json();
 
       if (data.success && data.appointment) {
-        this.showToast(`🎉 ADTT Driving Test Slot Confirmed: ${slotDate} (${slotTime})!`, "success");
+        this.showToast(`ADTT Driving Test Slot Confirmed: ${slotDate} (${slotTime})!`, "success");
         this.openHallTicketModal(data.appointment);
         this.renderDlAppointmentsTable();
         this.renderDlApplicationsTable();
@@ -4128,7 +4128,7 @@ const App = {
         vehicleClasses: ["MCWG", "LMV"]
       };
       this.openHallTicketModal(appt);
-      this.showToast(`✓ Driving Test Slot Confirmed!`, "success");
+      this.showToast(`Driving Test Slot Confirmed!`, "success");
     }
   },
 
@@ -4195,19 +4195,19 @@ const App = {
           <td style="font-family:var(--font-mono); font-size:10.5px;">${(a.submittedAt || '2026-09-30').substring(0, 10)}</td>
           <td>
             <span style="background:${isConfirmed ? '#dcfce7' : '#fef3c7'}; color:${isConfirmed ? '#15803d' : '#b45309'}; padding:2px 8px; border-radius:4px; font-weight:700; font-size:10px;">
-              ${isConfirmed ? '✓ SLOT CONFIRMED' : '⏳ APPLICATION PENDING'}
+              ${isConfirmed ? 'SLOT CONFIRMED' : 'APPLICATION PENDING'}
             </span>
           </td>
           <td>
             ${isConfirmed ? `
               <button class="btn-action-primary" style="font-size:10.5px; padding:3px 8px; background:#059669; color:#fff;"
                 onclick="App.openHallTicketModal({ applicationNumber: '${a.applicationNumber}', applicantName: '${a.applicantName}', trackLocation: '${a.testTrack || 'DTO Pipar City ADTT'}', slotDate: '${a.slotDate || '2026-10-02'}', slotTime: '${a.slotTime || '09:30 AM'}', vehicleClasses: ${JSON.stringify(a.vehicleClasses || ['MCWG', 'LMV'])} })">
-                🎟️ Admit Card
+                Admit Card
               </button>
             ` : `
               <button class="btn-action-primary" style="font-size:10.5px; padding:3px 8px;"
                 onclick="document.getElementById('inSlotAppNumber').value = '${a.applicationNumber}'; App.switchDlServiceTab('slot');">
-                📅 Book Slot
+                Book Slot
               </button>
             `}
           </td>
@@ -4253,11 +4253,11 @@ const App = {
         <td><span style="font-size:11px;">${s.trackLocation}</span></td>
         <td><strong style="color:#0f172a;">${s.slotDate}</strong></td>
         <td><span style="font-weight:700; color:#2563eb;">${s.slotTime}</span></td>
-        <td><span style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700; font-size:10px;">✓ CONFIRMED</span></td>
+        <td><span style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700; font-size:10px;">CONFIRMED</span></td>
         <td>
           <button class="btn-action-gold" style="font-size:10.5px; padding:3px 8px;"
             onclick="App.openHallTicketModal(${JSON.stringify(s).replace(/"/g, '&quot;')})">
-            📄 Print Ticket
+            Print Ticket
           </button>
         </td>
       </tr>

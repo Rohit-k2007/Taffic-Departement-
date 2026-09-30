@@ -1,60 +1,64 @@
 /* ==========================================================================
-   NATDAMS - National Automated Traffic Department & Enforcement System
-   Official Government UI/UX Design System - Classic Sovereign Theme (Zero Blue)
-   Colors: Deep Charcoal, Slate, Pure White, Warm Ashoka Gold & Emerald
+   NATDAMS / TRAFIX - National Traffic Department & Enforcement System
+   Official Sovereign Blue & White Government UI/UX Design System
+   Colors: Deep Sovereign Navy, Royal Blue, Ice Blue, Pure Snow White & Slate
    ========================================================================== */
 
 :root {
-  /* Classic Sovereign Government Palette (Zero Blue) */
-  --gov-white-950: #eff2f7;
-  --gov-white-900: #d2d9e8;
-  --gov-white-850: #e9edf3;
-  --gov-white-800: #d1d4d8;
-  --gov-white-700: #d0d6e0;
-  --gov-white-600: #cbced2;
+  /* Sovereign Blue & White Master Palette */
+  --gov-navy-950: #07172c;
+  --gov-navy-900: #0a1f3d;
+  --gov-navy-800: #0f2e5a;
+  --gov-navy-700: #1e3a8a;
+  --gov-blue-600: #1d4ed8;
+  --gov-blue-500: #2563eb;
+  --gov-blue-400: #3b82f6;
+  --gov-blue-300: #60a5fa;
+  --gov-blue-200: #93c5fd;
+  --gov-blue-100: #dbeafe;
+  --gov-blue-50: #eff6ff;
 
-  --gov-gold-600: #92400e;
-  --gov-gold-500: #b45309;
-  --gov-gold-400: #d97706;
-  --gov-gold-300: #f59e0b;
-  --gov-gold-bg: rgba(180, 83, 9, 0.08);
+  --gov-white-pure: #ffffff;
+  --gov-white-ice: #f8fafc;
+  --gov-white-slate: #f1f5f9;
 
-  --gov-emerald: #065f46;
-  --gov-emerald-light: #047857;
-  --gov-emerald-bg: rgba(4, 120, 87, 0.08);
+  /* Accent Alert Colors */
+  --gov-emerald: #059669;
+  --gov-emerald-light: #10b981;
+  --gov-emerald-bg: #ecfdf5;
 
-  --gov-ruby: #991b1b;
-  --gov-ruby-light: #b91c1c;
-  --gov-ruby-bg: rgba(185, 28, 28, 0.08);
+  --gov-ruby: #dc2626;
+  --gov-ruby-light: #ef4444;
+  --gov-ruby-bg: #fef2f2;
 
-  --gov-amber: #b45309;
-  --gov-amber-light: #d97706;
-  --gov-amber-bg: rgba(217, 119, 6, 0.08);
+  --gov-amber: #d97706;
+  --gov-amber-light: #f59e0b;
+  --gov-amber-bg: #fffbeb;
 
   --gov-slate: #334155;
-  --gov-slate-light: #475569;
+  --gov-slate-light: #64748b;
 
-  /* Surfaces & Typography - Classic Sovereign Default */
+  /* Surfaces & Typography - Sovereign Blue & White Default */
   --bg-primary: #f8fafc;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
   --bg-surface-card: #ffffff;
-  --bg-table-header: #f1f5f9;
+  --bg-table-header: #eff6ff;
 
   --border-subtle: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --border-gold: #d97706;
+  --border-strong: #bfdbfe;
+  --border-blue: #3b82f6;
   --border-light: #edf2f7;
 
   --text-primary: #0f172a;
-  --text-secondary: #334155;
+  --text-secondary: #1e293b;
   --text-muted: #64748b;
-  --text-gold: #92400e;
+  --text-blue: #1e40af;
 
-  /* Elevation (Subtle, non-distracting) */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 3px 8px rgba(17, 24, 39, 0.07);
-  --shadow-lg: 0 8px 20px rgba(17, 24, 39, 0.1);
+  /* Elevation */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(30, 58, 138, 0.08);
+  --shadow-lg: 0 10px 24px rgba(30, 58, 138, 0.12);
 
   /* Fonts */
   --font-heading: 'Cinzel', 'Plus Jakarta Sans', serif;
@@ -62,7 +66,7 @@
   --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
   /* Radii */
-  --radius-sm: 3px;
+  --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-full: 9999px;
@@ -166,14 +170,13 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Main Government Header (Charcoal & White) */
-/* Main Government Header (Charcoal & White) */
+/* Main Sovereign Government Header (Blue & White) */
 .gov-top-header,
 .main-gov-header {
-  background: #111827;
-  border-bottom: 2px solid #b45309;
+  background: linear-gradient(135deg, #07172c 0%, #0f2e5a 50%, #1e3a8a 100%);
+  border-bottom: 2px solid #3b82f6;
   padding: 8px 20px;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 16px rgba(15, 46, 90, 0.25);
   position: sticky;
   top: 0;
   z-index: 999;
@@ -188,7 +191,7 @@ body {
   gap: 16px;
 }
 
-/* Emblem & Title Group (Professional Government Standard) */
+/* Emblem & Title Group (Professional Sovereign Standard) */
 .emblem-group {
   display: flex;
   align-items: center;
@@ -204,14 +207,14 @@ body {
   max-width: 48px;
   max-height: 48px;
   border-radius: 50%;
-  background: #111827;
-  border: 1.5px solid #d97706;
+  background: #0f2e5a;
+  border: 2px solid #60a5fa;
   padding: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  box-shadow: 0 0 8px rgba(217, 119, 6, 0.3);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
   flex-shrink: 0;
 }
 
@@ -236,7 +239,7 @@ body {
 .gov-title-hi {
   font-size: 0.72rem;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #bfdbfe;
   letter-spacing: 0.2px;
   white-space: nowrap;
 }
@@ -244,7 +247,7 @@ body {
 .gov-title-en {
   font-size: 0.65rem;
   font-weight: 700;
-  color: #94a3b8;
+  color: #93c5fd;
   letter-spacing: 0.4px;
   white-space: nowrap;
   margin-top: 1px;
@@ -263,13 +266,14 @@ body {
 }
 
 .portal-acronym {
-  background: #b45309;
+  background: #2563eb;
   color: #ffffff;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 800;
-  padding: 1px 6px;
-  border-radius: 3px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #60a5fa;
   letter-spacing: 0.5px;
 }
 
@@ -278,7 +282,8 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(7, 23, 44, 0.55);
+  border: 1px solid rgba(147, 197, 253, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 4px 12px;
   border-radius: var(--radius-md);
@@ -510,16 +515,16 @@ body {
 }
 
 .btn-icon:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  border-color: #f59e0b;
+  border-color: #60a5fa;
 }
 
 .btn-action-primary {
-  background: #1f2937;
+  background: #2563eb;
   color: #ffffff;
-  font-weight: 600;
-  border: 1px solid #4b5563;
+  font-weight: 700;
+  border: 1px solid #1d4ed8;
   padding: 6px 14px;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -527,17 +532,21 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 0.82rem;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+  transition: all 0.15s ease;
 }
 
 .btn-action-primary:hover {
-  background: #374151;
+  background: #1d4ed8;
+  border-color: #1e40af;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
 }
 
 .btn-action-gold {
-  background: #b45309;
+  background: #0f2e5a;
   color: #ffffff;
   font-weight: 700;
-  border: 1px solid #92400e;
+  border: 1px solid #2563eb;
   padding: 6px 14px;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -545,25 +554,29 @@ body {
   align-items: center;
   gap: 6px;
   font-size: 0.82rem;
+  box-shadow: 0 2px 6px rgba(15, 46, 90, 0.2);
+  transition: all 0.15s ease;
 }
 
 .btn-action-gold:hover {
-  background: #92400e;
+  background: #1e3a8a;
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
 }
 
 /* ==========================================================================
-   State & District Selector Bar
+   State & District Selector Bar (Ice Blue & Crisp White)
    ========================================================================== */
 .location-selector-bar {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  background: #f0f7ff;
+  border-bottom: 1.5px solid #bfdbfe;
   padding: 8px 24px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 4px rgba(30, 58, 138, 0.05);
 }
 
 [data-theme="dark"] .location-selector-bar {
-  background: #111827;
-  border-bottom: 1px solid #2d3748;
+  background: #0f2e5a;
+  border-bottom: 1px solid #1e40af;
 }
 
 .location-bar-container {
@@ -1302,28 +1315,29 @@ body {
   width: 100%;
 }
 
-/* Left Sidebar */
+/* Left Sidebar: Systematic Central Operations Menu */
 .app-sidebar {
-  width: 310px;
-  min-width: 310px;
-  background: var(--bg-surface);
-  border-right: 1px solid var(--border-subtle);
-  padding: 16px 14px;
+  width: 320px;
+  min-width: 320px;
+  background: #ffffff;
+  border-right: 1.5px solid #bfdbfe;
+  padding: 16px 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   position: sticky;
   top: 0;
   height: calc(100vh - 72px);
   overflow-y: auto;
   z-index: 100;
+  box-shadow: 2px 0 8px rgba(30, 58, 138, 0.04);
 }
 
 .sidebar-profile-card {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-subtle);
+  background: #f0f7ff;
+  border: 1.5px solid #bfdbfe;
   border-radius: var(--radius-md);
-  padding: 12px;
+  padding: 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1332,7 +1346,7 @@ body {
 .role-switcher-pills {
   display: flex;
   gap: 4px;
-  background: #e2e8f0;
+  background: #dbeafe;
   padding: 3px;
   border-radius: var(--radius-md);
 }
@@ -1343,7 +1357,7 @@ body {
   border: none;
   font-size: 11px;
   font-weight: 700;
-  color: var(--text-secondary);
+  color: #1e40af;
   padding: 6px 4px;
   border-radius: 4px;
   cursor: pointer;
@@ -1354,19 +1368,28 @@ body {
   gap: 4px;
 }
 
+.role-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
 .role-pill-btn.active {
-  background: #111827;
+  background: #1e3a8a;
   color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 6px rgba(30, 58, 138, 0.25);
 }
 
 .sidebar-section-title {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
-  color: var(--text-muted);
+  color: #0f2e5a;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 6px 6px 2px;
+  letter-spacing: 0.08em;
+  padding: 8px 6px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #bfdbfe;
+  margin-top: 4px;
 }
 
 .sidebar-group-header {
@@ -1374,36 +1397,39 @@ body {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #b45309;
-  padding: 10px 8px 3px;
+  color: #1e40af;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 10px 0 4px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid #e2e8f0;
-  margin-top: 6px;
 }
 
 [data-theme="dark"] .sidebar-group-header {
-  border-top-color: #334155;
-  color: #f59e0b;
+  background: #1e293b;
+  border-color: #334155;
+  color: #93c5fd;
 }
 
 .sidebar-menu-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .sidebar-nav-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text-primary);
-  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #f1f5f9;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -1412,43 +1438,48 @@ body {
 }
 
 .sidebar-nav-item:hover {
-  background: var(--bg-primary);
-  border-color: var(--border-subtle);
+  background: #f0f7ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
 }
 
 .sidebar-nav-item.active {
-  background: #111827;
-  color: #f8fafc;
-  border-color: #111827;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%);
+  color: #ffffff;
+  border-color: #1e3a8a;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
 }
 
-.sidebar-nav-item.active .nav-item-icon {
-  color: #f59e0b;
+.sidebar-nav-item.active span,
+.sidebar-nav-item.active i {
+  color: #ffffff !important;
 }
 
 .sidebar-nav-item.active .nav-step-num {
-  background: #b45309;
-  color: #fff;
+  background: #ffffff;
+  color: #1e3a8a;
+  border-color: #ffffff;
 }
 
 .nav-step-num {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #e2e8f0;
-  color: #475569;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: #eff6ff;
+  color: #1e40af;
   font-size: 10px;
   font-weight: 800;
+  border: 1px solid #bfdbfe;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .sidebar-emergency-btn {
-  background: #dc2626;
+  background: linear-gradient(135deg, #0f2e5a 0%, #b91c1c 100%);
   color: #ffffff;
-  border: none;
+  border: 1.5px solid #ef4444;
   border-radius: var(--radius-md);
   padding: 10px 14px;
   font-size: 12px;
@@ -1458,12 +1489,14 @@ body {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 3px 8px rgba(220, 38, 38, 0.35);
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3);
   margin-top: auto;
+  transition: all 0.2s ease;
 }
 
 .sidebar-emergency-btn:hover {
   background: #b91c1c;
+  box-shadow: 0 6px 16px rgba(185, 28, 28, 0.45);
 }
 
 /* Right Main Content Area */
@@ -3152,18 +3185,18 @@ body {
 }
 
 /* =========================================================================
-   4-SECTION DIVIDED DASHBOARD FRONTEND STYLES (CITIZEN, POLICE, RTO, ADMIN)
+   4-SECTION DIVIDED DASHBOARD FRONTEND STYLES (BLUE & WHITE MASTER THEME)
    ========================================================================= */
 .dashboard-quadrant-bar {
   display: flex;
   gap: 8px;
   background: #ffffff;
-  border: 1.5px solid #cbd5e1;
+  border: 1.5px solid #bfdbfe;
   border-radius: 10px;
   padding: 8px;
   margin-bottom: 22px;
   flex-wrap: wrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 14px rgba(30, 58, 138, 0.06);
 }
 
 .quadrant-tab-btn {
@@ -3175,7 +3208,7 @@ body {
   padding: 10px 14px;
   font-size: 11.5px;
   font-weight: 700;
-  color: #334155;
+  color: #1e3a8a;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -3185,36 +3218,41 @@ body {
 }
 
 .quadrant-tab-btn:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
-  color: #0f172a;
+  background: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
 }
 
 .quadrant-tab-btn.active {
-  background: #0f172a;
+  background: linear-gradient(135deg, #0f2e5a 0%, #1e40af 100%);
   color: #ffffff;
-  border-color: #0f172a;
-  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.2);
+  border-color: #0f2e5a;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+}
+
+.quadrant-tab-btn.active span,
+.quadrant-tab-btn.active i {
+  color: #ffffff !important;
 }
 
 .quadrant-tab-btn.active.tab-citizen {
-  background: #059669;
-  border-color: #059669;
+  background: linear-gradient(135deg, #0f2e5a 0%, #2563eb 100%);
+  border-color: #1e40af;
 }
 
 .quadrant-tab-btn.active.tab-police {
-  background: #b45309;
-  border-color: #b45309;
+  background: linear-gradient(135deg, #0a1f3d 0%, #1e3a8a 100%);
+  border-color: #0f2e5a;
 }
 
 .quadrant-tab-btn.active.tab-rto {
-  background: #2563eb;
-  border-color: #2563eb;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  border-color: #1e40af;
 }
 
 .quadrant-tab-btn.active.tab-admin {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: linear-gradient(135deg, #07172c 0%, #1e3a8a 100%);
+  border-color: #0a1f3d;
 }
 
 /* 4 Section Container Blocks */
@@ -3226,12 +3264,12 @@ body {
 
 .dashboard-section-block {
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #bfdbfe;
   border-radius: 10px;
-  padding: 20px 22px;
+  padding: 22px 24px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(30, 58, 138, 0.05);
   transition: all 0.2s ease;
 }
 
@@ -3245,31 +3283,31 @@ body {
 }
 
 .dashboard-section-block.sector-citizen {
-  border-color: rgba(5, 150, 105, 0.4);
+  border-color: #93c5fd;
 }
 .dashboard-section-block.sector-citizen::before {
-  background: linear-gradient(90deg, #10b981, #059669);
-}
-
-.dashboard-section-block.sector-police {
-  border-color: rgba(180, 83, 9, 0.4);
-}
-.dashboard-section-block.sector-police::before {
-  background: linear-gradient(90deg, #f59e0b, #b45309);
-}
-
-.dashboard-section-block.sector-rto {
-  border-color: rgba(37, 99, 235, 0.4);
-}
-.dashboard-section-block.sector-rto::before {
   background: linear-gradient(90deg, #3b82f6, #1d4ed8);
 }
 
+.dashboard-section-block.sector-police {
+  border-color: #bfdbfe;
+}
+.dashboard-section-block.sector-police::before {
+  background: linear-gradient(90deg, #1e3a8a, #0f2e5a);
+}
+
+.dashboard-section-block.sector-rto {
+  border-color: #93c5fd;
+}
+.dashboard-section-block.sector-rto::before {
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+}
+
 .dashboard-section-block.sector-admin {
-  border-color: rgba(220, 38, 38, 0.4);
+  border-color: #bfdbfe;
 }
 .dashboard-section-block.sector-admin::before {
-  background: linear-gradient(90deg, #ef4444, #b91c1c);
+  background: linear-gradient(90deg, #07172c, #1e3a8a);
 }
 
 /* Section Header */
@@ -3294,15 +3332,15 @@ body {
 }
 
 .section-num-tag.citizen {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
 }
 
 .section-num-tag.police {
-  background: #fffbeb;
-  color: #b45309;
-  border: 1px solid #fde68a;
+  background: #f0f7ff;
+  color: #0f2e5a;
+  border: 1px solid #93c5fd;
 }
 
 .section-num-tag.rto {
@@ -3312,9 +3350,9 @@ body {
 }
 
 .section-num-tag.admin {
-  background: #fef2f2;
-  color: #b91c1c;
-  border: 1px solid #fecaca;
+  background: #f8fafc;
+  color: #07172c;
+  border: 1px solid #cbd5e1;
 }
 
 .section-block-title {
@@ -3343,33 +3381,36 @@ body {
 }
 
 .section-module-card {
-  background: #f8fafc;
+  background: #ffffff;
   border: 1.5px solid #e2e8f0;
   border-radius: 8px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   cursor: pointer;
   transition: all 0.18s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(30, 58, 138, 0.03);
 }
 
 .section-module-card:hover {
   transform: translateY(-2px);
   background: #ffffff;
-  border-color: #94a3b8;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+  border-color: #3b82f6;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.12);
 }
 
 .section-module-card .mod-icon-box {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  margin-bottom: 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  margin-bottom: 12px;
 }
 
 .section-module-card .mod-title {
@@ -3389,6 +3430,7 @@ body {
 .section-module-card .mod-footer-link {
   font-size: 11px;
   font-weight: 700;
+  color: #2563eb;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -3400,7 +3442,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
-  border-top: 1px dashed #e2e8f0;
+  border-top: 1px dashed #bfdbfe;
   flex-wrap: wrap;
   gap: 8px;
 }

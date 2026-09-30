@@ -203,7 +203,7 @@ class MapController {
         <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12px; color:#0f172a;">
           <strong style="color:#0a2540;">${c.name}</strong><br/>
           <span>Average Flow Speed: <strong>${c.speed} km/h</strong></span><br/>
-          ${isSatMode ? '<span style="color:#0284c7; font-weight:700;">🛰️ Satellite Thermal Emission Verified</span>' : ''}
+          ${isSatMode ? '<span style="color:#0284c7; font-weight:700;"> Satellite Thermal Emission Verified</span>' : ''}
         </div>
       `);
       this.corridorLayers.push(poly);
@@ -218,7 +218,7 @@ class MapController {
 
     patrolUnits.forEach(p => {
       const isAmb = p.id.includes('AMBULANCE');
-      const iconHtml = `<div style="background:${isAmb ? '#dc2626' : '#111827'}; color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; font-size:12px; box-shadow:0 1px 4px rgba(0,0,0,0.3);">${isAmb ? '🚨' : '🚔'}</div>`;
+      const iconHtml = `<div style="background:${isAmb ? '#dc2626' : '#111827'}; color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; font-size:12px; box-shadow:0 1px 4px rgba(0,0,0,0.3);">${isAmb ? '[ALERT]' : '[PATROL]'}</div>`;
       
       const icon = L.divIcon({ html: iconHtml, className: 'patrol-icon', iconSize: [26, 26], iconAnchor: [13, 13] });
       const marker = L.marker([p.lat, p.lng], { icon: icon }).addTo(this.map);
@@ -245,7 +245,7 @@ class MapController {
       const lng = this.currentLng + (idx === 0 ? 0.012 : -0.014);
 
       const icon = L.divIcon({
-        html: `<div style="background:#d97706; color:#fff; border-radius:4px; padding:2px 6px; font-weight:800; font-size:11px; border:2px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.3); display:flex; align-items:center; gap:3px;">🚧 ROADWORK</div>`,
+        html: `<div style="background:#d97706; color:#fff; border-radius:4px; padding:2px 6px; font-weight:800; font-size:11px; border:2px solid #fff; box-shadow:0 2px 5px rgba(0,0,0,0.3); display:flex; align-items:center; gap:3px;">[ROADWORK] ROADWORK</div>`,
         className: 'roadwork-pin',
         iconSize: [85, 24],
         iconAnchor: [42, 12]
@@ -254,7 +254,7 @@ class MapController {
       const marker = L.marker([lat, lng], { icon: icon }).addTo(this.map);
       marker.bindPopup(`
         <div style="font-size:12px; color:#0f172a; max-width:220px;">
-          <strong style="color:#b45309;">🚧 Active Road Construction Zone</strong><br/>
+          <strong style="color:#b45309;">[ROADWORK] Active Road Construction Zone</strong><br/>
           <strong>${rw.roadName}</strong><br/>
           <span>Type: ${rw.workType}</span><br/>
           <span>Contractor: <em>${rw.contractor}</em></span><br/>
@@ -282,7 +282,7 @@ class MapController {
         <div style="position:relative; display:flex; flex-direction:column; align-items:center;">
           <div style="position:absolute; width:48px; height:48px; border-radius:50%; background:rgba(217, 119, 6, 0.25); border:2px solid #b45309; animation:pulse-dot-anim 1.2s infinite; top:-14px; left:-14px; pointer-events:none;"></div>
           <div style="background:#111827; color:#f8fafc; border:2px solid #d97706; border-radius:6px; padding:3px 8px; font-size:11px; font-weight:800; font-family:'JetBrains Mono', monospace; box-shadow:0 3px 8px rgba(0,0,0,0.45); display:flex; align-items:center; gap:5px; z-index:10; white-space:nowrap;">
-            <span style="font-size:13px;">${vehicleInfo.icon || '🚗'}</span> ${plate}
+            <span style="font-size:13px;">${vehicleInfo.icon || ''}</span> ${plate}
           </div>
           <div style="width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:7px solid #d97706; margin-top:-1px;"></div>
         </div>
@@ -301,7 +301,7 @@ class MapController {
       <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12px; color:#111827; min-width:270px; padding:4px;">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:6px; margin-bottom:8px;">
           <span style="background:#111827; color:#fff; font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:800; padding:2px 7px; border-radius:3px;">${plate}</span>
-          <span style="background:#dcfce7; color:#15803d; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px;">🛰️ NAVIC GPS LOCKED</span>
+          <span style="background:#dcfce7; color:#15803d; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px;"> NAVIC GPS LOCKED</span>
         </div>
         <div style="line-height:1.55;">
           <div><strong>Registered Owner:</strong> <span style="color:#b45309; font-weight:700;">${vehicleInfo.owner}</span></div>
@@ -312,10 +312,10 @@ class MapController {
           <div><strong>Statutory PUCC:</strong> <span style="color:#047857; font-weight:600;">Valid / Compliant</span></div>
         </div>
         <div style="margin-top:8px; padding-top:6px; border-top:1px dashed #cbd5e1; font-family:'JetBrains Mono', monospace; font-size:11px; color:#334155; line-height:1.45;">
-          <div>📡 Radar Speed: <strong style="color:#b45309;">${vehicleInfo.speed} km/h</strong></div>
-          <div>📍 Coordinates: <strong>${lat.toFixed(5)}°N, ${lng.toFixed(5)}°E</strong></div>
-          <div>🌐 Radar / MDT IP: <strong style="color:#0f172a;">${vehicleInfo.ipAddress || '164.100.24.11'}</strong></div>
-          <div>🛰️ Constellation: <span style="color:#047857; font-weight:700;">ISRO Cartosat-3 (L5 Carrier)</span></div>
+          <div> Radar Speed: <strong style="color:#b45309;">${vehicleInfo.speed} km/h</strong></div>
+          <div> Coordinates: <strong>${lat.toFixed(5)}°N, ${lng.toFixed(5)}°E</strong></div>
+          <div> Radar / MDT IP: <strong style="color:#0f172a;">${vehicleInfo.ipAddress || '164.100.24.11'}</strong></div>
+          <div> Constellation: <span style="color:#047857; font-weight:700;">ISRO Cartosat-3 (L5 Carrier)</span></div>
         </div>
       </div>
     `;
@@ -457,7 +457,7 @@ class MapController {
         html: `
           <div style="position:relative; display:flex; flex-direction:column; align-items:center;">
             <div style="background:#dc2626; color:#fff; border:2px solid #fff; border-radius:6px; padding:3px 8px; font-weight:800; font-size:11px; box-shadow:0 3px 8px rgba(0,0,0,0.4); display:flex; align-items:center; gap:4px; white-space:nowrap;">
-              📍 TARGET DESTINATION
+               TARGET DESTINATION
             </div>
             <div style="width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:7px solid #dc2626;"></div>
           </div>
@@ -476,17 +476,17 @@ class MapController {
       this.searchMarker.bindPopup(`
         <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12px; color:#111827; min-width:270px; padding:4px;">
           <div style="font-weight:800; color:#0f172a; margin-bottom:4px; font-size:13px;">${placeDisplayName}</div>
-          <div style="color:#64748b; font-size:11px; margin-bottom:6px;">📍 Coords: <strong>${targetLat.toFixed(5)}°N, ${targetLng.toFixed(5)}°E</strong></div>
+          <div style="color:#64748b; font-size:11px; margin-bottom:6px;"> Coords: <strong>${targetLat.toFixed(5)}°N, ${targetLng.toFixed(5)}°E</strong></div>
           <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:4px; padding:6px 8px; font-size:11px; color:#92400e; margin-bottom:8px;">
-            🚗 Driving Distance: <strong>${drivingDistanceKm} km</strong> • Est. Transit: <strong>~${estTimeMins} mins</strong><br/>
-            🛰️ ISRO / NavIC Cartosat Satellite Lock: <span style="color:#047857; font-weight:700;">ACTIVE (0.28m HD)</span>
+             Driving Distance: <strong>${drivingDistanceKm} km</strong> • Est. Transit: <strong>~${estTimeMins} mins</strong><br/>
+             ISRO / NavIC Cartosat Satellite Lock: <span style="color:#047857; font-weight:700;">ACTIVE (0.28m HD)</span>
           </div>
           <div style="display:flex; flex-direction:column; gap:4px;">
             <a href="${gmapsDirUrl}" target="_blank" rel="noopener noreferrer" style="background:#111827; color:#fff; text-align:center; padding:5px 8px; border-radius:4px; text-decoration:none; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; gap:5px;">
-              🗺️ Open Route in Google Maps
+               Open Route in Google Maps
             </a>
             <a href="${gmapsSatUrl}" target="_blank" rel="noopener noreferrer" style="background:#b45309; color:#fff; text-align:center; padding:5px 8px; border-radius:4px; text-decoration:none; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; gap:5px;">
-              🌍 Open in Google Maps Satellite
+               Open in Google Maps Satellite
             </a>
           </div>
         </div>
@@ -508,15 +508,15 @@ class MapController {
           <span style="background:#b45309; color:#fff; font-weight:800; padding:2px 7px; border-radius:3px; font-size:11px;">ROUTE FOUND</span>
           <strong style="color:#0f172a;">${placeDisplayName}</strong>
           <span style="color:#64748b;">(${targetLat.toFixed(4)}°N, ${targetLng.toFixed(4)}°E)</span>
-          <span style="background:#f1f5f9; padding:2px 6px; border-radius:3px; font-weight:700; color:#334155;">🛣️ ${drivingDistanceKm} km</span>
-          <span style="background:#fef3c7; color:#92400e; padding:2px 6px; border-radius:3px; font-weight:700;">⏱️ ~${estTimeMins} mins</span>
+          <span style="background:#f1f5f9; padding:2px 6px; border-radius:3px; font-weight:700; color:#334155;">️ ${drivingDistanceKm} km</span>
+          <span style="background:#fef3c7; color:#92400e; padding:2px 6px; border-radius:3px; font-weight:700;">️ ~${estTimeMins} mins</span>
         </div>
         <div style="display:flex; gap:6px; align-items:center;">
           <a href="${gmapsDirUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="font-size:11px; padding:3px 8px; text-decoration:none;">
-            🗺️ Google Maps Directions
+             Google Maps Directions
           </a>
           <a href="${gmapsSatUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="font-size:11px; padding:3px 8px; background:#b45309; border-color:#b45309; color:#fff; text-decoration:none;">
-            🛰️ Google Satellite
+             Google Satellite
           </a>
           <button class="btn-action-primary" style="font-size:11px; padding:3px 8px; background:transparent; color:#64748b; border-color:#cbd5e1;" onclick="window.mapController.clearRoute()">
             Clear
@@ -593,7 +593,7 @@ class MapController {
       const lng = a.locationLng || (this.currentLng + 0.007);
 
       const icon = L.divIcon({
-        html: `<div style="background:#dc2626; color:#fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; font-size:13px; box-shadow:0 2px 6px rgba(0,0,0,0.4); animation:pulse-dot-anim 1.2s infinite;">💥</div>`,
+        html: `<div style="background:#dc2626; color:#fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; font-size:13px; box-shadow:0 2px 6px rgba(0,0,0,0.4); animation:pulse-dot-anim 1.2s infinite;"></div>`,
         className: 'accident-marker-pin',
         iconSize: [28, 28],
         iconAnchor: [14, 14]
@@ -602,7 +602,7 @@ class MapController {
       const marker = L.marker([lat, lng], { icon: icon }).addTo(this.map);
       marker.bindPopup(`
         <div style="font-family:'Plus Jakarta Sans', sans-serif; font-size:12px; color:#0f172a;">
-          <strong style="color:#b91c1c;">🚨 ACCIDENT INCIDENT: ${a.accidentNumber || a.id}</strong><br/>
+          <strong style="color:#b91c1c;">[ALERT] ACCIDENT INCIDENT: ${a.accidentNumber || a.id}</strong><br/>
           <strong>${a.accidentType}</strong> (${a.severity})<br/>
           <span>Location: ${a.locationAddress || a.location}</span><br/>
           <span style="color:#dc2626; font-weight:700;">Casualties: ${a.casualties} Persons &bull; ${a.vehiclesInvolved} Vehicles</span><br/>
