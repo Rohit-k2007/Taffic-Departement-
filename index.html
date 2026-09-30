@@ -349,76 +349,93 @@
             </p>
           </div>
           <div style="display:flex; gap:8px;">
-            <button class="btn-action-primary" onclick="App.switchTab('current')">
-              <i data-lucide="map-pin"></i> View GIS Live Map
+            <button class="btn-action-primary" onclick="App.switchTab('citizen-vehicles')">
+              <i data-lucide="car"></i> Find Car Details
             </button>
-            <button class="btn-action-gold" onclick="App.switchTab('citizen-report')">
-              <i data-lucide="plus-circle"></i> File Traffic Complaint
+            <button class="btn-action-gold" onclick="App.switchTab('citizen-track')">
+              <i data-lucide="credit-card"></i> Pay Challan (PhonePe/Paytm/GPay)
             </button>
           </div>
         </div>
 
         <!-- Citizen 4-KPI Stat Cards -->
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-bottom:16px;">
-          <div class="ratio-stat-card" style="border-top:3px solid #b45309; cursor:pointer;" onclick="App.switchTab('citizen-track')">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">ACTIVE COMPLAINTS</div>
-            <div style="font-size:24px; font-weight:800; color:#b45309; margin:4px 0;" id="citStatActiveComplaints">2 Active</div>
-            <div style="font-size:10px; color:#b45309;">Track Police Investigation ➔</div>
-          </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #059669; cursor:pointer;" onclick="App.switchTab('citizen-track')">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">RESOLVED COMPLAINTS</div>
-            <div style="font-size:24px; font-weight:800; color:#059669; margin:4px 0;" id="citStatResolvedComplaints">1 Closed</div>
-            <div style="font-size:10px; color:#059669;">Feedback Stored ➔</div>
+          <div class="ratio-stat-card" style="border-top:3px solid #b45309; cursor:pointer;" onclick="App.switchTab('citizen-vehicles')">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">VEHICLE INTELLIGENCE</div>
+            <div style="font-size:24px; font-weight:800; color:#b45309; margin:4px 0;" id="citStatRegisteredVehicles">RJ54CK4706</div>
+            <div style="font-size:10px; color:#b45309;">Search Any Car / VAHAN RC ➔</div>
           </div>
           <div class="ratio-stat-card" style="border-top:3px solid #dc2626; cursor:pointer;" onclick="App.switchTab('citizen-track')">
             <div style="font-size:11px; color:#64748b; font-weight:700;">PENDING CHALLANS</div>
             <div style="font-size:24px; font-weight:800; color:#dc2626; margin:4px 0;" id="citStatPendingChallans">1 Unpaid</div>
-            <div style="font-size:10px; color:#dc2626;">Pay Online via Bharat UPI ➔</div>
+            <div style="font-size:10px; color:#dc2626;">Pay via PhonePe / Paytm / GPay ➔</div>
           </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #111827; cursor:pointer;" onclick="App.switchTab('citizen-vehicles')">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">REGISTERED VEHICLES</div>
-            <div style="font-size:24px; font-weight:800; color:#111827; margin:4px 0;" id="citStatRegisteredVehicles">2 Vehicles</div>
-            <div style="font-size:10px; color:#64748b;">VAHAN RC &amp; Insurance ➔</div>
+          <div class="ratio-stat-card" style="border-top:3px solid #2563eb; cursor:pointer;" onclick="App.switchTab('citizen-rto-apps')">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">DIRECT RTO UPLOAD</div>
+            <div style="font-size:24px; font-weight:800; color:#2563eb; margin:4px 0;">RTO Pipar City</div>
+            <div style="font-size:10px; color:#2563eb;">Upload Form 29/30 &amp; RC ➔</div>
+          </div>
+          <div class="ratio-stat-card" style="border-top:3px solid #059669; cursor:pointer;" onclick="App.switchTab('citizen-report')">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">CITIZEN COMPLAINTS</div>
+            <div style="font-size:24px; font-weight:800; color:#059669; margin:4px 0;" id="citStatActiveComplaints">2 Active</div>
+            <div style="font-size:10px; color:#059669;">Report Traffic Issue ➔</div>
           </div>
         </div>
 
-        <!-- Quick Action Grid -->
-        <div class="gov-card" style="margin-bottom:16px;">
-          <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px;">
-            ⚡ Quick Citizen Actions
+        <!-- 3 CORE CITIZEN FUNCTIONALITY HERO CARDS -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; margin-bottom:16px;">
+          
+          <!-- Pillar 1: Find Car Details -->
+          <div class="citizen-hero-card" style="border-top:4px solid #b45309;" onclick="App.switchTab('citizen-vehicles')">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:26px;">🚗</span>
+                <span style="font-size:10px; background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:4px; font-weight:700;">VAHAN &amp; RTO</span>
+              </div>
+              <h3 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:4px;">Find Car &amp; Vehicle Details</h3>
+              <p style="font-size:11.5px; color:#64748b; line-height:1.4;">
+                Lookup any vehicle number plate across India (e.g. RJ54CK4706, DL01AB4921). Check RC status, fitness, insurance, and issuing RTO authority.
+              </p>
+            </div>
+            <div style="margin-top:12px; font-size:11px; font-weight:700; color:#b45309;">
+              Search Vehicle Intelligence ➔
+            </div>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:10px;">
-            <button class="btn-action-primary" style="padding:14px; display:flex; flex-direction:column; align-items:center; gap:6px; background:#fff; color:#0f172a;" onclick="App.switchTab('citizen-report')">
-              <span style="font-size:22px;">📢</span>
-              <strong>Report Violation</strong>
-              <span style="font-size:10px; color:#64748b;">Upload Evidence &amp; GPS</span>
-            </button>
-            <button class="btn-action-primary" style="padding:14px; display:flex; flex-direction:column; align-items:center; gap:6px; background:#fff; color:#b91c1c; border-color:#fca5a5;" onclick="App.switchTab('citizen-accident')">
-              <span style="font-size:22px;">🚗💥</span>
-              <strong>Report Accident</strong>
-              <span style="font-size:10px; color:#7f1d1d;">Dispatch 112 Patrol</span>
-            </button>
-            <button class="btn-action-primary" style="padding:14px; display:flex; flex-direction:column; align-items:center; gap:6px; background:#fff; color:#b45309;" onclick="App.switchTab('citizen-track')">
-              <span style="font-size:22px;">💳</span>
-              <strong>Pay e-Challan</strong>
-              <span style="font-size:10px; color:#64748b;">Instant Bharat Receipt</span>
-            </button>
-            <button class="btn-action-primary" style="padding:14px; display:flex; flex-direction:column; align-items:center; gap:6px; background:#fff; color:#0f172a;" onclick="App.switchTab('citizen-vehicles')">
-              <span style="font-size:22px;">🚗</span>
-              <strong>My Vehicles</strong>
-              <span style="font-size:10px; color:#64748b;">VAHAN RC Status</span>
-            </button>
-            <button class="btn-action-primary" style="padding:14px; display:flex; flex-direction:column; align-items:center; gap:6px; background:#fff; color:#0f172a;" onclick="App.switchTab('citizen-rto-apps')">
-              <span style="font-size:22px;">📄</span>
-              <strong>Apply RTO Service</strong>
-              <span style="font-size:10px; color:#64748b;">Renewal, Transfer, NOC</span>
-            </button>
-            <button class="btn-action-primary" style="padding:14px; display:flex; flex-direction:column; align-items:center; gap:6px; background:#fef2f2; border-color:#dc2626; color:#dc2626;" onclick="App.switchTab('emergency')">
-              <span style="font-size:22px;">🚨</span>
-              <strong>Emergency 112</strong>
-              <span style="font-size:10px; color:#b91c1c;">Direct Dispatch SOS</span>
-            </button>
+
+          <!-- Pillar 2: Pay Challan Direct via UPI Apps -->
+          <div class="citizen-hero-card" style="border-top:4px solid #059669;" onclick="App.switchTab('citizen-track')">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:26px;">💳</span>
+                <span style="font-size:10px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700;">Direct UPI Apps</span>
+              </div>
+              <h3 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:4px;">Pay e-Challan Online</h3>
+              <p style="font-size:11.5px; color:#64748b; line-height:1.4;">
+                Check pending traffic citations on your vehicle and pay instantly via <strong>PhonePe</strong>, <strong>Paytm</strong>, or <strong>Google Pay</strong> with official Bharat Receipt.
+              </p>
+            </div>
+            <div style="margin-top:12px; font-size:11px; font-weight:700; color:#059669;">
+              Pay Fine via UPI (PhonePe / Paytm / GPay) ➔
+            </div>
           </div>
+
+          <!-- Pillar 3: Upload Directly to RTO Office -->
+          <div class="citizen-hero-card" style="border-top:4px solid #2563eb;" onclick="App.switchTab('citizen-rto-apps')">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:26px;">🏛️</span>
+                <span style="font-size:10px; background:#dbeafe; color:#1d4ed8; padding:2px 8px; border-radius:4px; font-weight:700;">Direct RTO Upload</span>
+              </div>
+              <h3 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:4px;">Upload Details to RTO Office</h3>
+              <p style="font-size:11.5px; color:#64748b; line-height:1.4;">
+                Upload Form 29/30 transfer documents, RC updates, duplicate RC, NOC, and fitness renewal requests directly to your local RTO Office desk.
+              </p>
+            </div>
+            <div style="margin-top:12px; font-size:11px; font-weight:700; color:#2563eb;">
+              Upload to Local RTO Desk ➔
+            </div>
+          </div>
+
         </div>
 
         <!-- Recent Activity & Notifications -->
@@ -722,7 +739,37 @@
           </p>
         </div>
 
+        <!-- DIRECT E-CHALLAN QUICK PAY (PhonePe, Paytm, Google Pay) -->
+        <div class="gov-card" style="border-top:3px solid #059669; margin-bottom:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <div style="font-weight:800; font-size:14px; color:#0f172a;">💳 Pay e-Challan Online (PhonePe / Paytm / Google Pay Direct Link)</div>
+              <div style="font-size:11px; color:#64748b;">Instant lookup by vehicle registration number &amp; direct 1-click UPI app settlement</div>
+            </div>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span style="font-size:11px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700;">Zero Convenience Fee</span>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+            <div style="flex:1; min-width:240px;">
+              <input type="text" id="citTrackChallanPlate" class="form-control" placeholder="Enter Vehicle Registration (e.g. RJ54CK4706 or DL-01-AB-4921)..." value="RJ54CK4706" style="font-family:var(--font-mono); font-weight:800; letter-spacing:1px; text-transform:uppercase;">
+            </div>
+            <button type="button" class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:700;" onclick="App.searchAndPayChallanByPlate()">
+              <i data-lucide="search"></i> Check Pending Challans
+            </button>
+          </div>
+
+          <!-- Pending Challan Display Container -->
+          <div id="citTrackPendingChallanContainer">
+            <!-- Injected dynamically via JS -->
+          </div>
+        </div>
+
         <div class="gov-card" style="margin-bottom:16px;">
+          <div style="font-weight:700; color:#0f172a; margin-bottom:8px; font-size:13px;">
+            🔍 Track Submitted Traffic Complaint or Incident Report
+          </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
             <div style="flex:1; min-width:240px;">
               <input type="text" id="inputCaseSearch" class="form-control" placeholder="Search by Case ID (e.g. CASE-2026-801) or Vehicle Plate..." value="CASE-2026-801">
@@ -1155,10 +1202,10 @@
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
-              📄 Regional Transport Office (RTO) Citizen Applications
+              🏛️ Direct Document &amp; Vehicle Details Upload to RTO Office
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Parivahan Citizen Portal: Submit Application &rarr; Document Upload &rarr; RTO Officer Review &rarr; Verification &rarr; Approval.
+              Official Parivahan Gateway: Upload vehicle details, Form 29/30, and KYC directly to your local Registering Authority.
             </p>
           </div>
         </div>
@@ -1167,46 +1214,63 @@
           
           <!-- Submit New Application Form -->
           <div class="gov-card" style="border-top:3px solid #2563eb;">
-            <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px;">
-              📝 Apply for RTO Service
+            <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
+              <span>📝 Upload Details Directly to RTO</span>
+              <span style="font-size:10px; background:#eff6ff; color:#1d4ed8; padding:2px 6px; border-radius:3px; font-weight:700;">Direct Officer Desk Routing</span>
             </div>
             <form id="formCitizenRtoApp">
               <div class="form-group" style="margin-bottom:10px;">
-                <label class="form-label">Application Type *</label>
-                <select class="form-control" id="rtoAppType" required>
-                  <option value="Licence Renewal">Driving Licence (DL) Renewal</option>
-                  <option value="Ownership Transfer">Vehicle Transfer of Ownership</option>
-                  <option value="New Vehicle Registration">New Vehicle Registration (RC)</option>
-                  <option value="Address Update">Address Update in RC / DL</option>
-                  <option value="Fitness Certificate">Vehicle Fitness Test Certificate</option>
-                  <option value="Vehicle Document Update">Vehicle Document &amp; NOC Update</option>
+                <label class="form-label" style="font-weight:700;">1. Select Target RTO / DTO Office *</label>
+                <select class="form-control" id="rtoAppTargetOffice" required style="font-weight:600;">
+                  <option value="DTO Pipar City (RJ-54)">DTO Pipar City (RJ-54, Jodhpur Division, Rajasthan)</option>
+                  <option value="RTO Jodhpur (RJ-19)">RTO Jodhpur (RJ-19, Mandore Road, Rajasthan)</option>
+                  <option value="RTO Jaipur South (RJ-14)">RTO Jaipur South (RJ-14, Transport Nagar, Rajasthan)</option>
+                  <option value="RTO Mall Road (DL-01)">RTO Mall Road (DL-01, North Delhi)</option>
+                  <option value="RTO Janakpuri (DL-04)">RTO Janakpuri (DL-04, West Delhi)</option>
+                  <option value="RTO Sheikh Sarai (DL-03)">RTO Sheikh Sarai (DL-03, South Delhi)</option>
+                  <option value="RTO Tardeo (MH-01)">RTO Tardeo (MH-01, Mumbai South)</option>
+                  <option value="RTO Koramangala (KA-01)">RTO Koramangala (KA-01, Bengaluru)</option>
                 </select>
               </div>
 
               <div class="form-group" style="margin-bottom:10px;">
-                <label class="form-label">Vehicle Plate / DL Number *</label>
-                <input type="text" class="form-control" id="rtoAppTargetId" placeholder="e.g. DL-01-AB-4921 or DL-1420110023456" value="DL-01-AB-4921" required>
+                <label class="form-label">2. Service / Application Type *</label>
+                <select class="form-control" id="rtoAppType" required>
+                  <option value="Ownership Transfer">Vehicle Transfer of Ownership (Form 29 &amp; 30)</option>
+                  <option value="Duplicate RC">Issue of Duplicate RC / Smart Card</option>
+                  <option value="Address Update">Address Update in RC / DL</option>
+                  <option value="Fitness Certificate">Vehicle Fitness Test Certificate Renewal</option>
+                  <option value="NOC Issue">No Objection Certificate (NOC) for Inter-state Transfer</option>
+                  <option value="New Vehicle Registration">New Vehicle Permanent Registration (RC)</option>
+                  <option value="Licence Renewal">Driving Licence (DL) Renewal</option>
+                </select>
               </div>
 
               <div class="form-group" style="margin-bottom:10px;">
-                <label class="form-label">Applicant Citizen Name *</label>
-                <input type="text" class="form-control" id="rtoAppCitizenName" value="Vikramaditya Sharma" required>
+                <label class="form-label">3. Vehicle Plate / Registration Number *</label>
+                <input type="text" class="form-control" id="rtoAppTargetId" placeholder="e.g. RJ54CK4706 or DL-01-AB-4921" value="RJ54CK4706" style="font-family:var(--font-mono); font-weight:800; letter-spacing:1px;" required>
               </div>
 
-              <div class="form-group" style="margin-bottom:10px;">
-                <label class="form-label">Contact Mobile / Aadhaar Registered *</label>
-                <input type="text" class="form-control" id="rtoAppPhone" value="+91 98101 23456" required>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+                <div class="form-group">
+                  <label class="form-label">4. Applicant Name *</label>
+                  <input type="text" class="form-control" id="rtoAppCitizenName" value="Rohit Khandal" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">5. Mobile Number *</label>
+                  <input type="text" class="form-control" id="rtoAppPhone" value="+91 98290 12345" required>
+                </div>
               </div>
 
               <div class="form-group" style="margin-bottom:12px;">
-                <label class="form-label">Attach Supporting Documents (PDF / JPG) *</label>
+                <label class="form-label">6. Attach Documents (Form 29/30, RC, Aadhaar, Insurance) *</label>
                 <input type="file" class="form-control" id="rtoAppDocFile" style="padding:5px;">
-                <span style="font-size:10px; color:#64748b;">Attach Form 29/30, Aadhaar Card, or Medical Certificate</span>
+                <span style="font-size:10px; color:#64748b;">Direct digital attachment dispatched immediately to designated RTO Officer desk</span>
               </div>
 
               <div style="display:flex; justify-content:flex-end;">
                 <button type="submit" class="btn-action-primary" style="background:#2563eb; border-color:#2563eb; color:#fff; width:100%; padding:10px; font-weight:700;">
-                  <i data-lucide="send"></i> Submit RTO Application
+                  <i data-lucide="send"></i> 🚀 Submit &amp; Upload Details Directly to RTO Office
                 </button>
               </div>
             </form>
@@ -2353,44 +2417,64 @@
           </div>
         </div>
 
-        <!-- Payment Mode Selectors -->
+        <!-- Direct 1-Click UPI Payment Apps (PhonePe, Paytm, Google Pay) -->
         <div style="margin-bottom:14px;">
-          <label class="form-label" style="font-weight:700;">Select Secure Payment Channel (Simulated):</label>
-          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-top:6px;">
-            <label style="border:1px solid #cbd5e1; border-radius:4px; padding:10px 8px; text-align:center; cursor:pointer; font-size:11px; background:#fff;">
-              <input type="radio" name="payChannel" value="UPI" checked style="margin-bottom:4px;"><br/>
-              <strong>Bharat UPI</strong><br/>
-              <span style="font-size:9px; color:#64748b;">GPay / PhonePe / BHIM</span>
-            </label>
-            <label style="border:1px solid #cbd5e1; border-radius:4px; padding:10px 8px; text-align:center; cursor:pointer; font-size:11px; background:#fff;">
-              <input type="radio" name="payChannel" value="CARD" style="margin-bottom:4px;"><br/>
-              <strong>Debit / Credit Card</strong><br/>
-              <span style="font-size:9px; color:#64748b;">RuPay / Visa / Master</span>
-            </label>
-            <label style="border:1px solid #cbd5e1; border-radius:4px; padding:10px 8px; text-align:center; cursor:pointer; font-size:11px; background:#fff;">
-              <input type="radio" name="payChannel" value="NETBANK" style="margin-bottom:4px;"><br/>
-              <strong>Net Banking</strong><br/>
-              <span style="font-size:9px; color:#64748b;">SBI / PNB / HDFC</span>
-            </label>
+          <label class="form-label" style="font-weight:700; color:#0f172a; margin-bottom:6px;">
+            ⚡ Direct 1-Click UPI App Payment:
+          </label>
+          <div class="upi-apps-grid">
+            <!-- PhonePe -->
+            <a id="linkPayPhonePe" href="phonepe://" class="btn-upi-app btn-upi-phonepe" onclick="App.payViaUpiApp('PhonePe'); return true;">
+              <span class="upi-app-icon">🟣</span>
+              <span>PhonePe</span>
+              <span style="font-size:9.5px; opacity:0.85;">Instant App Pay</span>
+            </a>
+
+            <!-- Paytm -->
+            <a id="linkPayPaytm" href="paytmmp://" class="btn-upi-app btn-upi-paytm" onclick="App.payViaUpiApp('Paytm'); return true;">
+              <span class="upi-app-icon">🔵</span>
+              <span>Paytm</span>
+              <span style="font-size:9.5px; opacity:0.85;">UPI &amp; Wallet</span>
+            </a>
+
+            <!-- Google Pay -->
+            <a id="linkPayGpay" href="tez://" class="btn-upi-app btn-upi-gpay" onclick="App.payViaUpiApp('GooglePay'); return true;">
+              <span class="upi-app-icon">🟢</span>
+              <span style="color:#1e293b;">Google Pay</span>
+              <span style="font-size:9.5px; color:#64748b;">Direct GPay UPI</span>
+            </a>
           </div>
         </div>
 
-        <!-- UPI / Card Input simulation -->
+        <!-- Scan Any UPI QR Code -->
+        <div class="upi-qr-card">
+          <div style="font-size:11px; font-weight:700; color:#0f172a; margin-bottom:6px;">
+            📲 Or Scan with PhonePe / Paytm / GPay / BHIM App:
+          </div>
+          <div class="upi-qr-image">
+            <img id="payModalQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3Dgov.traffic.echallan%40sbi%26pn%3DeChallan%20Parivahan%26am%3D2000" alt="UPI e-Challan QR Code" width="140" height="140" style="display:block; margin:0 auto;" />
+          </div>
+          <div style="font-size:10px; color:#64748b; margin-top:6px;">
+            Virtual Payment Address: <strong style="font-family:var(--font-mono); color:#0f172a;">gov.traffic.echallan@sbi</strong>
+          </div>
+        </div>
+
+        <!-- UPI VPA input -->
         <div class="form-group" style="margin-bottom:12px;">
-          <label class="form-label">Virtual Payment Address (VPA / UPI ID) *</label>
-          <input type="text" class="form-control" id="payModalVpa" value="vikram.sharma@okhdfcbank" required>
+          <label class="form-label" style="font-size:11px;">Or Enter Custom UPI ID (VPA):</label>
+          <input type="text" class="form-control" id="payModalVpa" value="user@okhdfcbank" placeholder="e.g. yourname@ybl, mobile@paytm" style="font-size:12px;">
         </div>
 
         <div style="font-size:10px; color:#64748b; background:#f1f5f9; padding:8px 10px; border-radius:4px;">
-          🔒 <strong>NPCI / Bharat BillPay Security Note:</strong> Simulated sandbox transaction. No actual currency is debited. On authorization, status updates to PAID and official Bharat E-Challan receipt is issued.
+          🔒 <strong>Govt of India NPCI e-Challan Gateway:</strong> Click any UPI button (PhonePe / Paytm / GPay) or scan QR. After authorizing payment on your mobile app, click the button below to generate your official signed Bharat e-Challan Tax Receipt.
         </div>
 
       </div>
 
       <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
         <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('payChallanModal')">Cancel</button>
-        <button type="button" class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:700; padding:8px 20px;" onclick="App.confirmChallanPayment()">
-          ✓ Authorize Payment &amp; Issue Receipt
+        <button type="button" class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:800; padding:10px 22px; font-size:12px;" onclick="App.confirmChallanPayment()">
+          ✓ Confirm Payment &amp; Issue Bharat Receipt
         </button>
       </div>
     </div>

@@ -1326,6 +1326,21 @@
   },
   "violations": [
     {
+      "id": "CH-2026-69086",
+      "dateTime": "2026-09-30 05:29:02",
+      "status": "Paid",
+      "plateNumber": "DL-01-AB-4921",
+      "vehicleType": "Cars & SUVs (4-Wheelers)",
+      "violationType": "Speed Violation (>80 km/h in 60 km/h Zone)",
+      "violationCode": "SEC-183(2) MV ACT",
+      "location": "Ring Road Expressway Gantry 04",
+      "fineAmount": 2000,
+      "officerBadge": "TR-INSP-5501",
+      "paymentStatus": "PAID",
+      "paidAt": "2026-09-30 05:29:02",
+      "paymentReference": "PAY-UPI-777566"
+    },
+    {
       "id": "CH-2026-65987",
       "dateTime": "2026-09-30 05:10:06",
       "status": "Paid",
@@ -2321,6 +2336,23 @@
   },
   "cases": [
     {
+      "id": "CASE-2026-6646",
+      "dateTime": "2026-09-30 05:29:02",
+      "aiPriority": "High",
+      "aiClassification": "AI Analyzed: Signal Failure & Congestion (Confidence: 95%)",
+      "aiDuplicateDetected": false,
+      "status": "Under Review",
+      "verificationStatus": "Pending Review",
+      "assignedOfficer": "Inspector Rajeshwar Nath (TR-INSP-5501)",
+      "userNotified": true,
+      "feedbackRating": null,
+      "feedbackComment": null,
+      "category": "Signal Failure & Congestion",
+      "description": "Traffic signals non-functional at Ring Road junction causing heavy delay.",
+      "locationAddress": "Ring Road Expressway Gantry 04, New Delhi",
+      "location": "28.6139° N, 77.2090° E"
+    },
+    {
       "id": "CASE-2026-1176",
       "dateTime": "2026-09-30 05:10:06",
       "aiPriority": "High",
@@ -2677,6 +2709,21 @@
   ],
   "accidents": [
     {
+      "id": "ACC-115",
+      "accidentNumber": "ACC-2026-57",
+      "status": "INVESTIGATION",
+      "reportedAt": "2026-09-30 05:29:02",
+      "assignedOfficerId": "OFF-POLICE-01",
+      "assignedOfficerName": "Inspector Rajeshwar Nath",
+      "accidentType": "Collision",
+      "severity": "Serious",
+      "locationAddress": "NH-48 KM 22 Approach Corridor",
+      "location": "28.5400° N, 77.2100° E",
+      "description": "Multiple vehicle pileup on outer lane, medical assistance dispatched.",
+      "casualties": 1,
+      "vehiclesInvolved": 2
+    },
+    {
       "id": "ACC-431",
       "accidentNumber": "ACC-2026-73",
       "status": "INVESTIGATION",
@@ -2834,6 +2881,20 @@
     }
   ],
   "rtoApplications": [
+    {
+      "id": "RTO-APP-55",
+      "applicationNumber": "RTO-DL-2026-90734",
+      "status": "APPROVED",
+      "submittedAt": "2026-09-30 05:29:02",
+      "reviewedBy": "OFF-RTO-01",
+      "applicationType": "LICENCE_RENEWAL",
+      "applicantName": "Vikramaditya Sharma",
+      "citizenId": "CIT-101",
+      "targetDlRc": "DL-1420110023456",
+      "rtoCode": "DL-01",
+      "remarks": "Documents verified and eligibility confirmed.",
+      "reviewedAt": "2026-09-30 05:29:02"
+    },
     {
       "id": "RTO-APP-90",
       "applicationNumber": "RTO-DL-2026-91095",

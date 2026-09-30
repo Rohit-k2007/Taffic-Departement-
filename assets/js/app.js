@@ -45,7 +45,10 @@ const App = {
       window.analyticsController.initPredictiveCharts();
     }
 
-    this.showToast("NATDAMS Central National Portal Initialized (State: Delhi NCT)", "info");
+    // 7. Enforce Citizen Role Isolation by Default
+    this.switchRole('citizen');
+
+    this.showToast("TRAFIX Central National Portal Initialized (Citizen Mode)", "info");
   },
 
   initLocationSelectors() {
@@ -373,7 +376,7 @@ const App = {
   // =========================================================================
 
   ROLE_TABS: {
-    citizen: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-rto-apps', 'roadworks'],
+    citizen: ['citizen-dashboard', 'citizen-vehicles', 'citizen-track', 'citizen-rto-apps', 'citizen-report', 'emergency'],
     officer: ['citizen-dashboard', 'current', 'emergency', 'officer-cases', 'violations', 'officer-accidents', 'risk-center', 'roadworks'],
     rto: ['citizen-dashboard', 'current', 'rto-desk', 'citizen-vehicles', 'vehicle-ratios', 'roadworks'],
     admin: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-rto-apps', 'officer-cases', 'violations', 'officer-accidents', 'rto-desk', 'risk-center', 'roadworks', 'vehicle-ratios', 'admin']
@@ -494,6 +497,7 @@ const App = {
       this.renderEmergenciesList();
     } else if (tabName === 'citizen-track') {
       this.searchAndDisplayCase();
+      this.searchAndPayChallanByPlate();
     } else if (tabName === 'officer-cases') {
       this.renderCasesList();
     } else if (tabName === 'violations') {
@@ -2420,31 +2424,51 @@ const App = {
 
   searchCitizenVehicleProfile(queryPlate = null) {
     const input = document.getElementById('citVehSearchPlate');
-    const plate = queryPlate || (input ? input.value.trim().toUpperCase() : 'DL-01-AB-4921');
-    const veh = window.trafficDB.getVehicleByPlate(plate) || {
-      registrationNumber: plate,
-      ownerName: "Vikramaditya Sharma",
-      make: "Honda",
-      model: "City 1.5L i-VTEC",
-      fuelType: "Petrol / Hybrid",
-      manufactureYear: 2022,
-      registrationExpiry: "2037-03-14",
-      fitnessExpiry: "2037-03-14",
-      insuranceExpiry: "2027-03-12",
-      status: "ACTIVE"
-    };
+    const rawVal = queryPlate || (input ? input.value.trim() : 'RJ54CK4706');
+    const plate = (rawVal || 'RJ54CK4706').toUpperCase().replace(/[\s-]/g, '');
+
+    if (input) input.value = plate;
+
+    // Synchronize the top TRAFIX parser card as well
+    const trafixInput = document.getElementById('trafixPlateInput');
+    if (trafixInput && trafixInput.value !== plate) {
+      this.identifyVehicle(plate);
+    }
+
+    let veh = window.trafficDB.getVehicleByPlate(plate);
+    if (!veh) {
+      const parsed = window.parseVehicleNumber ? window.parseVehicleNumber(plate) : null;
+      const isRJ = (plate.startsWith('RJ') || (parsed && parsed.stateCode === 'RJ'));
+      const isDL = (plate.startsWith('DL') || (parsed && parsed.stateCode === 'DL'));
+      const isMH = (plate.startsWith('MH') || (parsed && parsed.stateCode === 'MH'));
+
+      veh = {
+        registrationNumber: plate,
+        ownerName: isRJ ? "Rohit Khandal" : (isMH ? "Amol Patil" : "Vikramaditya Sharma"),
+        make: isRJ ? "Mahindra" : (isMH ? "Tata" : "Honda"),
+        model: isRJ ? "Scorpio-N Z8 4x4" : (isMH ? "Nexon EV Max" : "City 1.5L i-VTEC"),
+        fuelType: isRJ ? "Diesel (BS-VI)" : (isMH ? "Electric (BEV)" : "Petrol / Hybrid"),
+        manufactureYear: 2023,
+        registrationExpiry: "2038-08-14",
+        fitnessExpiry: "2038-08-14",
+        insuranceExpiry: "2027-04-20",
+        insuranceCompany: "HDFC ERGO General Insurance Co. Ltd.",
+        status: "ACTIVE / COMPLIANT",
+        authority: parsed ? (parsed.authority || parsed.district) : "DTO Pipar City, Jodhpur Division"
+      };
+    }
 
     const plateEl = document.getElementById('citVehPlate');
     if (plateEl) plateEl.innerText = veh.registrationNumber;
 
     const ownerEl = document.getElementById('citVehOwner');
-    if (ownerEl) ownerEl.innerText = veh.ownerName || "Vikramaditya Sharma";
+    if (ownerEl) ownerEl.innerText = veh.ownerName || "Rohit Khandal";
 
     const makeEl = document.getElementById('citVehMake');
     if (makeEl) makeEl.innerText = `${veh.make} ${veh.model}`;
 
     const fuelEl = document.getElementById('citVehFuel');
-    if (fuelEl) fuelEl.innerText = `${veh.fuelType} (${veh.manufactureYear || 2022})`;
+    if (fuelEl) fuelEl.innerText = `${veh.fuelType} (${veh.manufactureYear || 2023})`;
 
     const fitEl = document.getElementById('citVehFitness');
     if (fitEl) fitEl.innerText = `${veh.fitnessExpiry} (Valid)`;
@@ -2452,11 +2476,30 @@ const App = {
     const insEl = document.getElementById('citVehInsurance');
     if (insEl) insEl.innerText = `${veh.insuranceExpiry} (Active)`;
 
-    // Render Challan History for this vehicle
+    // Check violations for this vehicle
     const tbody = document.getElementById('citChallanHistoryTableBody');
     if (tbody) {
-      const violations = window.trafficDB.getViolations();
-      const vehViolations = violations.filter(v => v.plateNumber === plate || v.plate === plate || v.plateNumber === 'DL-01-AB-4921');
+      let violations = window.trafficDB.getViolations();
+      let vehViolations = violations.filter(v => 
+        (v.plateNumber && v.plateNumber.toUpperCase().replace(/[\s-]/g, '') === plate) ||
+        (v.plate && v.plate.toUpperCase().replace(/[\s-]/g, '') === plate)
+      );
+
+      // If RJ54CK4706, ensure a pending challan exists so citizen can test PhonePe, Paytm, Google Pay directly!
+      if (vehViolations.length === 0 && plate === 'RJ54CK4706') {
+        const demoChallan = {
+          id: "CH-2026-5401",
+          plateNumber: "RJ54CK4706",
+          ownerName: "Rohit Khandal",
+          violationType: "Radar Speed Breach (84 km/h in 60 km/h Zone)",
+          location: "Pipar City Highway Corridor, Jodhpur",
+          fineAmount: 2000,
+          status: "Pending",
+          dateTime: "2026-09-30 08:30:00"
+        };
+        window.trafficDB.addViolation(demoChallan);
+        vehViolations = [demoChallan];
+      }
 
       if (vehViolations.length === 0) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:12px; color:#059669; font-weight:700;">✓ No pending challans or violations on this vehicle.</td></tr>`;
@@ -2466,7 +2509,7 @@ const App = {
             <td><strong style="font-family:var(--font-mono);">${v.id}</strong></td>
             <td><strong>${v.violationType || v.type}</strong></td>
             <td>${v.location}</td>
-            <td><strong style="color:#b45309;">₹${v.fineAmount || v.fine || 1000}</strong></td>
+            <td><strong style="color:#b45309;">₹${(v.fineAmount || 2000).toLocaleString()}</strong></td>
             <td>
               <span class="badge-rto-${v.status === 'Paid' ? 'approved' : 'rejected'}">
                 ${v.status || 'Pending'}
@@ -2478,8 +2521,8 @@ const App = {
                   Receipt
                 </button>
               ` : `
-                <button class="btn-action-gold" style="font-size:10px; padding:3px 8px;" onclick="App.openPayChallanModal('${v.id}')">
-                  💳 Pay Now
+                <button class="btn-action-gold" style="font-size:10px; padding:4px 10px; font-weight:800; background:#059669; border-color:#059669; color:#fff;" onclick="App.openPayChallanModal('${v.id}')">
+                  💳 Pay via PhonePe / Paytm / GPay
                 </button>
               `}
             </td>
@@ -2489,11 +2532,89 @@ const App = {
     }
   },
 
+  searchAndPayChallanByPlate(overridePlate = null) {
+    const input = document.getElementById('citTrackChallanPlate');
+    const rawVal = overridePlate || (input ? input.value.trim() : 'RJ54CK4706');
+    const plate = (rawVal || 'RJ54CK4706').toUpperCase().replace(/[\s-]/g, '');
+
+    if (input) input.value = plate;
+
+    const container = document.getElementById('citTrackPendingChallanContainer');
+    if (!container) return;
+
+    let violations = window.trafficDB.getViolations();
+    let vehViolations = violations.filter(v => 
+      (v.plateNumber && v.plateNumber.toUpperCase().replace(/[\s-]/g, '') === plate) ||
+      (v.plate && v.plate.toUpperCase().replace(/[\s-]/g, '') === plate)
+    );
+
+    // If RJ54CK4706, provide demo pending violation
+    if (vehViolations.length === 0 && plate === 'RJ54CK4706') {
+      const demoChallan = {
+        id: "CH-2026-5401",
+        plateNumber: "RJ54CK4706",
+        ownerName: "Rohit Khandal",
+        violationType: "Radar Speed Breach (84 km/h in 60 km/h Zone)",
+        location: "Pipar City Highway Corridor, Jodhpur",
+        fineAmount: 2000,
+        status: "Pending",
+        dateTime: "2026-09-30 08:30:00"
+      };
+      window.trafficDB.addViolation(demoChallan);
+      vehViolations = [demoChallan];
+    }
+
+    if (vehViolations.length === 0) {
+      container.innerHTML = `
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:16px; text-align:center;">
+          <div style="font-size:24px; margin-bottom:4px;">🎉</div>
+          <div style="font-weight:800; color:#15803d; font-size:14px;">No Pending Challans Found for ${plate}</div>
+          <div style="font-size:11px; color:#166534; margin-top:2px;">All traffic citations have been settled or this vehicle has zero recorded violations.</div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = vehViolations.map(v => `
+      <div style="background:#f8fafc; border:1px solid ${v.status === 'Paid' ? '#86efac' : '#fecaca'}; border-radius:6px; padding:14px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">${v.id}</span>
+            <span style="background:${v.status === 'Paid' ? '#f0fdf4' : '#fef2f2'}; color:${v.status === 'Paid' ? '#15803d' : '#b91c1c'}; border:1px solid ${v.status === 'Paid' ? '#bbf7d0' : '#fca5a5'}; padding:2px 8px; border-radius:3px; font-size:10px; font-weight:800;">
+              ${v.status === 'Paid' ? '✓ PAID' : '⚠ PENDING PAYMENT'}
+            </span>
+          </div>
+          <div style="font-size:12px; font-weight:700; color:#0f172a;">${v.violationType || v.type}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:2px;">Location: ${v.location} • Date: ${v.dateTime || '2026-09-30'}</div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div style="text-align:right;">
+            <span style="font-size:10px; color:#64748b;">Fine Amount:</span>
+            <div style="font-size:18px; font-weight:800; color:${v.status === 'Paid' ? '#15803d' : '#dc2626'};">₹${(v.fineAmount || 2000).toLocaleString()}</div>
+          </div>
+          <div>
+            ${v.status === 'Paid' ? `
+              <button class="btn-action-primary" style="padding:6px 12px; font-size:11px;" onclick="App.showReceiptForPaidChallan('${v.id}')">
+                📄 View Receipt
+              </button>
+            ` : `
+              <button class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:800; padding:8px 16px; font-size:12px;" onclick="App.openPayChallanModal('${v.id}')">
+                💳 Pay via PhonePe / Paytm / GPay
+              </button>
+            `}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  },
+
   // =========================================================================
   // CITIZEN RTO APPLICATIONS (SECTION 17)
   // =========================================================================
 
   async handleCitizenRtoAppSubmit() {
+    const targetOffice = document.getElementById('rtoAppTargetOffice')?.value || 'DTO Pipar City (RJ-54)';
     const type = document.getElementById('rtoAppType').value;
     const targetId = document.getElementById('rtoAppTargetId').value.trim().toUpperCase();
     const citizenName = document.getElementById('rtoAppCitizenName').value;
@@ -2503,10 +2624,11 @@ const App = {
       citizenId: "CIT-01",
       citizenName: citizenName,
       phone: phone,
+      targetOffice: targetOffice,
       applicationType: type,
       targetEntityId: targetId,
       status: "UNDER_REVIEW",
-      remarks: "Application received. Verification pending with RTO Officer."
+      remarks: `Uploaded directly to ${targetOffice}. Verification assigned to statutory RTO Officer.`
     };
 
     const created = await window.trafficDB.addRtoApplication(newApp);
@@ -2514,13 +2636,13 @@ const App = {
     window.trafficDB.logAudit({
       user: citizenName,
       role: "CITIZEN",
-      action: "RTO_APPLICATION_SUBMITTED",
+      action: "DIRECT_RTO_OFFICE_UPLOAD_COMPLETED",
       entityType: "RTO_APPLICATION",
       entityId: created.applicationNumber || created.id,
-      details: `${type} for ${targetId}`
+      details: `${type} for ${targetId} uploaded directly to ${targetOffice}`
     });
 
-    this.showToast(`✓ RTO Application Submitted: [${created.applicationNumber || created.id}]`, "success");
+    this.showToast(`✓ Uploaded directly to ${targetOffice}! Application No: [${created.applicationNumber || created.id}]`, "success");
     this.renderCitizenRtoApps();
     this.renderRtoDesk();
   },
@@ -2556,6 +2678,7 @@ const App = {
   // =========================================================================
 
   activePayingChallanId: null,
+  activeUpiApp: 'PhonePe',
 
   openPayChallanModal(challanId) {
     const violations = window.trafficDB.getViolations();
@@ -2567,6 +2690,7 @@ const App = {
     };
 
     this.activePayingChallanId = challanId;
+    const amount = v.fineAmount || v.fine || 2000;
 
     const idEl = document.getElementById('payModalChallanId');
     if (idEl) idEl.innerText = v.id;
@@ -2578,9 +2702,46 @@ const App = {
     if (vioEl) vioEl.innerText = v.violationType || v.type || 'Traffic Violation';
 
     const amtEl = document.getElementById('payModalAmount');
-    if (amtEl) amtEl.innerText = `₹${v.fineAmount || v.fine || 2000}`;
+    if (amtEl) amtEl.innerText = `₹${amount.toLocaleString()}`;
+
+    // Generate Standard UPI Deep Link
+    const upiUri = `upi://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Challan%20${v.id}%20${v.plateNumber || ''}`;
+    
+    // Update Deep Links for Apps
+    const linkPhonePe = document.getElementById('linkPayPhonePe');
+    if (linkPhonePe) linkPhonePe.href = `phonepe://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
+
+    const linkPaytm = document.getElementById('linkPayPaytm');
+    if (linkPaytm) linkPaytm.href = `paytmmp://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
+
+    const linkGpay = document.getElementById('linkPayGpay');
+    if (linkGpay) linkGpay.href = `tez://upi/pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
+
+    // Update QR Code Image
+    const qrImg = document.getElementById('payModalQrImg');
+    if (qrImg) {
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(upiUri)}`;
+    }
 
     this.openModal('payChallanModal');
+  },
+
+  payViaUpiApp(appName) {
+    this.activeUpiApp = appName;
+    const v = window.trafficDB.violations.find(item => item.id === this.activePayingChallanId) || { id: this.activePayingChallanId, fineAmount: 2000 };
+    const amount = v.fineAmount || 2000;
+    
+    let deepLink = `upi://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
+    if (appName === 'PhonePe') deepLink = `phonepe://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
+    else if (appName === 'Paytm') deepLink = `paytmmp://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
+    else if (appName === 'GooglePay') deepLink = `tez://upi/pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
+
+    // Try opening the deep link on mobile device
+    try {
+      window.location.href = deepLink;
+    } catch (e) {}
+
+    this.showToast(`🚀 Opening ${appName} for e-Challan payment of ₹${amount}. Click Confirm after authorization.`, "info");
   },
 
   async confirmChallanPayment() {
@@ -2621,6 +2782,7 @@ const App = {
     // Refresh views
     this.renderViolationsTable();
     this.searchCitizenVehicleProfile();
+    this.searchAndPayChallanByPlate();
     this.renderCitizenDashboard();
   },
 
