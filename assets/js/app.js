@@ -69,7 +69,7 @@ const App = {
     if (!stateSelect || !distSelect) return;
 
     const states = window.trafficDB.getStates();
-    stateSelect.innerHTML = states.map(s => 
+    stateSelect.innerHTML = states.map(s =>
       `<option value="${s.code}" ${s.code === window.trafficDB.selectedState ? 'selected' : ''}>${s.name}</option>`
     ).join('');
 
@@ -107,7 +107,7 @@ const App = {
     if (!distSelect) return;
 
     const districts = window.trafficDB.getDistrictsForState(stateCode);
-    distSelect.innerHTML = districts.map((d, idx) => 
+    distSelect.innerHTML = districts.map((d, idx) =>
       `<option value="${d.id}" ${idx === 0 ? 'selected' : ''}>${d.name}</option>`
     ).join('');
 
@@ -144,27 +144,27 @@ const App = {
 
   trackVehicleByPlate(plateInput, showToastAlert = true) {
     const rawPlate = plateInput || 'DL-01-AB-4921';
-    
+
     // Resolve full vehicle details via Telemetry Vault
-    const v = window.telemetryVault 
+    const v = window.telemetryVault
       ? window.telemetryVault.resolveVehicleDetails(rawPlate)
       : {
-          plate: rawPlate,
-          owner: "Registered Vehicle Owner",
-          makeModel: "Sedan (4-Wheeler)",
-          class: "Cars & SUVs (4-Wheelers)",
-          icon: "🚗",
-          districtName: "National Highway Corridor",
-          corridor: "State Arterial Road",
-          stateCode: "DL",
-          stateName: "Delhi NCT",
-          speed: 54,
-          lat: 28.6139,
-          lng: 77.2090,
-          ipAddress: "164.100.24.11",
-          fuelType: "Petrol / Hybrid",
-          rtoCode: "DL-01"
-        };
+        plate: rawPlate,
+        owner: "Registered Vehicle Owner",
+        makeModel: "Sedan (4-Wheeler)",
+        class: "Cars & SUVs (4-Wheelers)",
+        icon: "🚗",
+        districtName: "National Highway Corridor",
+        corridor: "State Arterial Road",
+        stateCode: "DL",
+        stateName: "Delhi NCT",
+        speed: 54,
+        lat: 28.6139,
+        lng: 77.2090,
+        ipAddress: "164.100.24.11",
+        fuelType: "Petrol / Hybrid",
+        rtoCode: "DL-01"
+      };
 
     const matchedState = window.trafficDB.getStateByCode(v.stateCode);
     if (matchedState) {
@@ -174,7 +174,7 @@ const App = {
         if (stateSelect) stateSelect.value = matchedState.code;
         this.updateDistrictDropdown(matchedState.code);
       }
-      
+
       const distSelect = document.getElementById('selectDistrict');
       if (distSelect && distSelect.querySelector(`option[value="${v.rtoCode}"]`)) {
         distSelect.value = v.rtoCode;
@@ -233,14 +233,14 @@ const App = {
         const isSat = window.mapController.toggleSatelliteSurveillance();
         const btnText = document.getElementById('satBtnText');
         if (btnText) {
-          btnText.innerText = isSat 
-            ? "🗺️ Disconnect Satellite (Switch to Vector Map)" 
+          btnText.innerText = isSat
+            ? "🗺️ Disconnect Satellite (Switch to Vector Map)"
             : "🛰️ Connect Satellite Surveillance (ISRO Link)";
         }
         btnSat.style.background = isSat ? "#0284c7" : "#0f3057";
         btnSat.style.color = "#ffffff";
-        this.showToast(isSat 
-          ? "🛰️ ISRO Cartosat-3 / EOS-06 Earth Observation Satellite Feed Connected! (0.28m HD)" 
+        this.showToast(isSat
+          ? "🛰️ ISRO Cartosat-3 / EOS-06 Earth Observation Satellite Feed Connected! (0.28m HD)"
           : "Switched back to Standard Vector Cartography", isSat ? "success" : "info");
       });
     }
@@ -388,10 +388,10 @@ const App = {
   // =========================================================================
 
   ROLE_TABS: {
-    citizen: ['citizen-dashboard', 'citizen-vehicles', 'citizen-track', 'citizen-rto-apps', 'citizen-report', 'emergency'],
+    citizen: ['citizen-dashboard', 'citizen-vehicles', 'citizen-track', 'citizen-dl-services', 'citizen-rto-apps', 'citizen-report', 'emergency'],
     officer: ['citizen-dashboard', 'current', 'emergency', 'officer-cases', 'violations', 'officer-accidents', 'risk-center', 'roadworks'],
     rto: ['citizen-dashboard', 'current', 'rto-desk', 'citizen-vehicles', 'vehicle-ratios', 'roadworks'],
-    admin: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-rto-apps', 'officer-cases', 'violations', 'officer-accidents', 'rto-desk', 'risk-center', 'roadworks', 'vehicle-ratios', 'admin']
+    admin: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-dl-services', 'citizen-rto-apps', 'officer-cases', 'violations', 'officer-accidents', 'rto-desk', 'risk-center', 'roadworks', 'vehicle-ratios', 'admin']
   },
 
   switchRole(role) {
@@ -430,7 +430,7 @@ const App = {
         token: makeJwt('citizen@trafix.gov.in')
       };
       if (window.govAuth) window.govAuth.currentUser = citUser;
-      try { localStorage.setItem('gov_auth_session', JSON.stringify(citUser)); } catch (e) {}
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(citUser)); } catch (e) { }
 
       if (dot) dot.style.background = '#10b981';
       if (roleText) roleText.innerHTML = `Mode: <strong>Citizen Public Portal</strong>`;
@@ -456,7 +456,7 @@ const App = {
       };
       this.currentOfficer = off;
       if (window.govAuth) window.govAuth.currentUser = off;
-      try { localStorage.setItem('gov_auth_session', JSON.stringify(off)); } catch (e) {}
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(off)); } catch (e) { }
 
       if (dot) dot.style.background = '#f59e0b';
       if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">Traffic Police: ${off.name}</strong>`;
@@ -481,7 +481,7 @@ const App = {
         token: token
       };
       if (window.govAuth) window.govAuth.currentUser = rtoUser;
-      try { localStorage.setItem('gov_auth_session', JSON.stringify(rtoUser)); } catch (e) {}
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(rtoUser)); } catch (e) { }
 
       if (dot) dot.style.background = '#d97706';
       if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">RTO Officer: ${rtoUser.name}</strong>`;
@@ -506,7 +506,7 @@ const App = {
         token: token
       };
       if (window.govAuth) window.govAuth.currentUser = adminUser;
-      try { localStorage.setItem('gov_auth_session', JSON.stringify(adminUser)); } catch (e) {}
+      try { localStorage.setItem('gov_auth_session', JSON.stringify(adminUser)); } catch (e) { }
 
       if (dot) dot.style.background = '#dc2626';
       if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">Directorate Administrator Command</strong>`;
@@ -585,7 +585,7 @@ const App = {
     }
 
     this.activeTab = tabName;
-    
+
     // Sync sidebar buttons
     document.querySelectorAll('.sidebar-nav-item').forEach(item => {
       const target = item.getAttribute('data-tab');
@@ -612,6 +612,8 @@ const App = {
       if (gpsEl) gpsEl.value = "28.5910° N, 77.1620° E";
     } else if (tabName === 'citizen-vehicles') {
       this.renderCitizenVehicles();
+    } else if (tabName === 'citizen-dl-services') {
+      this.renderDlServicesView();
     } else if (tabName === 'citizen-rto-apps') {
       this.renderCitizenRtoApps();
     } else if (tabName === 'officer-accidents') {
@@ -701,8 +703,8 @@ const App = {
 
     // 2. Client-side Local Fallback Verification
     const officers = window.trafficDB.getOfficers();
-    const officer = officers.find(o => 
-      (o.badgeNumber && o.badgeNumber.toLowerCase() === officerId.toLowerCase()) || 
+    const officer = officers.find(o =>
+      (o.badgeNumber && o.badgeNumber.toLowerCase() === officerId.toLowerCase()) ||
       (o.id && o.id.toLowerCase() === officerId.toLowerCase())
     );
 
@@ -734,6 +736,365 @@ const App = {
       this.onOfficerAuthenticated(officer, scope);
     } else {
       this.showToast("Authentication Failed: Invalid Password or Camera PIN.", "error");
+    }
+  },
+
+  // =========================================================================
+  // UNIVERSAL APP LOGIN PAGE & 2FA ACCESS GATEWAY (CITIZEN, OFFICER, COMM., RTO)
+  // 1. User Name / Email ID / Vehicle No
+  // 2. Pass : 8 Characters, Number, Symbol
+  // 3. Who Are You (CITIZEN, TRAFFIC OFFICER, COMMISSIONER, CONTROL ROOM)
+  // 4. OTP
+  // 5. Verify Access The App
+  // =========================================================================
+
+  openAppLoginModal() {
+    this.openModal('appLoginModal');
+    const passInput = document.getElementById('inAppLoginPass');
+    if (passInput) this.validateAppPassword(passInput.value);
+    const idInput = document.getElementById('inAppLoginId');
+    if (idInput) this.onAppLoginIdInput(idInput.value);
+    if (window.lucide) lucide.createIcons();
+  },
+
+  onAppLoginIdInput(val) {
+    const feedback = document.getElementById('appLoginIdFeedback');
+    if (!feedback) return;
+    const clean = (val || '').trim().toUpperCase();
+
+    if (!clean) {
+      feedback.innerHTML = `<span style="color:#64748b;">Enter Vehicle Plate (e.g. RJ54CK4706), Email ID, or Official User ID.</span>`;
+      return;
+    }
+
+    // Plate detection
+    const plateRegex = /^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{1,4}$/;
+    if (plateRegex.test(clean) || clean.startsWith('RJ') || clean.startsWith('DL') || clean.startsWith('MH') || clean.startsWith('KA') || clean.startsWith('HR')) {
+      if (clean.startsWith('RJ-54') || clean.startsWith('RJ54')) {
+        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">✓ Matched Vehicle Plate: ${clean} (DTO Pipar City, Jodhpur Division)</span>`;
+      } else if (clean.startsWith('DL-01') || clean.startsWith('DL01')) {
+        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">✓ Matched Vehicle Plate: ${clean} (Mall Road RTO, North Delhi)</span>`;
+      } else {
+        feedback.innerHTML = `<span style="color:#047857; font-weight:700;">✓ Matched Vehicle Plate: ${clean} (National VAHAN Registry)</span>`;
+      }
+      return;
+    }
+
+    // Email detection
+    if (val.includes('@')) {
+      feedback.innerHTML = `<span style="color:#2563eb; font-weight:700;">✓ Matched Email Identity: ${val.trim()}</span>`;
+      return;
+    }
+
+    // Officer / Admin / Terminal ID
+    if (clean.startsWith('TR-') || clean.startsWith('IPS-') || clean.startsWith('RTO-') || clean.startsWith('OFF-')) {
+      feedback.innerHTML = `<span style="color:#b45309; font-weight:700;">✓ Matched Official Department Badge: ${clean}</span>`;
+      return;
+    }
+
+    feedback.innerHTML = `<span style="color:#334155; font-weight:600;">✓ Identifier Entered: ${val.trim()}</span>`;
+  },
+
+  validateAppPassword(val) {
+    const str = val || '';
+    const hasLen = str.length >= 8;
+    const hasNum = /[0-9]/.test(str);
+    const hasSym = /[!@#$%^&*(),.?":{}|<>]/.test(str);
+
+    const updatePill = (id, valid) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const baseLabel = id === 'pwdRuleLen' ? '8+ Characters' : (id === 'pwdRuleNum' ? '1+ Number (0-9)' : '1+ Symbol (!@#$%...)');
+      if (valid) {
+        el.className = 'pwd-rule-pill valid';
+        el.innerHTML = `<i data-lucide="check-circle-2" style="width:12px; height:12px;"></i> ${baseLabel}`;
+      } else {
+        el.className = 'pwd-rule-pill invalid';
+        el.innerHTML = `<i data-lucide="x-circle" style="width:12px; height:12px;"></i> ${baseLabel}`;
+      }
+    };
+
+    updatePill('pwdRuleLen', hasLen);
+    updatePill('pwdRuleNum', hasNum);
+    updatePill('pwdRuleSym', hasSym);
+    if (window.lucide) lucide.createIcons();
+
+    return hasLen && hasNum && hasSym;
+  },
+
+  togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const isPass = input.type === 'password';
+    input.type = isPass ? 'text' : 'password';
+    if (btn) {
+      btn.innerHTML = `<i data-lucide="${isPass ? 'eye-off' : 'eye'}" style="width:16px; height:16px;"></i>`;
+      if (window.lucide) lucide.createIcons();
+    }
+  },
+
+  selectAppLoginRole(role) {
+    const hiddenRole = document.getElementById('inAppLoginRole');
+    if (hiddenRole) hiddenRole.value = role;
+
+    // Update active card styling
+    document.querySelectorAll('.role-select-card').forEach(card => {
+      const cardRole = card.getAttribute('data-app-role');
+      const radio = card.querySelector('.role-check-radio');
+      if (cardRole === role) {
+        card.classList.add('active');
+        if (radio) radio.innerText = '●';
+      } else {
+        card.classList.remove('active');
+        if (radio) radio.innerText = '○';
+      }
+    });
+
+    // Update verification badge text
+    const titleEl = document.getElementById('appLoginVerifiedTitle');
+    const subEl = document.getElementById('appLoginVerifiedSubtitle');
+    const roleLabels = {
+      CITIZEN: 'Citizen Public Services (Motorist / e-Challan)',
+      TRAFFIC_OFFICER: 'Traffic Police Enforcement & Patrol',
+      COMMISSIONER: 'Directorate High Command & Policy Authority',
+      CONTROL_ROOM: 'Regional Transport Office & CCTV Signals'
+    };
+
+    if (titleEl) titleEl.innerText = `✓ Selected Role: ${roleLabels[role] || role}`;
+    if (subEl) subEl.innerText = `Ready for secure 2FA authentication & immediate app dashboard clearance.`;
+  },
+
+  applyAppLoginPreset(role) {
+    this.selectAppLoginRole(role);
+    const idInput = document.getElementById('inAppLoginId');
+    const passInput = document.getElementById('inAppLoginPass');
+    const otpInput = document.getElementById('inAppLoginOtp');
+
+    const presets = {
+      CITIZEN: { id: 'RJ54CK4706', pass: 'Citizen@2026', otp: '749201' },
+      TRAFFIC_OFFICER: { id: 'TR-INSP-5501', pass: 'INSP@2026', otp: '882190' },
+      COMMISSIONER: { id: 'IPS-8801-CIP', pass: 'Admin@2026', otp: '992410' },
+      CONTROL_ROOM: { id: 'RTO-DL-4402', pass: 'Rto@2026', otp: '554102' }
+    };
+
+    const target = presets[role] || presets.CITIZEN;
+    if (idInput) idInput.value = target.id;
+    if (passInput) passInput.value = target.pass;
+    if (otpInput) otpInput.value = target.otp;
+
+    this.activeAppOtp = target.otp;
+    this.validateAppPassword(target.pass);
+    this.onAppLoginIdInput(target.id);
+    this.showToast(`1-Click Profile Loaded for ${role} (${target.id})`, "info");
+  },
+
+  async sendAppLoginOtp() {
+    const idVal = (document.getElementById('inAppLoginId')?.value || 'RJ54CK4706').trim();
+    const role = (document.getElementById('inAppLoginRole')?.value || 'CITIZEN');
+    const btn = document.getElementById('btnSendAppOtp');
+    const btnText = document.getElementById('appOtpBtnText');
+    const banner = document.getElementById('appOtpBanner');
+    const bannerText = document.getElementById('appOtpBannerText');
+
+    let generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: idVal, role: role })
+      });
+      const data = await res.json();
+      if (data.success && data.otp) generatedOtp = data.otp;
+    } catch (e) {
+      const defaultOtps = { CITIZEN: '749201', TRAFFIC_OFFICER: '882190', COMMISSIONER: '992410', CONTROL_ROOM: '554102' };
+      generatedOtp = defaultOtps[role] || '749201';
+    }
+
+    this.activeAppOtp = generatedOtp;
+    if (banner) {
+      banner.style.display = 'flex';
+      if (bannerText) {
+        bannerText.innerHTML = `Security OTP <strong>${generatedOtp}</strong> dispatched for ${role} (${idVal})`;
+      }
+    }
+
+    this.showToast(`📱 Official SMS & Email OTP dispatched: ${generatedOtp}`, "info");
+
+    // 30s Countdown
+    if (btn && btnText) {
+      btn.disabled = true;
+      let seconds = 30;
+      btnText.innerText = `Resend (${seconds}s)`;
+      const interval = setInterval(() => {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          btn.disabled = false;
+          btnText.innerText = `Send OTP`;
+        } else {
+          btnText.innerText = `Resend (${seconds}s)`;
+        }
+      }, 1000);
+    }
+  },
+
+  async verifyAppLoginOtp() {
+    const idVal = (document.getElementById('inAppLoginId')?.value || 'RJ54CK4706').trim();
+    const otpVal = (document.getElementById('inAppLoginOtp')?.value || '').trim();
+
+    if (!otpVal || otpVal.length < 4) {
+      this.showToast("Please enter the 6-digit OTP received.", "warning");
+      return;
+    }
+
+    let verified = false;
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: idVal, otp: otpVal })
+      });
+      const data = await res.json();
+      if (data.success && data.verified) verified = true;
+    } catch (e) {
+      if (this.activeAppOtp && otpVal === this.activeAppOtp) verified = true;
+      if (['749201', '882190', '992410', '554102'].includes(otpVal)) verified = true;
+    }
+
+    const titleEl = document.getElementById('appLoginVerifiedTitle');
+    const subEl = document.getElementById('appLoginVerifiedSubtitle');
+
+    if (verified) {
+      this.appOtpVerified = true;
+      if (titleEl) titleEl.innerText = `✓ 2FA Security OTP Verified Successfully!`;
+      if (subEl) subEl.innerText = `Identity confirmed. Click 'VERIFY & ACCESS THE APP' below.`;
+      this.showToast("✓ OTP verified successfully.", "success");
+    } else {
+      this.showToast("Invalid or expired OTP. Please click Send OTP.", "error");
+    }
+  },
+
+  quickFillAppLoginOtp() {
+    const otpInput = document.getElementById('inAppLoginOtp');
+    const role = document.getElementById('inAppLoginRole')?.value || 'CITIZEN';
+    const fallbackOtps = { CITIZEN: '749201', TRAFFIC_OFFICER: '882190', COMMISSIONER: '992410', CONTROL_ROOM: '554102' };
+    const otpToFill = this.activeAppOtp || fallbackOtps[role] || '749201';
+
+    if (otpInput) otpInput.value = otpToFill;
+    this.showToast(`Auto-filled OTP: ${otpToFill}`, "info");
+    this.verifyAppLoginOtp();
+  },
+
+  async verifyAndAccessApp(event) {
+    if (event) event.preventDefault();
+
+    const idVal = (document.getElementById('inAppLoginId')?.value || '').trim();
+    const passVal = (document.getElementById('inAppLoginPass')?.value || '').trim();
+    const role = (document.getElementById('inAppLoginRole')?.value || 'CITIZEN');
+    const otpVal = (document.getElementById('inAppLoginOtp')?.value || '').trim();
+
+    // 1. Validate Identifier
+    if (!idVal) {
+      this.showToast("Please enter 1. User Name / Email ID / Vehicle No.", "error");
+      return;
+    }
+
+    // 2. Validate Password (8 chars, number, symbol)
+    const isPassValid = this.validateAppPassword(passVal);
+    const isPresetPass = ['Citizen@2026', 'INSP@2026', 'Admin@2026', 'Rto@2026', 'DGP@2026'].includes(passVal);
+    if (!isPassValid && !isPresetPass) {
+      this.showToast("Password requires at least 8 characters, a number (0-9), and a symbol (!@#$)", "error");
+      return;
+    }
+
+    // 3. Ensure OTP
+    if (!otpVal) {
+      this.showToast("Please enter the 4. OTP received.", "warning");
+      return;
+    }
+
+    // Prepare credentials payload
+    const payload = {
+      identifier: idVal,
+      password: passVal,
+      otp: otpVal,
+      role: role
+    };
+
+    if (idVal.includes('@')) {
+      payload.email = idVal;
+    } else if (idVal.startsWith('TR-')) {
+      payload.badgeNumber = idVal;
+      payload.pin = '5050';
+    } else if (idVal.startsWith('IPS-')) {
+      payload.badgeNumber = idVal;
+      payload.pin = '9090';
+    } else if (idVal.startsWith('RTO-')) {
+      payload.badgeNumber = idVal;
+      payload.pin = '7788';
+    } else {
+      payload.vehicleNumber = idVal.toUpperCase();
+    }
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.success && data.user) {
+        // Unlock verified roles
+        if (!this.verifiedOfficerRoles) this.verifiedOfficerRoles = {};
+        if (role === 'TRAFFIC_OFFICER' || data.user.role === 'TRAFFIC_POLICE_OFFICER') {
+          this.verifiedOfficerRoles['police'] = true;
+          this.currentOfficer = data.user;
+          this.closeModal('appLoginModal');
+          this.switchRole('officer');
+        } else if (role === 'COMMISSIONER' || data.user.role === 'ADMINISTRATOR') {
+          this.verifiedOfficerRoles['admin'] = true;
+          this.closeModal('appLoginModal');
+          this.switchRole('admin');
+        } else if (role === 'CONTROL_ROOM' || data.user.role === 'RTO_OFFICER') {
+          this.verifiedOfficerRoles['rto'] = true;
+          this.closeModal('appLoginModal');
+          this.switchRole('rto');
+        } else {
+          this.closeModal('appLoginModal');
+          this.switchRole('citizen');
+        }
+
+        if (window.govAuth) window.govAuth.currentUser = Object.assign({}, data.user, { token: data.token });
+        try { localStorage.setItem('gov_auth_session', JSON.stringify(Object.assign({}, data.user, { token: data.token }))); } catch (e) {}
+
+        this.showToast(`✓ Access Granted: Welcome ${data.user.fullName || data.user.name || idVal}!`, "success");
+        return;
+      } else {
+        this.showToast(`Login Failed: ${data.message || 'Check credentials & OTP'}`, "error");
+      }
+    } catch (err) {
+      console.warn("API login fallback to client-side authentication:", err);
+      // Client-side fallback authorization
+      if (!this.verifiedOfficerRoles) this.verifiedOfficerRoles = {};
+      if (role === 'TRAFFIC_OFFICER') {
+        this.verifiedOfficerRoles['police'] = true;
+        this.closeModal('appLoginModal');
+        this.switchRole('officer');
+      } else if (role === 'COMMISSIONER') {
+        this.verifiedOfficerRoles['admin'] = true;
+        this.closeModal('appLoginModal');
+        this.switchRole('admin');
+      } else if (role === 'CONTROL_ROOM') {
+        this.verifiedOfficerRoles['rto'] = true;
+        this.closeModal('appLoginModal');
+        this.switchRole('rto');
+      } else {
+        this.closeModal('appLoginModal');
+        this.switchRole('citizen');
+      }
+      this.showToast(`✓ Access Granted as ${role}!`, "success");
     }
   },
 
@@ -880,7 +1241,7 @@ const App = {
       });
       const data = await res.json();
       if (data.success && data.verified) isMatch = true;
-    } catch (e) {}
+    } catch (e) { }
 
     if (isMatch) {
       this.citizenVerified = true;
@@ -937,7 +1298,7 @@ const App = {
         if (window.govAuth) {
           window.govAuth.currentUser = userWithVeh;
         }
-        try { localStorage.setItem('gov_auth_session', JSON.stringify(userWithVeh)); } catch (e) {}
+        try { localStorage.setItem('gov_auth_session', JSON.stringify(userWithVeh)); } catch (e) { }
         this.closeModal('officerPassModal');
         this.switchRole('citizen');
         this.showToast(`✓ Welcome: Motorist ${vehicleNumber} Authenticated`, "success");
@@ -1151,10 +1512,10 @@ const App = {
     this.currentOfficer = officer;
     this.displayOfficialDutyPass(officer);
     this.closeModal('officerPassModal');
-    
+
     // Switch to Officer role & unlock case review desk
     this.switchRole('officer');
-    
+
     // Log audit trail entry
     window.trafficDB.logAudit({
       user: `${officer.name} (${officer.badgeNumber})`,
@@ -1272,7 +1633,7 @@ const App = {
     // Auto-populate Case Search and Switch to Case Tracking View
     const inputSearch = document.getElementById('inputCaseSearch');
     if (inputSearch) inputSearch.value = saved.id;
-    
+
     this.switchTab('citizen-track');
     this.searchAndDisplayCase(saved.id);
 
@@ -1612,7 +1973,7 @@ const App = {
     if (banner) banner.style.display = 'block';
     if (title) title.innerText = `${type.toUpperCase()} EMERGENCY BROADCASTED`;
     if (desc) desc.innerText = `Nearest Response Team: ${assigned} • GPS Locked`;
-    
+
     // Start Live ETA Countdown
     let remainingSecs = 180;
     if (this.emergencyTimerId) clearInterval(this.emergencyTimerId);
@@ -1698,7 +2059,7 @@ const App = {
 
     item.innerHTML = `
       <div>
-        <div style="font-weight:700; color:${isCritical ? '#b91c1c' : '#047857'};">
+        <div style="font-weight:700; color:${isCritical ? '#353232ff' : '#cad9d5ff'};">
           ${isCritical ? '⚠️ OVERSPEED DETECTION' : '✓ PLATE RECORDED'} [${event.plate}]
         </div>
         <div style="color:#111827; font-size:11px; margin-top:2px;">
@@ -1719,18 +2080,18 @@ const App = {
   },
 
   quickFine(plate, speed) {
-    const v = window.telemetryVault 
+    const v = window.telemetryVault
       ? window.telemetryVault.resolveVehicleDetails(plate)
-      : { 
-          owner: "Registered Vehicle Owner", 
-          class: "Cars & SUVs (4-Wheelers)", 
-          districtName: "National Highway", 
-          corridor: "Main Arterial", 
-          ipAddress: "164.100.24.11",
-          stateCode: window.trafficDB.selectedState,
-          rtoCode: window.trafficDB.selectedDistrict,
-          speedLimit: 60
-        };
+      : {
+        owner: "Registered Vehicle Owner",
+        class: "Cars & SUVs (4-Wheelers)",
+        districtName: "National Highway",
+        corridor: "Main Arterial",
+        ipAddress: "164.100.24.11",
+        stateCode: window.trafficDB.selectedState,
+        rtoCode: window.trafficDB.selectedDistrict,
+        speedLimit: 60
+      };
 
     const challan = {
       id: "CH-2026-" + Math.floor(10000 + Math.random() * 90000),
@@ -1765,7 +2126,7 @@ const App = {
     const vType = document.getElementById('filterVehicleType')?.value;
 
     if (query) {
-      list = list.filter(v => 
+      list = list.filter(v =>
         (v.plateNumber && v.plateNumber.toUpperCase().includes(query)) ||
         (v.id && v.id.toUpperCase().includes(query)) ||
         (v.ownerName && v.ownerName.toUpperCase().includes(query))
@@ -2117,7 +2478,7 @@ const App = {
     const query = document.getElementById('adminSearchUsersInput')?.value?.trim().toUpperCase();
 
     if (query) {
-      users = users.filter(u => 
+      users = users.filter(u =>
         (u.name && u.name.toUpperCase().includes(query)) ||
         (u.dlNumber && u.dlNumber.toUpperCase().includes(query)) ||
         (u.id && u.id.toUpperCase().includes(query)) ||
@@ -2452,7 +2813,7 @@ const App = {
       const recentApps = rtoApps.slice(0, 2);
 
       let html = '';
-      
+
       // Add standard verified vehicle entry
       html += `
         <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:6px; padding:10px 12px; font-size:11.5px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -2595,7 +2956,7 @@ const App = {
     });
 
     this.showToast(`🚨 Accident Case Registered: [${saved.accidentNumber || saved.id}] • 112 Unit Dispatched!`, "success");
-    
+
     // Switch to tracking or officer desk
     this.renderOfficerAccidentsTable();
     this.switchTab('officer-accidents');
@@ -2796,8 +3157,8 @@ const App = {
             // Server verified
           }
         })
-        .catch(() => {});
-    } catch (e) {}
+        .catch(() => { });
+    } catch (e) { }
 
     if (!result || !result.valid) {
       if (parsedState) parsedState.innerText = "—";
@@ -2915,7 +3276,7 @@ const App = {
         insuranceExpiry: "2027-04-20",
         insuranceCompany: "HDFC ERGO General Insurance Co. Ltd.",
         status: "ACTIVE / COMPLIANT",
-        authority: parsed ? (parsed.authority || parsed.district) : "DTO Pipar City, Jodhpur Division"
+        authority: parsed ? (parsed.authority || parsed.district) : "DTO  Jodhpur Division"
       };
     }
 
@@ -2923,7 +3284,7 @@ const App = {
     if (plateEl) plateEl.innerText = veh.registrationNumber;
 
     const ownerEl = document.getElementById('citVehOwner');
-    if (ownerEl) ownerEl.innerText = veh.ownerName || "Rohit Khandal";
+    if (ownerEl) ownerEl.innerText = veh.ownerName || "Rohit";
 
     const makeEl = document.getElementById('citVehMake');
     if (makeEl) makeEl.innerText = `${veh.make} ${veh.model}`;
@@ -2941,7 +3302,7 @@ const App = {
     const tbody = document.getElementById('citChallanHistoryTableBody');
     if (tbody) {
       let violations = window.trafficDB.getViolations();
-      let vehViolations = violations.filter(v => 
+      let vehViolations = violations.filter(v =>
         (v.plateNumber && v.plateNumber.toUpperCase().replace(/[\s-]/g, '') === plate) ||
         (v.plate && v.plate.toUpperCase().replace(/[\s-]/g, '') === plate)
       );
@@ -2951,7 +3312,7 @@ const App = {
         const demoChallan = {
           id: "CH-2026-5401",
           plateNumber: "RJ54CK4706",
-          ownerName: "Rohit Khandal",
+          ownerName: "Rohit ",
           violationType: "Radar Speed Breach (84 km/h in 60 km/h Zone)",
           location: "Pipar City Highway Corridor, Jodhpur",
           fineAmount: 2000,
@@ -3004,7 +3365,7 @@ const App = {
     if (!container) return;
 
     let violations = window.trafficDB.getViolations();
-    let vehViolations = violations.filter(v => 
+    let vehViolations = violations.filter(v =>
       (v.plateNumber && v.plateNumber.toUpperCase().replace(/[\s-]/g, '') === plate) ||
       (v.plate && v.plate.toUpperCase().replace(/[\s-]/g, '') === plate)
     );
@@ -3167,7 +3528,7 @@ const App = {
 
     // Generate Standard UPI Deep Link
     const upiUri = `upi://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Challan%20${v.id}%20${v.plateNumber || ''}`;
-    
+
     // Update Deep Links for Apps
     const linkPhonePe = document.getElementById('linkPayPhonePe');
     if (linkPhonePe) linkPhonePe.href = `phonepe://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
@@ -3191,7 +3552,7 @@ const App = {
     this.activeUpiApp = appName;
     const v = window.trafficDB.violations.find(item => item.id === this.activePayingChallanId) || { id: this.activePayingChallanId, fineAmount: 2000 };
     const amount = v.fineAmount || 2000;
-    
+
     let deepLink = `upi://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
     if (appName === 'PhonePe') deepLink = `phonepe://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
     else if (appName === 'Paytm') deepLink = `paytmmp://pay?pa=gov.traffic.echallan@sbi&pn=eChallan%20Parivahan&am=${amount}&cu=INR&tn=Traffic%20Challan%20${v.id}`;
@@ -3200,7 +3561,7 @@ const App = {
     // Try opening the deep link on mobile device
     try {
       window.location.href = deepLink;
-    } catch (e) {}
+    } catch (e) { }
 
     this.showToast(`🚀 Opening ${appName} for e-Challan payment of ₹${amount}. Click Confirm after authorization.`, "info");
   },
@@ -3457,6 +3818,494 @@ const App = {
       window.mapController.flyToLocation(lat, lng, 15);
       this.showToast(`📍 Focused GIS Map on ${level} Hazard Zone: ${name}`, "info");
     }
+  },
+
+  // =========================================================================
+  // SARATHI DRIVING LICENCE (DL) APPLICATION & ADTT TEST SLOT BOOKING CONTROLLER
+  // =========================================================================
+
+  renderDlServicesView() {
+    this.renderDlDatePills();
+    this.renderDlApplicationsTable();
+    this.renderDlAppointmentsTable();
+    this.recalculateDlFee();
+    if (window.lucide) lucide.createIcons();
+  },
+
+  switchDlServiceTab(subTab) {
+    const tabs = ['apply', 'slot', 'track'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`btnDlTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+      const panel = document.getElementById(`dlSubView${t.charAt(0).toUpperCase() + t.slice(1)}`);
+      if (btn) btn.classList.toggle('active', t === subTab);
+      if (panel) panel.style.display = (t === subTab) ? 'block' : 'none';
+    });
+
+    if (subTab === 'slot') {
+      this.renderDlDatePills();
+    } else if (subTab === 'track') {
+      this.renderDlApplicationsTable();
+      this.renderDlAppointmentsTable();
+    }
+    if (window.lucide) lucide.createIcons();
+  },
+
+  onDlCategoryChange(cat) {
+    this.recalculateDlFee();
+    this.showToast(`Selected Category: ${cat}`, "info");
+  },
+
+  recalculateDlFee() {
+    const checkboxes = document.querySelectorAll('input[name="dlClassCheckbox"]:checked');
+    const classCount = checkboxes.length || 1;
+    const cat = document.getElementById('inDlAppCategory')?.value || '';
+
+    let appFee = 200;
+    let trackFee = 300;
+    let smartCardFee = 200;
+
+    if (cat.includes('Learner')) {
+      trackFee = 0;
+      smartCardFee = 150;
+    } else if (cat.includes('Renewal')) {
+      trackFee = 0;
+      smartCardFee = 200;
+    }
+
+    const total = appFee + (trackFee * classCount) + smartCardFee;
+
+    const elApp = document.getElementById('feeAppProc');
+    const elTrack = document.getElementById('feeTestTrack');
+    const elCard = document.getElementById('feeSmartCard');
+    const elTotal = document.getElementById('feeTotalSum');
+
+    if (elApp) elApp.innerText = `₹${appFee.toFixed(2)}`;
+    if (elTrack) elTrack.innerText = `₹${(trackFee * classCount).toFixed(2)}`;
+    if (elCard) elCard.innerText = `₹${smartCardFee.toFixed(2)}`;
+    if (elTotal) elTotal.innerText = `₹${total.toFixed(2)}`;
+  },
+
+  fillDlDemoApplication() {
+    const nameEl = document.getElementById('inDlApplicantName');
+    const guardEl = document.getElementById('inDlGuardianName');
+    const dobEl = document.getElementById('inDlDob');
+    const phoneEl = document.getElementById('inDlPhone');
+    const emailEl = document.getElementById('inDlEmail');
+    const addrEl = document.getElementById('inDlAddress');
+
+    if (nameEl) nameEl.value = "Vikramaditya Sharma";
+    if (guardEl) guardEl.value = "Rameshwar Sharma";
+    if (dobEl) dobEl.value = "1996-08-14";
+    if (phoneEl) phoneEl.value = "+91 98101 23456";
+    if (emailEl) emailEl.value = "citizen@trafix.gov.in";
+    if (addrEl) addrEl.value = "Plot 42, Civil Lines Road, Near High Court Junction, Pipar City, Jodhpur - 342601";
+
+    this.recalculateDlFee();
+    this.showToast("⚡ Sample Applicant Particulars Loaded", "info");
+  },
+
+  async handleDrivingLicenceApply(event) {
+    if (event) event.preventDefault();
+
+    const applicantName = document.getElementById('inDlApplicantName')?.value.trim();
+    const guardianName = document.getElementById('inDlGuardianName')?.value.trim();
+    const dob = document.getElementById('inDlDob')?.value;
+    const gender = document.getElementById('inDlGender')?.value;
+    const bloodGroup = document.getElementById('inDlBloodGroup')?.value;
+    const phone = document.getElementById('inDlPhone')?.value.trim();
+    const email = document.getElementById('inDlEmail')?.value.trim();
+    const address = document.getElementById('inDlAddress')?.value.trim();
+    const rtoOffice = document.getElementById('inDlRtoOffice')?.value;
+    const appCategory = document.getElementById('inDlAppCategory')?.value;
+
+    const checkedBoxes = document.querySelectorAll('input[name="dlClassCheckbox"]:checked');
+    const vehicleClasses = Array.from(checkedBoxes).map(c => c.value);
+
+    if (vehicleClasses.length === 0) {
+      this.showToast("Please select at least one Vehicle Class (e.g. MCWG or LMV).", "warning");
+      return;
+    }
+
+    const payload = {
+      applicantName,
+      guardianName,
+      dob,
+      gender,
+      bloodGroup,
+      phone,
+      email,
+      address,
+      rtoOffice,
+      applicationType: appCategory,
+      vehicleClasses,
+      medicalDeclared: true
+    };
+
+    try {
+      const res = await fetch('/api/licence-applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.success && data.application) {
+        const appNo = data.application.applicationNumber;
+        this.showToast(`✓ Driving Licence Application Registered: ${appNo}`, "success");
+
+        const slotAppInput = document.getElementById('inSlotAppNumber');
+        if (slotAppInput) slotAppInput.value = appNo;
+        const feedback = document.getElementById('slotAppLookupFeedback');
+        if (feedback) {
+          feedback.innerHTML = `✓ Matched Applicant: ${applicantName} • Classes: ${vehicleClasses.join(', ')}`;
+        }
+
+        this.switchDlServiceTab('slot');
+        this.renderDlApplicationsTable();
+      } else {
+        this.showToast(`Error: ${data.message || 'Unable to register application'}`, "error");
+      }
+    } catch (e) {
+      console.warn("Offline fallback for DL application:", e);
+      const randomAppNo = `SARATHI-DL-2026-${Math.floor(10000 + Math.random() * 90000)}`;
+      const slotAppInput = document.getElementById('inSlotAppNumber');
+      if (slotAppInput) slotAppInput.value = randomAppNo;
+      this.switchDlServiceTab('slot');
+      this.showToast(`✓ Application Recorded (${randomAppNo})`, "success");
+    }
+  },
+
+  renderDlDatePills() {
+    const container = document.getElementById('dlDatePillsContainer');
+    if (!container) return;
+
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    let html = '';
+    const today = new Date();
+
+    for (let i = 1; i <= 10; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const isSunday = d.getDay() === 0;
+      const dateISO = d.toISOString().split('T')[0];
+      const dayName = days[d.getDay()];
+      const dayNum = d.getDate();
+      const monthName = months[d.getMonth()];
+      const isActive = i === 1;
+
+      html += `
+        <button type="button" class="date-pill-btn ${isActive ? 'active' : ''}" 
+          data-date="${dateISO}" onclick="App.onSlotDateSelected('${dateISO}', this)"
+          ${isSunday ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>
+          <div style="font-weight:800; font-size:12px;">${dayName}, ${dayNum} ${monthName}</div>
+          <div style="font-size:9.5px; margin-top:2px; ${isSunday ? 'color:#dc2626;' : (i % 2 === 0 ? 'color:#15803d;' : 'color:#b45309;')}">
+            ${isSunday ? 'Sunday Closed' : (i % 2 === 0 ? '✓ Available' : '⚡ 6 Slots Left')}
+          </div>
+        </button>
+      `;
+    }
+
+    container.innerHTML = html;
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const dateInput = document.getElementById('inSlotTestDate');
+    if (dateInput) dateInput.value = tomorrow.toISOString().split('T')[0];
+  },
+
+  onSlotDateSelected(dateStr, btnEl) {
+    const dateInput = document.getElementById('inSlotTestDate');
+    if (dateInput) dateInput.value = dateStr;
+
+    document.querySelectorAll('.date-pill-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    if (btnEl) {
+      btnEl.classList.add('active');
+    } else {
+      const match = document.querySelector(`.date-pill-btn[data-date="${dateStr}"]`);
+      if (match) match.classList.add('active');
+    }
+
+    this.showToast(`Selected Test Date: ${dateStr}`, "info");
+  },
+
+  selectDlTimeSlot(timeStr, el) {
+    const hidden = document.getElementById('inSlotTimeSelected');
+    if (hidden) hidden.value = timeStr;
+
+    document.querySelectorAll('.slot-time-card').forEach(c => c.classList.remove('active'));
+    if (el) el.classList.add('active');
+
+    this.showToast(`Selected Test Batch: ${timeStr}`, "info");
+  },
+
+  onTestTrackChange() {
+    const track = document.getElementById('inSlotTestTrack')?.value;
+    this.showToast(`ADTT Center Selected: ${track}`, "info");
+  },
+
+  async lookupDlApplicationForSlot() {
+    const input = document.getElementById('inSlotAppNumber');
+    const val = (input?.value || '').trim();
+    const feedback = document.getElementById('slotAppLookupFeedback');
+
+    if (!val) {
+      this.showToast("Please enter an Application Reference Number", "warning");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/licence-applications?search=${encodeURIComponent(val)}`);
+      const data = await res.json();
+      if (data.success && data.applications && data.applications.length > 0) {
+        const app = data.applications[0];
+        if (feedback) {
+          feedback.innerHTML = `✓ Verified: <strong>${app.applicantName}</strong> • RTO: ${app.rtoOffice} • Classes: ${(app.vehicleClasses || []).join(', ')}`;
+        }
+        this.showToast(`Application Found for ${app.applicantName}`, "success");
+      } else {
+        if (feedback) {
+          feedback.innerHTML = `✓ Matched Reference: <strong>${val}</strong> (Ready for Slot Scheduling)`;
+        }
+      }
+    } catch (e) {
+      if (feedback) feedback.innerHTML = `✓ Ready for scheduling for ${val}`;
+    }
+  },
+
+  async handleDrivingLicenceSlotBook(event) {
+    if (event) event.preventDefault();
+
+    const appNo = document.getElementById('inSlotAppNumber')?.value.trim();
+    const trackLocation = document.getElementById('inSlotTestTrack')?.value;
+    const slotDate = document.getElementById('inSlotTestDate')?.value || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0];
+    const slotTime = document.getElementById('inSlotTimeSelected')?.value || "09:30 AM - 11:30 AM";
+    const applicantName = document.getElementById('inDlApplicantName')?.value || "Vikramaditya Sharma";
+
+    if (!appNo) {
+      this.showToast("Please enter a valid Application Reference Number.", "warning");
+      return;
+    }
+
+    const payload = {
+      applicationNumber: appNo,
+      applicantName,
+      trackLocation,
+      slotDate,
+      slotTime,
+      vehicleClasses: ["MCWG", "LMV"]
+    };
+
+    try {
+      const res = await fetch('/api/licence-slots/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.success && data.appointment) {
+        this.showToast(`🎉 ADTT Driving Test Slot Confirmed: ${slotDate} (${slotTime})!`, "success");
+        this.openHallTicketModal(data.appointment);
+        this.renderDlAppointmentsTable();
+        this.renderDlApplicationsTable();
+      } else {
+        this.showToast(`Slot Booking Error: ${data.message || 'Slot currently full'}`, "error");
+      }
+    } catch (e) {
+      console.warn("Offline fallback for slot booking:", e);
+      const appt = {
+        appointmentToken: `SARATHI-APPT-${Math.floor(100000 + Math.random() * 900000)}`,
+        applicationNumber: appNo,
+        applicantName: applicantName,
+        trackLocation: trackLocation,
+        slotDate: slotDate,
+        slotTime: slotTime,
+        vehicleClasses: ["MCWG", "LMV"]
+      };
+      this.openHallTicketModal(appt);
+      this.showToast(`✓ Driving Test Slot Confirmed!`, "success");
+    }
+  },
+
+  openHallTicketModal(appt) {
+    const tAppNo = document.getElementById('ticketAppNumber');
+    const tToken = document.getElementById('ticketApptToken');
+    const tName = document.getElementById('ticketCandidateName');
+    const tFather = document.getElementById('ticketFatherName');
+    const tClasses = document.getElementById('ticketVehicleClasses');
+    const tVenue = document.getElementById('ticketTrackVenue');
+    const tDate = document.getElementById('ticketSlotDate');
+    const tTime = document.getElementById('ticketSlotTime');
+
+    if (tAppNo) tAppNo.innerText = appt.applicationNumber || 'SARATHI-DL-2026-78412';
+    if (tToken) tToken.innerText = appt.appointmentToken || 'SARATHI-APPT-849102';
+    if (tName) tName.innerText = appt.applicantName || 'Vikramaditya Sharma';
+    if (tFather) tFather.innerText = appt.guardianName || document.getElementById('inDlGuardianName')?.value || 'Rameshwar Sharma';
+    if (tClasses) tClasses.innerText = Array.isArray(appt.vehicleClasses) ? appt.vehicleClasses.join(', ') : 'MCWG, LMV';
+    if (tVenue) tVenue.innerText = appt.trackLocation || 'DTO Pipar City ADTT Sensor Track (RJ-54)';
+    if (tDate) tDate.innerText = appt.slotDate || '2026-10-02';
+    if (tTime) tTime.innerText = appt.slotTime || '09:30 AM - 11:30 AM';
+
+    this.openModal('dlHallTicketModal');
+    if (window.lucide) lucide.createIcons();
+  },
+
+  async renderDlApplicationsTable() {
+    const tbody = document.getElementById('dlApplicationsTableBody');
+    if (!tbody) return;
+
+    let apps = [];
+    try {
+      const res = await fetch('/api/licence-applications');
+      const data = await res.json();
+      if (data.success && data.applications) apps = data.applications;
+    } catch (e) {
+      apps = [
+        {
+          applicationNumber: "SARATHI-DL-2026-78412",
+          applicantName: "Vikramaditya Sharma",
+          applicationType: "Permanent Driving Licence (DL)",
+          vehicleClasses: ["MCWG", "LMV"],
+          rtoOffice: "DTO Pipar City (RJ-54)",
+          submittedAt: "2026-09-28",
+          status: "SLOT_CONFIRMED"
+        }
+      ];
+    }
+
+    if (apps.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:16px; color:#64748b;">No applications registered yet. Fill the form above to apply.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = apps.map(a => {
+      const isConfirmed = a.status === 'SLOT_CONFIRMED';
+      return `
+        <tr>
+          <td><strong style="font-family:var(--font-mono); color:#b45309;">${a.applicationNumber}</strong></td>
+          <td><strong>${a.applicantName}</strong></td>
+          <td><span style="font-size:11px; color:#334155;">${a.applicationType || 'DL'}</span></td>
+          <td><span style="background:#ecfdf5; color:#047857; padding:2px 6px; border-radius:3px; font-weight:700; font-size:10px;">${(a.vehicleClasses || ['LMV']).join(', ')}</span></td>
+          <td><span style="font-size:11px;">${a.rtoOffice || 'DTO Pipar City'}</span></td>
+          <td style="font-family:var(--font-mono); font-size:10.5px;">${(a.submittedAt || '2026-09-30').substring(0, 10)}</td>
+          <td>
+            <span style="background:${isConfirmed ? '#dcfce7' : '#fef3c7'}; color:${isConfirmed ? '#15803d' : '#b45309'}; padding:2px 8px; border-radius:4px; font-weight:700; font-size:10px;">
+              ${isConfirmed ? '✓ SLOT CONFIRMED' : '⏳ APPLICATION PENDING'}
+            </span>
+          </td>
+          <td>
+            ${isConfirmed ? `
+              <button class="btn-action-primary" style="font-size:10.5px; padding:3px 8px; background:#059669; color:#fff;"
+                onclick="App.openHallTicketModal({ applicationNumber: '${a.applicationNumber}', applicantName: '${a.applicantName}', trackLocation: '${a.testTrack || 'DTO Pipar City ADTT'}', slotDate: '${a.slotDate || '2026-10-02'}', slotTime: '${a.slotTime || '09:30 AM'}', vehicleClasses: ${JSON.stringify(a.vehicleClasses || ['MCWG', 'LMV'])} })">
+                🎟️ Admit Card
+              </button>
+            ` : `
+              <button class="btn-action-primary" style="font-size:10.5px; padding:3px 8px;"
+                onclick="document.getElementById('inSlotAppNumber').value = '${a.applicationNumber}'; App.switchDlServiceTab('slot');">
+                📅 Book Slot
+              </button>
+            `}
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  async renderDlAppointmentsTable() {
+    const tbody = document.getElementById('dlAppointmentsTableBody');
+    if (!tbody) return;
+
+    let slots = [];
+    try {
+      const res = await fetch('/api/licence-slots');
+      const data = await res.json();
+      if (data.success && data.slots) slots = data.slots;
+    } catch (e) {
+      slots = [
+        {
+          appointmentToken: "SARATHI-APPT-849102",
+          applicationNumber: "SARATHI-DL-2026-78412",
+          applicantName: "Vikramaditya Sharma",
+          trackLocation: "DTO Pipar City Automated Driving Test Track (RJ-54)",
+          slotDate: "2026-10-02",
+          slotTime: "09:30 AM - 11:30 AM",
+          status: "CONFIRMED",
+          vehicleClasses: ["MCWG", "LMV"]
+        }
+      ];
+    }
+
+    if (slots.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:16px; color:#64748b;">No test slots booked yet. Select a date &amp; time slot above.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = slots.map(s => `
+      <tr>
+        <td><strong style="font-family:var(--font-mono); color:#2563eb;">${s.appointmentToken}</strong></td>
+        <td><span style="font-family:var(--font-mono);">${s.applicationNumber}</span></td>
+        <td><strong>${s.applicantName}</strong></td>
+        <td><span style="font-size:11px;">${s.trackLocation}</span></td>
+        <td><strong style="color:#0f172a;">${s.slotDate}</strong></td>
+        <td><span style="font-weight:700; color:#2563eb;">${s.slotTime}</span></td>
+        <td><span style="background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700; font-size:10px;">✓ CONFIRMED</span></td>
+        <td>
+          <button class="btn-action-gold" style="font-size:10.5px; padding:3px 8px;"
+            onclick="App.openHallTicketModal(${JSON.stringify(s).replace(/"/g, '&quot;')})">
+            📄 Print Ticket
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  // 4-Quadrant Sector Filter for Frontend Dashboard
+  filterDashboardSector(sector = 'all') {
+    const sectors = [
+      { id: 'citizen', elId: 'secCitizenPortal', btnId: 'btnSectorCitizen', className: 'tab-citizen' },
+      { id: 'police', elId: 'secPoliceEnforcement', btnId: 'btnSectorPolice', className: 'tab-police' },
+      { id: 'rto', elId: 'secRtoControl', btnId: 'btnSectorRto', className: 'tab-rto' },
+      { id: 'admin', elId: 'secAdminHighCommand', btnId: 'btnSectorAdmin', className: 'tab-admin' }
+    ];
+
+    const btnAll = document.getElementById('btnSectorAll');
+    if (btnAll) btnAll.classList.toggle('active', sector === 'all');
+
+    sectors.forEach(s => {
+      const btn = document.getElementById(s.btnId);
+      const block = document.getElementById(s.elId);
+
+      if (btn) {
+        btn.classList.remove('active', 'tab-citizen', 'tab-police', 'tab-rto', 'tab-admin');
+        if (sector === s.id) {
+          btn.classList.add('active', s.className);
+        }
+      }
+
+      if (block) {
+        if (sector === 'all' || sector === s.id) {
+          block.style.display = 'block';
+        } else {
+          block.style.display = 'none';
+        }
+      }
+    });
+
+    const sectorNames = {
+      all: 'Command Matrix (All 4 Department Sections)',
+      citizen: 'Section 1: Citizen & Motorist Public Services',
+      police: 'Section 2: Traffic Police & Highway Patrol Enforcement',
+      rto: 'Section 3: RTO Statutory & Traffic Control Room',
+      admin: 'Section 4: Commissioner & Directorate High Command'
+    };
+
+    this.showToast(`Active Dashboard View: ${sectorNames[sector] || sector}`, 'info');
+    if (window.lucide) lucide.createIcons();
   }
 };
 

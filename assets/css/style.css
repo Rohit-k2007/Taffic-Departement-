@@ -70,7 +70,7 @@
   --transition-fast: 150ms ease;
 }
 
-/* Optional white theme  (High contrast Charcoal mode - No Blue) */
+/* Optional white theme - No Blue */
 [data-theme="dark"] {
   --bg-primary: #0a0e14;
   --bg-surface: #111827;
@@ -130,7 +130,7 @@ body {
 
 /* Official Government Strip (Charcoal/Onyx) */
 .official-top-strip {
-  background-color: #0a0e14;
+  background-color: #19202a;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 5px 24px;
   font-size: 0.78rem;
@@ -2760,4 +2760,647 @@ body {
 
 .security-gate-banner i {
   color: #f59e0b;
+}
+
+/* =========================================================================
+   APP LOGIN PAGE & 4-ROLE GATEWAY STYLES
+   ========================================================================= */
+.role-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .role-select-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.role-select-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.role-select-card:hover {
+  border-color: #b45309;
+  background: #fffbeb;
+  transform: translateY(-1px);
+}
+
+.role-select-card.active {
+  border-color: #b45309;
+  background: #fffbeb;
+  box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.25);
+}
+
+.role-select-card .role-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.role-select-card .role-title {
+  font-weight: 800;
+  font-size: 11.5px;
+  color: #0f172a;
+  letter-spacing: 0.02em;
+}
+
+.role-select-card .role-desc {
+  font-size: 9.5px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.role-select-card .role-check-radio {
+  font-size: 14px;
+  font-weight: 800;
+  color: #cbd5e1;
+}
+
+.role-select-card.active .role-check-radio {
+  color: #b45309;
+}
+
+/* Password Rule Pills */
+.pwd-rules-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pwd-rule-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+  transition: all 0.2s ease;
+}
+
+.pwd-rule-pill.valid {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #6ee7b7;
+}
+
+.pwd-rule-pill.invalid {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+/* 1-Click Demo Profile Button */
+.btn-preset-mini {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  color: #334155;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-preset-mini:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* Verify & Access Button */
+.btn-verify-access-app {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  border: 1px solid #047857;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-verify-access-app:hover {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.35);
+  transform: translateY(-1px);
+}
+
+/* =========================================================================
+   DRIVING LICENCE APPLICATION & TEST SLOT BOOKING STYLES (SARATHI SEVA)
+   ========================================================================= */
+.dl-service-tabs-row {
+  display: flex;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.dl-subtab-btn {
+  flex: 1;
+  min-width: 180px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.dl-subtab-btn:hover {
+  background: rgba(255, 255, 255, 0.6);
+  color: #0f172a;
+}
+
+.dl-subtab-btn.active {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.dl-class-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .dl-class-checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dl-class-checkbox-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dl-class-checkbox-card:hover {
+  border-color: #b45309;
+  background: #fffbeb;
+}
+
+.dl-class-checkbox-card input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: #b45309;
+  width: 16px;
+  height: 16px;
+}
+
+.slot-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.slot-time-card {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+}
+
+.slot-time-card:hover {
+  border-color: #2563eb;
+  background: #f0f7ff;
+  transform: translateY(-1px);
+}
+
+.slot-time-card.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+.slot-time-card .slot-time-title {
+  font-weight: 800;
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.slot-time-card .slot-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.slot-badge.available {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.slot-badge.fast {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.slot-badge.full {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.date-pill-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-top: 6px;
+}
+
+.date-pill-btn {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.date-pill-btn:hover {
+  border-color: #2563eb;
+  background: #f8fafc;
+}
+
+.date-pill-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.adtt-maneuver-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.adtt-maneuver-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adtt-maneuver-card .icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #eff6ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Official Government Admit Card / Hall Ticket Card */
+.hall-ticket-card {
+  background: #ffffff;
+  border: 2px solid #0f172a;
+  border-radius: 8px;
+  padding: 24px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.hall-ticket-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+  border-radius: 6px 6px 0 0;
+}
+
+.hall-ticket-header {
+  text-align: center;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.hall-ticket-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .hall-ticket-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================================
+   4-SECTION DIVIDED DASHBOARD FRONTEND STYLES (CITIZEN, POLICE, RTO, ADMIN)
+   ========================================================================= */
+.dashboard-quadrant-bar {
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.quadrant-tab-btn {
+  flex: 1;
+  min-width: 170px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.quadrant-tab-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.quadrant-tab-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.2);
+}
+
+.quadrant-tab-btn.active.tab-citizen {
+  background: #059669;
+  border-color: #059669;
+}
+
+.quadrant-tab-btn.active.tab-police {
+  background: #b45309;
+  border-color: #b45309;
+}
+
+.quadrant-tab-btn.active.tab-rto {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.quadrant-tab-btn.active.tab-admin {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+/* 4 Section Container Blocks */
+.dashboard-sections-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.dashboard-section-block {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.dashboard-section-block::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.dashboard-section-block.sector-citizen {
+  border-color: rgba(5, 150, 105, 0.4);
+}
+.dashboard-section-block.sector-citizen::before {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.dashboard-section-block.sector-police {
+  border-color: rgba(180, 83, 9, 0.4);
+}
+.dashboard-section-block.sector-police::before {
+  background: linear-gradient(90deg, #f59e0b, #b45309);
+}
+
+.dashboard-section-block.sector-rto {
+  border-color: rgba(37, 99, 235, 0.4);
+}
+.dashboard-section-block.sector-rto::before {
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+}
+
+.dashboard-section-block.sector-admin {
+  border-color: rgba(220, 38, 38, 0.4);
+}
+.dashboard-section-block.sector-admin::before {
+  background: linear-gradient(90deg, #ef4444, #b91c1c);
+}
+
+/* Section Header */
+.section-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-num-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.section-num-tag.citizen {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.section-num-tag.police {
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.section-num-tag.rto {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.section-num-tag.admin {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.section-block-title {
+  font-family: var(--font-heading);
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-block-desc {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 3px;
+}
+
+/* Modules Grid inside Section */
+.section-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-module-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.section-module-card:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+  border-color: #94a3b8;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+.section-module-card .mod-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.section-module-card .mod-title {
+  font-weight: 800;
+  font-size: 12.5px;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.section-module-card .mod-desc {
+  font-size: 10.5px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.section-module-card .mod-footer-link {
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Bottom Action Bar of Section */
+.section-block-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+  flex-wrap: wrap;
+  gap: 8px;
 }
