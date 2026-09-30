@@ -1868,6 +1868,16 @@
   ],
   "auditLogs": [
     {
+      "id": "SEC-LOG-2483",
+      "timestamp": "2026-09-30 03:25:50",
+      "user": "Dr. V. K. Malhotra, IPS (IPS-7701-HQ)",
+      "role": "SUPER_ADMIN",
+      "action": "AUTHENTICATION_SUCCESS_MFA_PASSED",
+      "details": "Session established on secure Gov gateway [Role: Director General / Commissioner]",
+      "ipAddress": "10.42.68.212",
+      "sha256Hash": "2724ca1049afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
       "id": "SEC-LOG-9921",
       "timestamp": "2026-09-30 02:25:10",
       "user": "Director General Dr. Arvind K. Saxena (IPS-8801-CIP)",
@@ -2275,5 +2285,110 @@
         "limitations": "Available years and tables vary by release; record the specific yearbook, table, and units used."
       }
     ]
-  }
+  },
+  "cases": [
+    {
+      "id": "CASE-2026-801",
+      "citizenName": "Anil Deshmukh",
+      "citizenPhone": "+91 98201 44921",
+      "category": "Accident Report",
+      "description": "Minor collision between multi-axle commercial truck and sedan near Ring Road flyover approach. Left lane obstructed.",
+      "location": "Ring Road Expressway Gantry 04, New Delhi",
+      "lat": 28.625,
+      "lng": 77.21,
+      "dateTime": "2026-09-30 08:15:00",
+      "evidenceType": "CCTV & Dashcam Capture",
+      "evidenceUrl": "assets/images/cctv_sample.jpg",
+      "aiClassification": "Accident Obstruction (High Priority)",
+      "aiPriority": "High",
+      "aiConfidence": "96%",
+      "aiDuplicateDetected": false,
+      "assignedOfficer": "Inspector Rajeshwar Nath (TR-INSP-5501)",
+      "status": "Action Taken",
+      "verificationStatus": "Verified Valid",
+      "actionTaken": "Interceptor Unit 04 Dispatched; Crane cleared debris; e-Challan issued for improper lane change.",
+      "challanId": "CH-2026-90412",
+      "userNotified": true,
+      "feedbackRating": 5,
+      "feedbackComment": "Prompt response by Highway Patrol SI Priya Sharma within 6 minutes!"
+    },
+    {
+      "id": "CASE-2026-802",
+      "citizenName": "Pooja Agarwal",
+      "citizenPhone": "+91 97112 55390",
+      "category": "Traffic Violation",
+      "description": "Reckless wrong-side driving and jumping red light at Central Vista Patel Chowk junction during peak rush.",
+      "location": "Ashoka Road & Patel Chowk Junction",
+      "lat": 28.618,
+      "lng": 77.215,
+      "dateTime": "2026-09-30 08:30:20",
+      "evidenceType": "Mobile Photo Evidence",
+      "evidenceUrl": "assets/images/cctv_sample.jpg",
+      "aiClassification": "Red Light Jump & Dangerous Driving",
+      "aiPriority": "Critical",
+      "aiConfidence": "94%",
+      "aiDuplicateDetected": false,
+      "assignedOfficer": "Inspector Rajeshwar Nath (TR-INSP-5501)",
+      "status": "Under Review",
+      "verificationStatus": "Pending Review",
+      "actionTaken": "Optical ANPR cross-checking vehicle registration DL-04-E-1011 against VAHAN ledger.",
+      "challanId": null,
+      "userNotified": true,
+      "feedbackRating": null,
+      "feedbackComment": null
+    },
+    {
+      "id": "CASE-2026-803",
+      "citizenName": "Mahesh Choudhary",
+      "citizenPhone": "+91 94140 88201",
+      "category": "Road Obstruction / Broken Signal",
+      "description": "Traffic signal malfunctioning at Bagru crossing on Jaipur Northern Ring Road link, creating severe traffic bottleneck.",
+      "location": "Jaipur Northern Ring Road (NH-48 Interchange)",
+      "lat": 26.82,
+      "lng": 75.75,
+      "dateTime": "2026-09-30 07:45:00",
+      "evidenceType": "Citizen Live Report",
+      "evidenceUrl": "assets/images/cctv_sample.jpg",
+      "aiClassification": "Infrastructure Fault (Signal Malfunction)",
+      "aiPriority": "Medium",
+      "aiConfidence": "91%",
+      "aiDuplicateDetected": false,
+      "assignedOfficer": "SP Ajay Singh Shekhawat, IPS (IPS-7714-RJ)",
+      "status": "Closed",
+      "verificationStatus": "Verified Valid",
+      "actionTaken": "JDA Electrical Maintenance team notified; manual traffic wardens deployed at intersection.",
+      "challanId": null,
+      "userNotified": true,
+      "feedbackRating": 4,
+      "feedbackComment": "Warden arrived quickly and managed the intersection."
+    }
+  ],
+  "emergencies": [
+    {
+      "id": "EMG-2026-01",
+      "type": "Accident",
+      "title": "Multi-Vehicle Collision on Express Highway",
+      "location": "Dwarka Expressway Link KM 4.5",
+      "lat": 28.5412,
+      "lng": 77.0125,
+      "callerPhone": "+91 98110 99420",
+      "status": "Patrol En Route",
+      "assignedPatrol": "Interceptor Unit 04 (Sub-Insp. Priya Sharma)",
+      "etaMinutes": 3,
+      "timestamp": "2026-09-30 08:52:10"
+    },
+    {
+      "id": "EMG-2026-02",
+      "type": "Medical",
+      "title": "Cardiac Patient Ambulance Green Corridor Required",
+      "location": "Sarai Kale Khan to AIIMS Trauma Centre",
+      "lat": 28.5833,
+      "lng": 77.25,
+      "callerPhone": "+91 98711 33200",
+      "status": "Green Corridor Active",
+      "assignedPatrol": "Green Corridor Pilot Unit 01",
+      "etaMinutes": 1,
+      "timestamp": "2026-09-30 08:58:00"
+    }
+  ]
 }

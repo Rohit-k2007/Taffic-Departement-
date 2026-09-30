@@ -15,6 +15,8 @@ class TrafficDatabase {
     this.violations = [];
     this.officers = [];
     this.auditLogs = [];
+    this.cases = [];
+    this.emergencies = [];
   }
 
   async loadInitialData() {
@@ -59,6 +61,20 @@ class TrafficDatabase {
       if (resLogs.ok) {
         const data = await resLogs.json();
         this.auditLogs = data.logs || [];
+      }
+
+      // 7. Fetch Citizen Cases Queue
+      const resCases = await fetch(`${this.apiBase}/api/cases`);
+      if (resCases.ok) {
+        const data = await resCases.json();
+        this.cases = data.cases || [];
+      }
+
+      // 8. Fetch Emergencies SOS Queue
+      const resEmg = await fetch(`${this.apiBase}/api/emergencies`);
+      if (resEmg.ok) {
+        const data = await resEmg.json();
+        this.emergencies = data.emergencies || [];
       }
 
       // 7. Fetch VAHAN Vehicle Registrations (1995-2026 Official Dataset)
@@ -262,6 +278,105 @@ class TrafficDatabase {
       });
     } catch (e) { }
     return entry;
+  }
+
+  // --- CASES & CITIZEN REPORTS ---
+  getCases(status = null) {
+    if (!status || status === 'ALL') return this.cases || [];
+    return (this.cases || []).filter(c => c.status === status);
+  }
+
+  getCaseById(id) {
+    return (this.cases || []).find(c => c.id === id);
+  }
+
+  async addCase(caseData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/cases`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(caseData)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        this.cases.unshift(result.caseRecord);
+        return result.caseRecord;
+      }
+    } catch (e) {
+      console.warn("Offline fallback for case submission:", e);
+    }
+    const fallback = Object.assign({
+      id: "CASE-2026-" + Math.floor(1000 + Math.random() * 9000),
+      dateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: "Under Review",
+      verificationStatus: "Pending Review",
+      userNotified: true
+    }, caseData);
+    this.cases.unshift(fallback);
+    return fallback;
+  }
+
+  async updateCase(id, patch) {
+    const item = (this.cases || []).find(c => c.id === id);
+    if (item) {
+      Object.assign(item, patch);
+      try {
+        fetch(`${this.apiBase}/api/cases/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(patch)
+        });
+      } catch (e) { }
+      return item;
+    }
+    return null;
+  }
+
+  async submitCaseFeedback(id, rating, comment) {
+    const item = (this.cases || []).find(c => c.id === id);
+    if (item) {
+      item.feedbackRating = rating;
+      item.feedbackComment = comment;
+      item.status = "Closed";
+      try {
+        fetch(`${this.apiBase}/api/cases/${id}/feedback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rating, comment })
+        });
+      } catch (e) { }
+      return item;
+    }
+    return null;
+  }
+
+  // --- EMERGENCY 112 DISPATCH ---
+  getEmergencies() {
+    return this.emergencies || [];
+  }
+
+  async triggerEmergency(emgData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/emergencies`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emgData)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        this.emergencies.unshift(result.emergency);
+        return result.emergency;
+      }
+    } catch (e) { }
+    const fallback = Object.assign({
+      id: "EMG-2026-" + Math.floor(10 + Math.random() * 90),
+      status: "Patrol Dispatched",
+      assignedPatrol: "Interceptor Unit 04",
+      etaMinutes: 4,
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19)
+    }, emgData);
+    this.emergencies.unshift(fallback);
+    return fallback;
   }
 
   pseudoSha256(str) {

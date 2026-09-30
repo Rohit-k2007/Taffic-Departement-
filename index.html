@@ -3,90 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NATDAMS - National Automated Traffic Department & Enforcement Administration</title>
-  <meta name="description" content="Official Government Traffic Department & Intelligent Mobility Administration System. Ministry of Road Transport and Highways, Government of India.">
+  <title>NATDAMS - National Automated Traffic Department & Enforcement System | Govt of India</title>
   
-  <!-- Google Fonts: Cinzel (Classic Sovereign), Plus Jakarta Sans & JetBrains Mono -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Leaflet CSS for GIS Cartography -->
+  <!-- Leaflet CSS for GIS Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   
-  <!-- Custom Design System Stylesheet - Professional & Classic Theme -->
+  <!-- Application CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-  <!-- National Top Tricolor Stripe -->
-  <div class="national-tricolor-bar"></div>
-
-  <!-- Official Top Government Strip -->
-  <div class="official-top-strip">
-    <div class="strip-left">
-      <div class="strip-item">
-        <span class="strip-badge">GOVERNMENT OF INDIA</span>
-        <span>सड़क परिवहन एवं राजमार्ग मंत्रालय | Ministry of Road Transport & Highways</span>
-      </div>
-      <div class="strip-item" style="color:#64748b;">|</div>
-      <div class="strip-item">
-        <i data-lucide="shield-check" style="width:13px; height:13px; color:#34d399;"></i>
-        <span>NIC Tier-4 Secured Network (National Data Vault)</span>
-      </div>
-    </div>
-    <div class="strip-right">
-      <div class="strip-item">
-        <i data-lucide="phone-call" style="width:13px; height:13px; color:#f2cb63;"></i>
-        <span>National Traffic Emergency Helpline: <strong>112 / 1033</strong></span>
-      </div>
-      <div class="strip-item" style="color:#64748b;">|</div>
-      <div class="strip-item">
-        <span id="currentTimeDisplay" style="font-family:var(--font-mono); font-size:0.75rem;">2026-09-30 01:50:00 IST</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Government Header -->
-  <header class="main-gov-header">
+  <!-- =========================================================================
+       TOP SOVEREIGN GOVERNMENT HEADER
+       ========================================================================= -->
+  <header class="gov-top-header">
     <div class="header-container">
-      <!-- Brand & Ashok Stambh Emblem -->
-      <div class="brand-section" onclick="App.switchTab('current')">
-        <div class="gov-crest-container">
-          <img src="assets/images/gov_emblem.jpg" alt="Official Ashoka Stambh Emblem" class="gov-crest-img" id="govHeaderLogo">
+      
+      <!-- Emblem & Title Group -->
+      <div class="emblem-group">
+        <!-- Pure White Ashok Stambh Emblem Seal -->
+        <div class="emblem-badge" style="background:#111827; border:2px solid #d97706; padding:2px; border-radius:50%; box-shadow:0 0 10px rgba(217, 119, 6, 0.35);">
+          <img src="assets/images/gov_emblem.jpg" alt="Government of India National Emblem" class="emblem-img" style="filter: brightness(2.2) contrast(1.2) drop-shadow(0 0 2px #fff);">
         </div>
-        <div class="brand-text">
-          <h1>
-            NATDAMS <span class="title-gold">NATIONAL PORTAL</span>
-          </h1>
-          <div class="brand-subtitle">
-            National Automated Traffic Department & Enforcement Administration
-          </div>
-          <div class="brand-tagline">
-            <span class="pulse-dot"></span>
-            <span>CENTRAL TRAFFIC CONTROL ROOM • ALL STATE & DISTRICT FEEDS LIVE</span>
+        <div class="gov-titles">
+          <div class="gov-title-hi">भारत सरकार • सड़क परिवहन और राजमार्ग मंत्रालय</div>
+          <div class="gov-title-en">GOVERNMENT OF INDIA • MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS</div>
+          <div class="portal-brand-title">
+            <span>राष्ट्रीय स्वचालित यातायात विभाग</span>
+            <span class="portal-acronym">NATDAMS</span>
           </div>
         </div>
       </div>
 
-      <!-- Live Quick Telemetry Metrics -->
-      <div class="header-quick-stats">
-        <div class="quick-stat">
-          <span class="quick-stat-label">Active Vehicles</span>
-          <span class="quick-stat-val" id="statActiveVehicles">184,520</span>
+      <!-- Live Telemetry Ticker -->
+      <div class="header-telemetry-strip">
+        <div class="quick-stat-box">
+          <span class="quick-stat-label">System Time (IST)</span>
+          <span class="quick-stat-val" id="currentTimeDisplay" style="font-family:var(--font-mono); font-size:11px;">2026-09-30 09:10:00 IST</span>
         </div>
-        <div class="stat-divider"></div>
-        <div class="quick-stat">
-          <span class="quick-stat-label">Avg Speed</span>
-          <span class="quick-stat-val" id="statAvgSpeed">42.6 km/h</span>
+        <div class="quick-stat-box">
+          <span class="quick-stat-label">Active Monitored Vehicles</span>
+          <span class="quick-stat-val" id="statActiveVehicles">14,820</span>
         </div>
-        <div class="stat-divider"></div>
-        <div class="quick-stat">
-          <span class="quick-stat-label">Congestion</span>
-          <span class="quick-stat-val" id="statCongestionIndex">38%</span>
+        <div class="quick-stat-box">
+          <span class="quick-stat-label">Avg Network Speed</span>
+          <span class="quick-stat-val" id="statAvgSpeed">48 km/h</span>
         </div>
-        <div class="stat-divider"></div>
-        <div class="quick-stat">
+        <div class="quick-stat-box">
+          <span class="quick-stat-label">Congestion Index</span>
+          <span class="quick-stat-val" id="statCongestionIndex" style="color:#d97706;">62%</span>
+        </div>
+        <div class="quick-stat-box">
           <span class="quick-stat-label">Patrol Units</span>
           <span class="quick-stat-val" id="statPatrolUnits">34 Active</span>
         </div>
@@ -94,12 +66,17 @@
 
       <!-- Officer Pass & Action Controls -->
       <div class="header-actions">
+        <div id="activeUserBadge" style="display:flex; align-items:center; gap:6px; background:#111827; border:1px solid #b45309; padding:4px 10px; border-radius:4px; font-size:11px; color:#f8fafc;">
+          <span id="roleIndicatorDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1.2s infinite;"></span>
+          <span id="activeUserRoleText">Mode: <strong>Citizen Public Portal</strong></span>
+        </div>
+
         <button class="btn-action-gold" id="btnOfficerPass" title="Verify Officer Badge or Duty Pass">
           <i data-lucide="badge-check"></i>
-          <span>Officer Duty Pass / Login</span>
+          <span id="headerOfficerBtnText">Officer Login / Duty Pass</span>
         </button>
 
-        <button class="btn-icon" id="btnThemeToggle" title="Toggle Theme (Classic Sovereign vs Dark Mode)">
+        <button class="btn-icon" id="btnThemeToggle" title="Toggle Theme">
           <i data-lucide="sun"></i>
         </button>
       </div>
@@ -141,687 +118,793 @@
     </div>
   </div>
 
-  <!-- Official Navigation Bar -->
-  <nav class="official-nav-bar">
-    <div class="nav-container">
-      <div class="nav-tabs-group">
-        <button class="nav-tab active" data-tab="current">
-          <i data-lucide="activity"></i>
-          <span>Current Telemetry & Surveillance</span>
-          <span class="tab-badge" style="background:#dc2626; color:#fff;">LIVE</span>
-        </button>
-        <button class="nav-tab" data-tab="roadworks">
-          <i data-lucide="cone"></i>
-          <span>Road Construction & Detours</span>
-          <span class="tab-badge" style="background:#d97706; color:#fff;">🚧 WORKING ROADS</span>
-        </button>
-        <button class="nav-tab" data-tab="vehicle-ratios">
-          <i data-lucide="pie-chart"></i>
-          <span>Vehicle Ratio Intelligence</span>
-          <span class="tab-badge" style="background:#374151; color:#fff;">RATIOS</span>
-        </button>
-        <button class="nav-tab" data-tab="vahan-registrations">
-          <i data-lucide="database"></i>
-          <span>VAHAN Registrations (1995-2026)</span>
-          <span class="tab-badge" style="background:#b45309; color:#fff;">38.2 Cr</span>
-        </button>
-        <button class="nav-tab" data-tab="previous">
-          <i data-lucide="history"></i>
-          <span>Historical Violations & Forensics</span>
-        </button>
-        <button class="nav-tab" data-tab="future">
-          <i data-lucide="sparkles"></i>
-          <span>Predictive AI Forecasting</span>
-        </button>
-        <button class="nav-tab" data-tab="security">
-          <i data-lucide="shield"></i>
-          <span>Security & Audit Vault</span>
-        </button>
-      </div>
-    </div>
-  </nav>
+  <!-- =========================================================================
+       APP SHELL: LEFT SIDEBAR & MAIN DASHBOARD
+       ========================================================================= -->
+  <div class="app-shell">
 
-  <!-- Main Content Wrapper -->
-  <main class="main-content-wrapper">
-
-    <!-- =========================================================================
-         PANEL 1: CURRENT TELEMETRY & CAMERA SURVEILLANCE CONTROL ROOM
-         ========================================================================= -->
-    <section class="view-panel active" id="panel-current">
+    <!-- LEFT SIDEBAR: Series-Wise Navigation & Role Switcher -->
+    <aside class="app-sidebar">
       
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-        <div>
-          <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
-            Central Traffic Control Room & Real-Time GIS Surveillance
+      <!-- Role Switcher & Active Profile -->
+      <div class="sidebar-profile-card">
+        <div style="font-size:10px; color:#64748b; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">
+          Select Portal Role
+        </div>
+        <div class="role-switcher-pills">
+          <button class="role-pill-btn active" id="pillRoleCitizen" onclick="App.switchRole('citizen')">
+            <i data-lucide="user"></i> Citizen
+          </button>
+          <button class="role-pill-btn" id="pillRoleOfficer" onclick="App.switchRole('officer')">
+            <i data-lucide="shield"></i> Officer
+          </button>
+          <button class="role-pill-btn" id="pillRoleAdmin" onclick="App.switchRole('admin')">
+            <i data-lucide="sliders"></i> Admin
+          </button>
+        </div>
+
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:8px 10px; font-size:11px; margin-top:4px;">
+          <div style="color:#64748b; font-size:10px;">Current Session:</div>
+          <div id="sidebarOfficerName" style="font-weight:700; color:#0f172a; margin-top:1px;">Citizen Guest Portal</div>
+          <div id="sidebarOfficerClearance" style="font-size:10px; color:#059669; font-weight:600; margin-top:2px;">
+            Public Access Clearance
+          </div>
+        </div>
+      </div>
+
+      <!-- SERIES-WISE NAVIGATION MENU (1 to 9 Flowchart Series) -->
+      <div class="sidebar-section-title">Navigation (Series Flow)</div>
+      
+      <div class="sidebar-menu-list">
+        
+        <!-- 1. GIS Live Map & Satellite Radar -->
+        <button class="sidebar-nav-item active" data-tab="current" onclick="App.switchTab('current')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">1</span>
+            <i data-lucide="map" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>GIS Live Map &amp; Radar</span>
+          </div>
+          <span style="background:#dc2626; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">LIVE</span>
+        </button>
+
+        <!-- 2. Emergency SOS 112 Dispatch -->
+        <button class="sidebar-nav-item" data-tab="emergency" onclick="App.switchTab('emergency')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">2</span>
+            <i data-lucide="alert-triangle" class="nav-item-icon" style="width:16px; height:16px; color:#dc2626;"></i>
+            <span>Emergency 112 SOS</span>
+          </div>
+          <span style="background:#fef2f2; color:#b91c1c; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px; border:1px solid #fca5a5;">SOS</span>
+        </button>
+
+        <!-- 3. Citizen: Report Issue & Evidence -->
+        <button class="sidebar-nav-item" data-tab="citizen-report" onclick="App.switchTab('citizen-report')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">3</span>
+            <i data-lucide="camera" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Citizen: Report Issue</span>
+          </div>
+          <span style="font-size:10px; color:#b45309;">Upload</span>
+        </button>
+
+        <!-- 4. Citizen: Track Status & Pay Challan -->
+        <button class="sidebar-nav-item" data-tab="citizen-track" onclick="App.switchTab('citizen-track')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">4</span>
+            <i data-lucide="file-search" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Citizen: Track &amp; Pay</span>
+          </div>
+          <span style="font-size:10px; color:#059669;">e-Challan</span>
+        </button>
+
+        <!-- 5. Officer: Assigned Cases Queue -->
+        <button class="sidebar-nav-item" data-tab="officer-cases" onclick="App.switchTab('officer-cases')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">5</span>
+            <i data-lucide="clipboard-check" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Officer: Review Cases</span>
+          </div>
+          <span id="badgeCasesCount" style="background:#b45309; color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:10px;">3</span>
+        </button>
+
+        <!-- 6. Officer: Live ANPR Interceptor -->
+        <button class="sidebar-nav-item" data-tab="violations" onclick="App.switchTab('violations')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">6</span>
+            <i data-lucide="scan" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Officer: ANPR &amp; Radar</span>
+          </div>
+          <span style="font-size:10px; color:#64748b;">Challans</span>
+        </button>
+
+        <!-- 7. Working Roads & AI Detours -->
+        <button class="sidebar-nav-item" data-tab="roadworks" onclick="App.switchTab('roadworks')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">7</span>
+            <i data-lucide="cone" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Working Roads &amp; Detours</span>
+          </div>
+          <span style="background:#d97706; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">Govt + AI</span>
+        </button>
+
+        <!-- 8. Vehicle Classification Analytics -->
+        <button class="sidebar-nav-item" data-tab="vehicle-ratios" onclick="App.switchTab('vehicle-ratios')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">8</span>
+            <i data-lucide="pie-chart" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Vehicle Ratio Analytics</span>
+          </div>
+          <span style="font-size:10px; color:#64748b;">VAHAN</span>
+        </button>
+
+        <!-- 9. Admin: Staff & Audit Ledger -->
+        <button class="sidebar-nav-item" data-tab="admin" onclick="App.switchTab('admin')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">9</span>
+            <i data-lucide="shield-alert" class="nav-item-icon" style="width:16px; height:16px;"></i>
+            <span>Admin: Staff &amp; Audit</span>
+          </div>
+          <span style="font-size:10px; color:#64748b;">SHA-256</span>
+        </button>
+
+      </div>
+
+      <!-- Quick Emergency SOS Button (Bottom Sidebar) -->
+      <button class="sidebar-emergency-btn" onclick="App.switchTab('emergency')">
+        <i data-lucide="phone-call"></i>
+        <span>🚨 Instant Emergency 112 SOS</span>
+      </button>
+
+    </aside>
+
+    <!-- RIGHT / MAIN DASHBOARD AREA -->
+    <main class="main-dashboard-body">
+
+      <!-- =========================================================================
+           PANEL 1: CURRENT TELEMETRY & CLEAN FRONT GIS MAP DASHBOARD
+           ========================================================================= -->
+      <section class="view-panel active" id="panel-current">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
+              Central Traffic Control Room &amp; Real-Time GIS Surveillance
+            </h2>
+            <p style="font-size:0.75rem; color:#64748b;">
+              High-resolution cartography, optical ANPR speed tracking, Google Maps directions, and ISRO Cartosat-3 reconnaissance.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-action-primary" id="btnToggleSatellite" title="Toggle ISRO High-Resolution Earth Observation Satellite Imagery">
+              <i data-lucide="satellite"></i>
+              <span id="satBtnText">🛰️ Connect ISRO Satellite</span>
+            </button>
+            <button class="btn-action-gold" onclick="App.openModal('officerPassModal')">
+              <i data-lucide="badge-check"></i> Officer Control Desk Login
+            </button>
+          </div>
+        </div>
+
+        <div class="gov-card" style="margin-bottom:16px;">
+          
+          <!-- Google Maps & ISRO Satellite Route Finder Bar -->
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-weight:700; font-size:12px; color:#0f172a;">🗺️ Search Area &amp; Route:</span>
+                <span style="font-size:11px; color:#64748b;">Powered by <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" style="color:#b45309; font-weight:700; text-decoration:none;">Google Maps</a> &amp; ISRO Satellite Imagery</span>
+              </div>
+              <div style="display:flex; gap:6px; font-size:11px;">
+                <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="padding:2px 8px; font-size:11px; text-decoration:none;">
+                  Open Google Maps ↗
+                </a>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <div style="position:relative; flex:1; min-width:260px;">
+                <input type="text" id="mapAreaSearchInput" placeholder="Enter landmark, highway, or area (e.g., Connaught Place, Barapullah, Jaipur Ring Road, Bandra Worli, Silk Board...)" style="width:100%; padding:7px 10px 7px 30px; font-size:12px; border:1px solid #cbd5e1; border-radius:4px; outline:none; background:#fff; color:#0f172a;" />
+                <span style="position:absolute; left:9px; top:8px; font-size:12px; color:#64748b;">🔍</span>
+              </div>
+              <button type="button" class="btn-action-primary" id="btnSearchAreaRoute" style="padding:7px 14px; font-size:12px;">
+                Find Accurate Route
+              </button>
+              <button type="button" class="btn-action-primary" id="btnSearchGmapsExternal" style="padding:7px 12px; font-size:12px; background:#111827; border-color:#111827;">
+                View on Google Maps
+              </button>
+            </div>
+          </div>
+
+          <!-- Route Analysis Live HUD (Hidden by default, shown upon search) -->
+          <div id="mapRouteHud" style="display:none; background:#fffbeb; border:1px solid #fde68a; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-size:11px; color:#1e293b; flex-wrap:wrap; gap:8px;">
+            <!-- Injected via JavaScript -->
+          </div>
+
+          <!-- Satellite Telemetry Live HUD Banner (Active when Satellite Surveillance is connected) -->
+          <div id="satelliteHudBanner" style="display:none; background:#06152b; border:1px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:11px; color:#38bdf8;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1s infinite;"></span>
+              <strong>ISRO CARTOSAT-3 / EOS-06 RECON LINK ACTIVE</strong>
+              <span style="color:#94a3b8;">| Res: 0.28m HD • Alt: 505 km • NavIC L5 Encrypted</span>
+            </div>
+            <div>
+              <span style="color:#f2cb63;">UPLINK: 100% (STABLE)</span>
+            </div>
+          </div>
+
+          <!-- Clean Leaflet Map Container -->
+          <div class="map-container-box" style="height:560px;">
+            <div id="trafficLiveMap"></div>
+          </div>
+
+          <!-- Live Speed Radar Telemetry Stream Strip -->
+          <div style="margin-top:12px; border-top:1px solid #e2e8f0; padding-top:10px;">
+            <div style="font-size:0.75rem; font-weight:700; color:#111827; text-transform:uppercase; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+              <span>📡 Live Highway Radar Speed Stream</span>
+              <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">Optical ANPR Active</span>
+            </div>
+            <div id="liveTelemetryTicker" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:8px; max-height:160px; overflow-y:auto;">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 2: EMERGENCY FLOW (ACCIDENT / MEDICAL / FIRE / POLICE)
+           ========================================================================= -->
+      <section class="view-panel" id="panel-emergency">
+        
+        <div style="margin-bottom:14px;">
+          <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#b91c1c;">
+            🚨 National Emergency Dispatch Control (Dial 112)
           </h2>
           <p style="font-size:0.75rem; color:#64748b;">
-            Live optical ANPR recognition, radar telemetry, active patrol units, and roadwork detours.
+            Instant response protocol: Select Type &rarr; GPS Location &rarr; Send Alert &rarr; Nearest Response Team &rarr; Live Tracking &rarr; Case Resolved.
           </p>
         </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn-action-primary" id="btnToggleSatellite" title="Toggle ISRO High-Resolution Earth Observation Satellite Imagery">
-            <i data-lucide="satellite"></i>
-            <span id="satBtnText">🛰️ Connect Satellite Surveillance (ISRO Link)</span>
-          </button>
-          <button class="btn-action-primary" onclick="App.openModal('officerPassModal')">
-            <i data-lucide="video"></i> Control Room Officer Access
-          </button>
-        </div>
-      </div>
 
-      <div class="dashboard-grid-12">
-        <!-- Interactive GIS Map (Full Width Col 12) -->
-        <div class="col-12">
-          <div class="gov-card" style="height:100%;">
-            <div class="gov-card-header">
-              <div class="card-title-group">
-                <div class="card-title-icon"><i data-lucide="map"></i></div>
-                <div>
-                  <div class="card-title">Jurisdiction GIS Radar & Satellite Feed</div>
-                  <div class="card-subtitle">Real-time corridors, patrol interceptors, cameras, and construction cones</div>
-                </div>
-              </div>
-              <div class="card-actions">
-                <button class="btn-action-primary" style="font-size:11px; padding:3px 8px;" onclick="App.openModal('satelliteInfoModal')">
-                  <i data-lucide="info"></i> Satellite Specs
-                </button>
-              </div>
-            </div>
+        <div class="gov-card" style="border-top:3px solid #dc2626; margin-bottom:16px;">
+          <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px;">
+            STEP 1: SELECT EMERGENCY TYPE
+          </div>
+          
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
+            <button type="button" class="btn-action-primary" style="background:#fef2f2; border:2px solid #ef4444; color:#b91c1c; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Accident')">
+              <span style="font-size:26px;">🚗💥</span>
+              <strong>Traffic Accident</strong>
+              <span style="font-size:10px; color:#7f1d1d;">Collision / Rollover</span>
+            </button>
+            <button type="button" class="btn-action-primary" style="background:#f0fdf4; border:2px solid #22c55e; color:#15803d; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Medical')">
+              <span style="font-size:26px;">🚑</span>
+              <strong>Medical Green Corridor</strong>
+              <span style="font-size:10px; color:#14532d;">Ambulance Clearance</span>
+            </button>
+            <button type="button" class="btn-action-primary" style="background:#fffbeb; border:2px solid #f59e0b; color:#b45309; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Fire')">
+              <span style="font-size:26px;">🔥</span>
+              <strong>Fire Emergency</strong>
+              <span style="font-size:10px; color:#78350f;">Vehicle / Highway Fire</span>
+            </button>
+            <button type="button" class="btn-action-primary" style="background:#f8fafc; border:2px solid #64748b; color:#0f172a; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Police')">
+              <span style="font-size:26px;">🚔</span>
+              <strong>Police Interceptor SOS</strong>
+              <span style="font-size:10px; color:#334155;">Armed Robbery / Assault</span>
+            </button>
+          </div>
 
-            <!-- Google Maps & ISRO Satellite Route Finder Bar -->
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                <div style="display:flex; align-items:center; gap:6px;">
-                  <span style="font-weight:700; font-size:12px; color:#0f172a;">🗺️ Search Area & Route:</span>
-                  <span style="font-size:11px; color:#64748b;">Powered by <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" style="color:#b45309; font-weight:700; text-decoration:none;">Google Maps</a> &amp; ISRO Satellite Imagery</span>
-                </div>
-                <div style="display:flex; gap:6px; font-size:11px;">
-                  <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="padding:2px 8px; font-size:11px; text-decoration:none;">
-                    Open Google Maps ↗
-                  </a>
-                </div>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <div style="position:relative; flex:1; min-width:260px;">
-                  <input type="text" id="mapAreaSearchInput" placeholder="Enter landmark, highway, or area (e.g., Connaught Place, Barapullah, Jaipur Ring Road, Bandra Worli, Silk Board...)" style="width:100%; padding:7px 10px 7px 30px; font-size:12px; border:1px solid #cbd5e1; border-radius:4px; outline:none; background:#fff; color:#0f172a;" />
-                  <span style="position:absolute; left:9px; top:8px; font-size:12px; color:#64748b;">🔍</span>
-                </div>
-                <button type="button" class="btn-action-primary" id="btnSearchAreaRoute" style="padding:7px 14px; font-size:12px;">
-                  Find Accurate Route
-                </button>
-                <button type="button" class="btn-action-primary" id="btnSearchGmapsExternal" style="padding:7px 12px; font-size:12px; background:#111827; border-color:#111827;">
-                  View on Google Maps
-                </button>
-              </div>
-            </div>
-
-            <!-- Route Analysis Live HUD (Hidden by default, shown upon search) -->
-            <div id="mapRouteHud" style="display:none; background:#fffbeb; border:1px solid #fde68a; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-size:11px; color:#1e293b; flex-wrap:wrap; gap:8px;">
-              <!-- Injected via JavaScript -->
-            </div>
-
-            <!-- Satellite Telemetry Live HUD Banner (Active when Satellite Surveillance is connected) -->
-            <div id="satelliteHudBanner" style="display:none; background:#06152b; border:1px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:11px; color:#38bdf8;">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1s infinite;"></span>
-                <strong>ISRO CARTOSAT-3 / EOS-06 RECON LINK ACTIVE</strong>
-                <span style="color:#94a3b8;">| Res: 0.28m HD • Alt: 505 km • NavIC L5 Encrypted</span>
-              </div>
+          <!-- Active Dispatch Tracker -->
+          <div id="emergencyStatusBanner" style="display:none; background:#fef2f2; border:2px solid #ef4444; border-radius:6px; padding:14px; margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
               <div>
-                <span style="color:#f2cb63;">UPLINK: 100% (STABLE)</span>
+                <span style="background:#dc2626; color:#fff; font-weight:800; font-size:11px; padding:2px 8px; border-radius:3px;">
+                  EMERGENCY DISPATCHED
+                </span>
+                <div style="font-size:14px; font-weight:800; color:#991b1b; margin-top:4px;" id="emgBannerTitle">
+                  Multi-Vehicle Collision Reported
+                </div>
+                <div style="font-size:11px; color:#7f1d1d; margin-top:2px;" id="emgBannerDesc">
+                  Nearest Unit: Interceptor Unit 04 (Sub-Insp. Priya Sharma) • GPS Locked
+                </div>
               </div>
-            </div>
-
-            <div class="map-container-box" style="height:520px;">
-              <div id="trafficLiveMap"></div>
-            </div>
-
-            <!-- Live Speed Radar Telemetry Stream (Compact Sovereign Strip) -->
-            <div style="margin-top:12px; border-top:1px solid #e2e8f0; padding-top:10px;">
-              <div style="font-size:0.75rem; font-weight:700; color:#111827; text-transform:uppercase; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                <span>📡 Live Highway Radar Speed Stream</span>
-                <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">Optical ANPR Active</span>
-              </div>
-              <div id="liveTelemetryTicker" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:8px; max-height:160px; overflow-y:auto;">
-                <!-- Injected via JS -->
+              <div style="text-align:right;">
+                <div style="font-size:20px; font-weight:800; color:#dc2626;" id="emgCountdown">ETA: 3 MINS</div>
+                <button class="btn-action-primary" style="background:#15803d; border-color:#15803d; color:#fff; font-size:11px; padding:4px 10px; margin-top:4px;" onclick="App.resolveCurrentEmergency()">
+                  Mark Case Resolved
+                </button>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- =========================================================================
-         PANEL 2: ACTIVE ROAD CONSTRUCTION & HIGHWAY MAINTENANCE (🚧)
-         ========================================================================= -->
-    <section class="view-panel" id="panel-roadworks">
-      
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-        <div>
+          <!-- Active Emergencies Queue Table -->
+          <div style="font-weight:700; color:#0f172a; margin-bottom:8px; font-size:12px;">Active Emergency Incidents</div>
+          <div class="gov-table-wrapper">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Alert ID</th>
+                  <th>Type</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                  <th>Assigned Patrol</th>
+                  <th>ETA</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="emergencyTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 3: CITIZEN REPORT ISSUE & EVIDENCE UPLOAD FLOW
+           ========================================================================= -->
+      <section class="view-panel" id="panel-citizen-report">
+        
+        <div style="margin-bottom:14px;">
           <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
-            Active Road Construction &amp; Highway Maintenance Work Zones
+            📢 Citizen Incident Reporting &amp; Evidence Submission
           </h2>
           <p style="font-size:0.75rem; color:#64748b;">
-            National Highways Authority of India (NHAI), MoRTH, Delhi Traffic Police &amp; State PWD Advisories integrated with Google Mobility AI live telemetry.
+            Citizen &rarr; Report Details &rarr; Evidence + GPS &rarr; AI Pre-Processing &rarr; Case Assigned to Traffic Officer.
           </p>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn-action-primary" id="btnSyncGovtAI" style="background:#047857; border-color:#047857; color:#fff;" title="Fetch latest advisories from NHAI Data Lake, MoRTH Bhoomi Rashi & Google Mobility AI">
-            <i data-lucide="refresh-cw"></i>
-            <span id="syncBtnText">Sync Live Govt &amp; AI Feeds</span>
-          </button>
-          <button class="btn-action-primary" id="btnNewRoadwork">
-            <i data-lucide="plus-circle"></i>
-            <span>Report / Log Construction Site</span>
-          </button>
-        </div>
-      </div>
 
-      <!-- Live Government & Google AI Telemetry Status Banner -->
-      <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#16a34a; animation:pulse-dot-anim 1.2s infinite;"></span>
-          <div style="font-size:12px; color:#14532d;">
-            <strong>LIVE API CONNECTED:</strong> NHAI Data Lake • MoRTH Bhoomi Rashi • Google Maps Mobility AI Matrix • data.gov.in
-          </div>
-        </div>
-        <div id="govtAiSyncMeta" style="font-size:11px; font-family:var(--font-mono); color:#166534;">
-          Last Synced: <strong>Live Real-Time Stream Active</strong>
-        </div>
-      </div>
+        <div class="gov-card">
+          <form id="formCitizenReport">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+              
+              <!-- 1. Category -->
+              <div class="form-group">
+                <label class="form-label">1. Issue Category *</label>
+                <select class="form-control" id="citCategory" required>
+                  <option value="Accident Report">🚗💥 Traffic Accident / Vehicle Collision</option>
+                  <option value="Traffic Violation">⚠️ Red Light Jump / Reckless Driving</option>
+                  <option value="Road Obstruction">🚧 Road Damage / Broken Traffic Signal</option>
+                  <option value="Illegal Parking">🚫 Illegal Parking / Expressway Obstruction</option>
+                  <option value="Drunken Driving">🍺 Driving Under Influence / Over Speeding</option>
+                </select>
+              </div>
 
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="wrench"></i></div>
-            <div>
-              <div class="card-title">Monitored Construction Corridors &amp; AI Delay Advisories</div>
-              <div class="card-subtitle">Official Government notifications, contractor milestones, lane restrictions, Google AI congestion indices, and verified detours</div>
-            </div>
-          </div>
-        </div>
+              <!-- 2. Location -->
+              <div class="form-group">
+                <label class="form-label">2. Location / Landmark *</label>
+                <input type="text" class="form-control" id="citLocation" placeholder="e.g. Ring Road Expressway near Gantry 04" required value="Ring Road Expressway Gantry 04">
+              </div>
 
-        <div id="roadworksListContainer">
-          <!-- Injected via JavaScript -->
-        </div>
-      </div>
-    </section>
+              <!-- 3. Description -->
+              <div class="form-group" style="grid-column:span 2;">
+                <label class="form-label">3. Detailed Incident Description *</label>
+                <textarea class="form-control" id="citDescription" rows="3" placeholder="Provide accurate details of the incident, vehicle numbers involved, road blockage..." required>Vehicle jumped red light at speed exceeding 90 km/h, near miss with pedestrian crossing.</textarea>
+              </div>
 
-    <!-- =========================================================================
-         PANEL 3: VEHICLE RATIO INTELLIGENCE (CAR • BIKE • TRUCK • BUS • AUTO)
-         ========================================================================= -->
-    <section class="view-panel" id="panel-vehicle-ratios">
-      
-      <div style="margin-bottom:14px;">
-        <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
-          Vehicle Classification Forensics: Challan Ratio & Accident Ratio
-        </h2>
-        <p style="font-size:0.75rem; color:#64748b;">
-          Comparative enforcement statistics across Cars, Bikes, Commercial Heavy Trucks, Transit Buses, and Auto-Rickshaws.
-        </p>
-      </div>
+              <!-- 4. Upload Evidence -->
+              <div class="form-group">
+                <label class="form-label">4. Upload Photo / Dashcam Evidence *</label>
+                <input type="file" class="form-control" id="citEvidenceFile" accept="image/*,video/*" style="padding:5px;">
+                <span style="font-size:10px; color:#64748b;">Supported: JPG, PNG, MP4 Dashcam Footage (Max 50MB)</span>
+              </div>
 
-      <!-- Vehicle Ratio 5 Category Cards -->
-      <div class="vehicle-ratio-grid" id="vehicleRatioCardsContainer" style="margin-bottom:16px;">
-        <!-- Injected via JavaScript -->
-      </div>
-
-      <!-- Comparative Side-by-Side Charts -->
-      <div class="dashboard-grid-12">
-        <div class="col-6">
-          <div class="gov-card">
-            <div class="gov-card-header">
-              <div class="card-title-group">
-                <div class="card-title-icon"><i data-lucide="pie-chart"></i></div>
-                <div>
-                  <div class="card-title">Challan Vehicle Ratio Breakdown (%)</div>
-                  <div class="card-subtitle">Proportion of total traffic contraventions by vehicle class</div>
+              <!-- 5. GPS Location Pin -->
+              <div class="form-group">
+                <label class="form-label">5. GPS Geo-Coordinates</label>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" class="form-control" id="citGpsCoords" value="28.6250° N, 77.2100° E" readonly style="background:#f1f5f9; font-family:var(--font-mono); font-size:11px;">
+                  <button type="button" class="btn-action-primary" style="font-size:11px;" onclick="App.autoDetectGps()">
+                    📍 Auto GPS Pin
+                  </button>
                 </div>
               </div>
-            </div>
-            <div style="height:280px; position:relative;">
-              <canvas id="vehicleChallanRatioChart"></canvas>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-6">
-          <div class="gov-card">
-            <div class="gov-card-header">
-              <div class="card-title-group">
-                <div class="card-title-icon"><i data-lucide="alert-octagon"></i></div>
-                <div>
-                  <div class="card-title">Accident Vehicle Ratio Contribution (%)</div>
-                  <div class="card-subtitle">Collision share and severity impact by vehicle class</div>
-                </div>
+            </div>
+
+            <!-- AI Pre-Processing Badge Box -->
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:12px; margin:14px 0;">
+              <div style="font-size:12px; font-weight:700; color:#14532d; display:flex; align-items:center; gap:6px;">
+                <span>🤖 AI Pre-Processing Engine Activated:</span>
+              </div>
+              <div style="font-size:11px; color:#166534; margin-top:3px;">
+                • Automatic category classification &amp; license plate OCR detection<br/>
+                • Duplicate complaint filtering across nearby 500m radius<br/>
+                • Dynamic priority scoring for immediate traffic officer dispatch
               </div>
             </div>
-            <div style="height:280px; position:relative;">
-              <canvas id="vehicleAccidentRatioChart"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- =========================================================================
-         PANEL 3B: VAHAN NATIONAL VEHICLE REGISTRATIONS DASHBOARD (5 PARTS)
-         Official MoRTH Data: 1995 through September 2026 (india_vehicle_registration)
-         ========================================================================= -->
-    <section class="view-panel" id="panel-vahan-registrations">
-      
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-        <div>
-          <h2 style="font-family:var(--font-heading); font-size:1.35rem; color:#111827;">
-            VAHAN National Vehicle Registration Intelligence (1995 – September 2026)
+            <div style="display:flex; justify-content:flex-end; gap:8px;">
+              <button type="reset" class="btn-action-primary" style="background:transparent; color:#64748b; border-color:#cbd5e1;">Clear</button>
+              <button type="submit" class="btn-action-gold" style="padding:10px 20px;">
+                <i data-lucide="send"></i>
+                <span>Submit Official Incident Report</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 4: CITIZEN CASE TRACKING & CHALLAN STATUS
+           ========================================================================= -->
+      <section class="view-panel" id="panel-citizen-track">
+        
+        <div style="margin-bottom:14px;">
+          <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
+            📄 Case Status Tracker &amp; e-Challan Payment Portal
           </h2>
-          <p style="font-size:0.76rem; color:#64748b;">
-            Official Database of the Ministry of Road Transport & Highways (MoRTH) & National Informatics Centre (NIC).
+          <p style="font-size:0.75rem; color:#64748b;">
+            Track lifecycle: Submitted &rarr; Under Review &rarr; Action Taken &rarr; Case Closed &rarr; Feedback Rating.
           </p>
         </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn-action-primary" onclick="App.exportVahanCsv()">
-            <i data-lucide="download"></i> Export VAHAN Dataset (CSV)
-          </button>
-        </div>
-      </div>
 
-      <!-- PART 1: National Multi-Year Growth & Cumulative Fleet Progression (1995-2026) -->
-      <div class="gov-card" style="margin-bottom:16px;">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="trending-up"></i></div>
-            <div>
-              <div class="card-title">Part 1: National Multi-Year Fleet Progression & Milestones (1995 – 2026)</div>
-              <div class="card-subtitle">Expansion of registered motorized vehicles across all Indian States & Union Territories</div>
+        <div class="gov-card" style="margin-bottom:16px;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+            <div style="flex:1; min-width:240px;">
+              <input type="text" id="inputCaseSearch" class="form-control" placeholder="Search by Case ID (e.g. CASE-2026-801) or Vehicle Plate..." value="CASE-2026-801">
             </div>
+            <button type="button" class="btn-action-gold" onclick="App.searchAndDisplayCase()">
+              <i data-lucide="search"></i>
+              <span>Search Status</span>
+            </button>
           </div>
-          <span style="font-size:11px; background:#f1f5f9; color:#111827; padding:3px 8px; border-radius:3px; font-weight:700;">
-            COVERAGE: 100% RTOs IN INDIA
+
+          <!-- Dynamic Case Progress Card -->
+          <div id="caseTrackerDisplay" style="border:1px solid #e2e8f0; border-radius:6px; padding:16px; background:#fff;">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 5: OFFICER ASSIGNED CASES & VERIFICATION DESK
+           ========================================================================= -->
+      <section class="view-panel" id="panel-officer-cases">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
+              👮 Traffic Officer Case Review &amp; Action Verification
+            </h2>
+            <p style="font-size:0.75rem; color:#64748b;">
+              Review Citizen Reports &rarr; Verify Evidence &rarr; Valid / Invalid &rarr; Action Required (Fine / Warning / Patrol) &rarr; Close &amp; Notify.
+            </p>
+          </div>
+          <span style="background:#111827; color:#f59e0b; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
+            OFFICER CLEARANCE REQUIRED
           </span>
         </div>
 
-        <!-- 4 KPI Summary Cards -->
-        <div class="predictive-stat-cards" style="margin-bottom:16px;">
-          <div class="predictive-stat-item">
-            <div class="pred-val" style="color:#111827;">38.24 Cr</div>
-            <div class="pred-label">Total Cumulative Registered Vehicles</div>
-          </div>
-          <div class="predictive-stat-item">
-            <div class="pred-val" style="color:#047857;">31.48 Cr</div>
-            <div class="pred-label">Active Registered Fleet (82.3%)</div>
-          </div>
-          <div class="predictive-stat-item">
-            <div class="pred-val" style="color:#b45309;">1.94 Cr</div>
-            <div class="pred-label">2026 YTD New Registrations</div>
-          </div>
-          <div class="predictive-stat-item">
-            <div class="pred-val" style="color:#374151;">7.6%</div>
-            <div class="pred-label">Electric (EV) Market Penetration</div>
+        <div class="gov-card">
+          <div id="officerCasesContainer">
+            <!-- Injected via JS -->
           </div>
         </div>
+      </section>
 
-        <div style="height:260px; position:relative;">
-          <canvas id="vahanProgressionChart"></canvas>
-        </div>
-      </div>
-
-      <!-- PART 2: State / UT Vehicle Leaderboard & Regional Ranking (Geo-Distribution) -->
-      <div class="gov-card" style="margin-bottom:16px;">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="map-pin"></i></div>
-            <div>
-              <div class="card-title">Part 2: State / UT Registration League & Regional Ranking</div>
-              <div class="card-subtitle">Geographic distribution of vehicle registrations across Top 10 Indian States</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="gov-table-wrapper">
-          <table class="gov-table">
-            <thead>
-              <tr>
-                <th>State / Union Territory</th>
-                <th>State Code</th>
-                <th>Cumulative Registered Fleet</th>
-                <th>2026 YTD New Additions</th>
-                <th>Primary Segment Dominance</th>
-                <th>National Share (%)</th>
-              </tr>
-            </thead>
-            <tbody id="vahanStateTableBody">
-              <!-- Injected via JavaScript -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- PART 3: 5-Vehicle Category Fleet Composition & Fuel Transition -->
-      <div class="gov-card" style="margin-bottom:16px;">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="pie-chart"></i></div>
-            <div>
-              <div class="card-title">Part 3: 5-Vehicle Category Fleet Composition (Share & Registered Counts)</div>
-              <div class="card-subtitle">Official VAHAN classification: 2-Wheelers, 4-Wheelers, Commercial Trucks, Buses, and 3-Wheelers/LCVs</div>
-            </div>
-          </div>
-        </div>
-
-        <div id="vahanClassCardsContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
-          <!-- Injected via JavaScript -->
-        </div>
-      </div>
-
-      <!-- PART 4 & 5 Grid: Measures Breakdown & Official Registry Ledger -->
-      <div class="dashboard-grid-12">
+      <!-- =========================================================================
+           PANEL 6: OPTICAL ANPR CITATIONS & RADAR
+           ========================================================================= -->
+      <section class="view-panel" id="panel-violations">
         
-        <!-- PART 4: Measures Breakdown & Scrappage Health Index (Col 5) -->
-        <div class="col-5">
-          <div class="gov-card" style="height:100%;">
-            <div class="gov-card-header">
-              <div class="card-title-group">
-                <div class="card-title-icon"><i data-lucide="shield-check"></i></div>
-                <div>
-                  <div class="card-title">Part 4: Metric Measures & Scrappage Health</div>
-                  <div class="card-subtitle">Active, Cumulative, and Deregistered Fleet</div>
-                </div>
-              </div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:12px; font-size:12px;">
-              <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:12px; border-radius:4px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong>Active Roadworthy Fleet:</strong>
-                  <span style="color:#047857; font-weight:700;">82.3% (31.48 Cr)</span>
-                </div>
-                <div style="font-size:11px; color:#64748b;">Vehicles with active fitness and valid statutory insurance</div>
-              </div>
-
-              <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:12px; border-radius:4px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong>New Additions Pace (2026):</strong>
-                  <span style="color:#b45309; font-weight:700;">6.2% Annual Additions</span>
-                </div>
-                <div style="font-size:11px; color:#64748b;">19.45 Million new vehicles registered through September 2026</div>
-              </div>
-
-              <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:12px; border-radius:4px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong>Vehicles Scrapped / Non-Compliant:</strong>
-                  <span style="color:#b91c1c; font-weight:700;">17.7% (6.76 Cr)</span>
-                </div>
-                <div style="font-size:11px; color:#64748b;">Vehicles &gt; 15-20 years undergoing automated fitness or scrappage</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- PART 5: Live VAHAN Registry Search & Verification Ledger (Col 7) -->
-        <div class="col-7">
-          <div class="gov-card" style="height:100%;">
-            <div class="gov-card-header">
-              <div class="card-title-group">
-                <div class="card-title-icon"><i data-lucide="search"></i></div>
-                <div>
-                  <div class="card-title">Part 5: Official VAHAN Ledger Search & Verification</div>
-                  <div class="card-subtitle">Verified database entries matching PostgreSQL schema criteria</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="gov-table-wrapper">
-              <table class="gov-table">
-                <thead>
-                  <tr>
-                    <th>Record ID</th>
-                    <th>Geography</th>
-                    <th>State/UT</th>
-                    <th>Period</th>
-                    <th>Measure</th>
-                    <th>Count</th>
-                  </tr>
-                </thead>
-                <tbody id="vahanRecordsTableBody">
-                  <!-- Injected via JavaScript -->
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Official SQL Sources from c:\chat gpt\india_vehicle_registrations.sql -->
-            <div style="margin-top:14px; padding:10px 14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; color:#475569;">
-              <div style="font-weight:700; color:#111827; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
-                <i data-lucide="database" style="width:14px; height:14px; color:#b45309;"></i>
-                <span>Official PostgreSQL Registry Schema & Data Sources (c:\chat gpt\india_vehicle_registrations.sql)</span>
-              </div>
-              <div style="line-height:1.6;">
-                • <strong>Source 1: VAHAN Public Report:</strong> Ministry of Road Transport & Highways, Government of India (<a href="https://analytics.parivahan.gov.in/analytics/vahanpublicreport" target="_blank" style="color:#b45309; text-decoration:underline;">analytics.parivahan.gov.in</a>)<br/>
-                • <strong>Source 2: Road Transport Year Book:</strong> Open Government Data Platform India (<a href="https://ap.data.gov.in/dataset-group-name/Road%20Transport%20Year%20Book" target="_blank" style="color:#b45309; text-decoration:underline;">ap.data.gov.in</a>)<br/>
-                • <strong>Database Table:</strong> <code>india_vehicle_registration</code> (1995–September 2026, 100% Pan-India Computerized RTOs across 36 States/UTs including Rajasthan)
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- =========================================================================
-         PANEL 4: HISTORICAL DATA & E-CHALLAN REPOSITORY
-         ========================================================================= -->
-    <section class="view-panel" id="panel-previous">
-      
-      <div class="gov-card" style="margin-bottom:16px;">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="trending-up"></i></div>
-            <div>
-              <div class="card-title">Historical Traffic Volume Patterns (2025 vs 2026)</div>
-              <div class="card-subtitle">Million vehicle trips across regional corridors</div>
-            </div>
-          </div>
-        </div>
-        <div style="height:240px; position:relative;">
-          <canvas id="monthlyVolumeChart"></canvas>
-        </div>
-      </div>
-
-      <!-- Violations Table -->
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="database"></i></div>
-            <div>
-              <div class="card-title">National e-Challan & Citation Archive</div>
-              <div class="card-subtitle">Search by registration plate number, violation type, or citation reference</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Filter bar -->
-        <div style="display:flex; gap:12px; margin-bottom:14px; flex-wrap:wrap;">
-          <input type="text" id="searchViolations" class="form-control" style="max-width:320px;" placeholder="Search Plate (e.g. DL-01, MH-12) or Owner...">
-          <select id="filterVehicleType" class="form-control" style="max-width:240px;">
-            <option value="ALL">All Vehicle Categories</option>
-            <option value="Cars & SUVs (4-Wheelers)">Cars & SUVs</option>
-            <option value="Bikes & Two-Wheelers">Bikes & Two-Wheelers</option>
-            <option value="Heavy Trucks & Multi-Axle Commercials">Heavy Trucks</option>
-            <option value="Buses & Public Passenger Carriers">Buses</option>
-            <option value="Auto-Rickshaws, E-Rickshaws & LCVs">Auto & LCVs</option>
-          </select>
-        </div>
-
-        <div class="gov-table-wrapper">
-          <table class="gov-table">
-            <thead>
-              <tr>
-                <th>Challan ID</th>
-                <th>Plate Number</th>
-                <th>Owner & Class</th>
-                <th>Violation Details</th>
-                <th>Location</th>
-                <th>Penalty</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="violationsTableBody">
-              <!-- Injected via JavaScript -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================================
-         PANEL 5: FUTURE PREDICTIVE AI
-         ========================================================================= -->
-    <section class="view-panel" id="panel-future">
-      
-      <div class="gov-card" style="margin-bottom:16px;">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="cpu"></i></div>
-            <div>
-              <div class="card-title">24-Hour AI Predictive Congestion Modeling</div>
-              <div class="card-subtitle">Neural forecasting based on time-series telemetry and environmental factors</div>
-            </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
+              Optical ANPR Radar &amp; Motor Vehicles Act e-Challan Desk
+            </h2>
+            <p style="font-size:0.75rem; color:#64748b;">
+              Real-time violation interceptor, automated evidence ledger, and Section 183 / 194 MV Act compliance.
+            </p>
           </div>
           <div style="display:flex; gap:8px;">
-            <button class="btn-action-primary btn-ai-toggle active" data-scenario="standard">Baseline Normal</button>
-            <button class="btn-action-primary btn-ai-toggle" data-scenario="rain">Monsoon Rain (+35%)</button>
-            <button class="btn-action-primary btn-ai-toggle" data-scenario="vip">VIP Motorcade</button>
-            <button class="btn-action-primary btn-ai-toggle" data-scenario="weekend">Holiday Weekend</button>
+            <input type="text" id="searchViolations" class="form-control" style="width:200px; padding:6px 10px;" placeholder="Search Plate or ID...">
+            <select id="filterVehicleType" class="form-control" style="width:160px; padding:6px;">
+              <option value="ALL">All Vehicle Types</option>
+              <option value="Cars &amp; SUVs (4-Wheelers)">Cars &amp; SUVs</option>
+              <option value="Bikes &amp; Two-Wheelers">Bikes</option>
+              <option value="Heavy Trucks &amp; Multi-Axle Commercials">Trucks</option>
+              <option value="Buses &amp; Public Passenger Carriers">Buses</option>
+              <option value="Auto-Rickshaws, E-Rickshaws &amp; LCVs">Autos</option>
+            </select>
           </div>
         </div>
-        <div style="height:260px; position:relative;">
-          <canvas id="future24HourChart"></canvas>
-        </div>
-      </div>
 
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="zap"></i></div>
-            <div>
-              <div class="card-title">Adaptive AI Signal Delay Reduction</div>
-              <div class="card-subtitle">Projected vehicle queue reduction across major junctions</div>
+        <div class="gov-card">
+          <div class="gov-table-wrapper">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Challan ID</th>
+                  <th>Vehicle Plate &amp; Type</th>
+                  <th>Registered Owner</th>
+                  <th>Violation Type</th>
+                  <th>Location &amp; IP</th>
+                  <th>Fine (₹)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="violationsTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 7: ACTIVE ROAD CONSTRUCTION & HIGHWAY MAINTENANCE (🚧)
+           ========================================================================= -->
+      <section class="view-panel" id="panel-roadworks">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
+              Active Road Construction &amp; Highway Maintenance Work Zones
+            </h2>
+            <p style="font-size:0.75rem; color:#64748b;">
+              National Highways Authority of India (NHAI), MoRTH, Delhi Traffic Police &amp; State PWD Advisories integrated with Google Mobility AI live telemetry.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-action-primary" id="btnSyncGovtAI" style="background:#047857; border-color:#047857; color:#fff;" title="Fetch latest advisories from NHAI Data Lake, MoRTH Bhoomi Rashi &amp; Google Mobility AI">
+              <i data-lucide="refresh-cw"></i>
+              <span id="syncBtnText">Sync Live Govt &amp; AI Feeds</span>
+            </button>
+            <button class="btn-action-primary" id="btnNewRoadwork">
+              <i data-lucide="plus-circle"></i>
+              <span>Report / Log Construction Site</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Government & Google AI Telemetry Status Banner -->
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#16a34a; animation:pulse-dot-anim 1.2s infinite;"></span>
+            <div style="font-size:12px; color:#14532d;">
+              <strong>LIVE API CONNECTED:</strong> NHAI Data Lake • MoRTH Bhoomi Rashi • Google Maps Mobility AI Matrix • data.gov.in
             </div>
           </div>
-        </div>
-        <div style="height:220px; position:relative;">
-          <canvas id="signalOptimizationChart"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================================
-         PANEL 6: SECURITY & AUDIT VAULT
-         ========================================================================= -->
-    <section class="view-panel" id="panel-security">
-      
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="card-title-group">
-            <div class="card-title-icon"><i data-lucide="shield-alert"></i></div>
-            <div>
-              <div class="card-title">National Audit Ledger & Officer Access Records</div>
-              <div class="card-subtitle">Cryptographically verified actions under Section 65B of Indian Evidence Act</div>
-            </div>
+          <div id="govtAiSyncMeta" style="font-size:11px; font-family:var(--font-mono); color:#166534;">
+            Last Synced: <strong>Live Real-Time Stream Active</strong>
           </div>
         </div>
 
-        <div class="gov-table-wrapper">
-          <table class="gov-table">
-            <thead>
-              <tr>
-                <th>Timestamp</th>
-                <th>Officer / Terminal</th>
-                <th>Action</th>
-                <th>Operation Details</th>
-                <th>Terminal IP</th>
-              </tr>
-            </thead>
-            <tbody id="auditLogsTableBody">
-              <!-- Injected via JavaScript -->
-            </tbody>
-          </table>
+        <div class="gov-card">
+          <div id="roadworksListContainer">
+            <!-- Injected via JavaScript -->
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-  </main>
+      <!-- =========================================================================
+           PANEL 8: VEHICLE RATIOS & VAHAN NATIONAL FLEET (1995-2026)
+           ========================================================================= -->
+      <section class="view-panel" id="panel-vehicle-ratios">
+        
+        <div style="margin-bottom:14px;">
+          <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
+            Vehicle Classification Forensics: Challan Ratio &amp; Accident Ratio
+          </h2>
+          <p style="font-size:0.75rem; color:#64748b;">
+            Comparative enforcement statistics across Cars, Bikes, Commercial Heavy Trucks, Transit Buses, and Auto-Rickshaws.
+          </p>
+        </div>
+
+        <div id="vehicleRatioCardsContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- VAHAN Fleet Growth Line Chart -->
+        <div class="gov-card">
+          <div class="gov-card-header">
+            <div class="card-title-group">
+              <div class="card-title-icon"><i data-lucide="trending-up"></i></div>
+              <div>
+                <div class="card-title">Pan-India Fleet Registration Progression (1995–2026)</div>
+                <div class="card-subtitle">Official Ministry of Road Transport and Highways (MoRTH) VAHAN Database (38.2 Crore Vehicles)</div>
+              </div>
+            </div>
+          </div>
+          <div style="height:320px; padding:10px;">
+            <canvas id="vahanProgressionChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 9: ADMIN COMMAND, STAFF MANAGEMENT & CRYPTO AUDIT
+           ========================================================================= -->
+      <section class="view-panel" id="panel-admin">
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
+              🛠️ National Directorate Admin Command &amp; Audit Trail
+            </h2>
+            <p style="font-size:0.75rem; color:#64748b;">
+              Manage Officer Hierarchy, System Monitoring, Citizen Complaints, and Cryptographic SHA-256 Audit Logs.
+            </p>
+          </div>
+          <span style="background:#064e3b; color:#10b981; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
+            SYSTEM STATUS: SECURE &amp; COMPLIANT
+          </span>
+        </div>
+
+        <!-- 4-Box Admin Stat Overview -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
+          <div class="ratio-stat-card" style="border-top:3px solid #059669;">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">TOTAL CITIZEN USERS</div>
+            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;">2,840,119</div>
+            <div style="font-size:10px; color:#047857;">✓ Pan-India VAHAN Linked</div>
+          </div>
+          <div class="ratio-stat-card" style="border-top:3px solid #b45309;">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">ACTIVE COMPLAINTS</div>
+            <div style="font-size:24px; font-weight:800; color:#b45309; margin:6px 0;">3 Under Review</div>
+            <div style="font-size:10px; color:#b45309;">⚡ Average Resolution: 14 mins</div>
+          </div>
+          <div class="ratio-stat-card" style="border-top:3px solid #111827;">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">OFFICERS COMMISSIONED</div>
+            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;">6 Command Tiers</div>
+            <div style="font-size:10px; color:#64748b;">Levels 1 to 5 Active</div>
+          </div>
+          <div class="ratio-stat-card" style="border-top:3px solid #dc2626;">
+            <div style="font-size:11px; color:#64748b; font-weight:700;">ACTIVE 112 EMERGENCIES</div>
+            <div style="font-size:24px; font-weight:800; color:#dc2626; margin:6px 0;">2 Dispatched</div>
+            <div style="font-size:10px; color:#dc2626;">Patrol Response: 3.5 mins avg</div>
+          </div>
+        </div>
+
+        <!-- Audit Logs Table -->
+        <div class="gov-card">
+          <div class="gov-card-header">
+            <div class="card-title-group">
+              <div class="card-title-icon"><i data-lucide="shield"></i></div>
+              <div>
+                <div class="card-title">Cryptographic SHA-256 Tamper-Proof Audit Trail</div>
+                <div class="card-subtitle">Immutable security ledger tracking every officer login, e-challan, and emergency override</div>
+              </div>
+            </div>
+          </div>
+          <div class="gov-table-wrapper">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Authorized Officer</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                  <th>Source IP</th>
+                </tr>
+              </thead>
+              <tbody id="auditLogsTableBody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
 
   <!-- =========================================================================
        MODALS
        ========================================================================= -->
 
-  <!-- 1. Officer Duty Pass & Login Modal -->
+  <!-- 1. Redesigned Officer Duty Pass & Login Modal (High-Level, Clean, 3 Required Fields) -->
   <div class="modal-backdrop" id="officerPassModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <i data-lucide="lock" style="color:#b8861c;"></i>
-          <strong style="color:#0a2540; font-family:var(--font-heading);">Officer Duty Pass & Clearance Verification</strong>
+    <div class="modal-card" style="max-width:540px;">
+      
+      <div class="modal-header" style="background:#111827; color:#fff; border-bottom:2px solid #b45309;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="background:#b45309; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#fff;">
+            <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:800; font-size:14px; letter-spacing:0.02em;">OFFICER DUTY CLEARANCE &amp; LOGIN</div>
+            <div style="font-size:10px; color:#cbd5e1;">Government of India Traffic Police Command Desk</div>
+          </div>
         </div>
-        <button class="btn-icon" style="color:#0f172a;" onclick="App.closeModal('officerPassModal')">&times;</button>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('officerPassModal')">&times;</button>
       </div>
+
       <form id="formVerifyOfficerPass">
-        <div class="modal-body">
-          <p style="font-size:0.75rem; color:#64748b; margin-bottom:12px;">
-            Enter your Traffic Police Badge / Officer ID and official Clearance PassCode or Security PIN to verify your Official Digital Duty Pass:
-          </p>
-
-          <div class="form-group">
-            <label class="form-label">Traffic Officer Badge / ID</label>
-            <input type="text" id="inOfficerBadge" class="form-control" value="TR-INSP-5501" placeholder="e.g. TR-INSP-5501, IPS-8801-CIP, IPS-7714-RJ" required>
+        <div class="modal-body" style="padding:18px 20px;">
+          
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:10px 12px; margin-bottom:14px; font-size:11px; color:#334155;">
+            🔒 <strong>Statutory Authentication Mandate:</strong> Enter your Officer User ID, Clearance Password, and Camera Control PIN.
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <!-- Required 1: User ID / Officer Badge -->
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label" style="font-weight:700; color:#0f172a; display:flex; justify-content:space-between;">
+              <span>1. User ID / Officer Badge ID *</span>
+              <span style="font-size:10px; color:#b45309; font-weight:600;">(Official IPS / Traffic ID)</span>
+            </label>
+            <div style="position:relative;">
+              <input type="text" id="inOfficerBadge" class="form-control" value="TR-INSP-5501" placeholder="e.g. TR-INSP-5501, IPS-8801-CIP, IPS-7714-RJ" required style="padding-left:32px; font-weight:600;">
+              <span style="position:absolute; left:10px; top:9px; color:#64748b;">🪪</span>
+            </div>
+          </div>
+
+          <!-- Required 2: Password -->
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label" style="font-weight:700; color:#0f172a; display:flex; justify-content:space-between;">
+              <span>2. Official Clearance Password *</span>
+              <span style="font-size:10px; color:#64748b;">(Encrypted PassCode)</span>
+            </label>
+            <div style="position:relative;">
+              <input type="password" id="inOfficerPass" class="form-control" value="INSP@2026" placeholder="e.g. INSP@2026, DGP@2026, SP@2026" required style="padding-left:32px;">
+              <span style="position:absolute; left:10px; top:9px; color:#64748b;">🔑</span>
+            </div>
+          </div>
+
+          <!-- Required 3: Camera / Telemetry PIN & Scope -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
             <div class="form-group">
-              <label class="form-label">Clearance PassCode / Password</label>
-              <input type="password" id="inOfficerPass" class="form-control" value="INSP@2026" placeholder="e.g. INSP@2026, DGP@2026">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">
+                3. Camera Access PIN *
+              </label>
+              <div style="position:relative;">
+                <input type="password" id="inOfficerPin" class="form-control" value="5050" placeholder="e.g. 5050, 9090, 7070" maxlength="6" required style="padding-left:32px; font-family:var(--font-mono); font-weight:700;">
+                <span style="position:absolute; left:10px; top:9px; color:#64748b;">🔢</span>
+              </div>
             </div>
+
             <div class="form-group">
-              <label class="form-label">Security PIN (Alternative)</label>
-              <input type="password" id="inOfficerPin" class="form-control" value="5050" placeholder="e.g. 5050, 9090, 6060" maxlength="6">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">
+                Which Camera / Scope
+              </label>
+              <select id="inOfficerCameraScope" class="form-control" style="font-size:11px;">
+                <option value="ALL_CAMS">All ANPR &amp; Speed Gantries</option>
+                <option value="CAM-01">Gantry 04 (Ring Road Flyover)</option>
+                <option value="CAM-02">Central Plaza Junction 03</option>
+                <option value="CAM-03">Airport Expressway Toll</option>
+                <option value="ISRO_SAT">ISRO Cartosat-3 Satellite</option>
+              </select>
             </div>
           </div>
 
-          <div class="form-group" style="margin-top:8px;">
-            <label class="form-label">Quick Officer Hierarchy Passes (Levels 1 - 5):</label>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:11px;">
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px;" onclick="document.getElementById('inOfficerBadge').value='IPS-8801-CIP'; document.getElementById('inOfficerPass').value='DGP@2026'; document.getElementById('inOfficerPin').value='9090';">
-                ⭐ Level 5: DGP (DGP@2026 / 9090)
+          <!-- 1-Click Fast Login Presets (Clear and Easy to Test) -->
+          <div style="border-top:1px dashed #cbd5e1; padding-top:10px; margin-top:6px;">
+            <div style="font-size:11px; font-weight:700; color:#334155; margin-bottom:6px;">
+              ⚡ One-Click Officer Hierarchy Credentials (Click to Auto-Fill):
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('IPS-8801-CIP', 'DGP@2026', '9090')">
+                ⭐ <strong>Level 5: DGP</strong> (DGP@2026 / 9090)
               </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px;" onclick="document.getElementById('inOfficerBadge').value='IPS-9244-DEL'; document.getElementById('inOfficerPass').value='SP@2026'; document.getElementById('inOfficerPin').value='7070';">
-                🎖️ Level 4: DCP Delhi (SP@2026 / 7070)
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('IPS-9244-DEL', 'SP@2026', '7070')">
+                🎖️ <strong>Level 4: DCP Delhi</strong> (SP@2026 / 7070)
               </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px;" onclick="document.getElementById('inOfficerBadge').value='IPS-7714-RJ'; document.getElementById('inOfficerPass').value='RAJ@2026'; document.getElementById('inOfficerPin').value='6060';">
-                🎖️ Level 4: SP Rajasthan (RAJ@2026 / 6060)
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('IPS-7714-RJ', 'RAJ@2026', '6060')">
+                🎖️ <strong>Level 4: SP Rajasthan</strong> (RAJ@2026 / 6060)
               </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px;" onclick="document.getElementById('inOfficerBadge').value='TR-INSP-5501'; document.getElementById('inOfficerPass').value='INSP@2026'; document.getElementById('inOfficerPin').value='5050';">
-                👮 Level 3: Inspector (INSP@2026 / 5050)
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('TR-INSP-5501', 'INSP@2026', '5050')">
+                👮 <strong>Level 3: Inspector</strong> (INSP@2026 / 5050)
               </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px;" onclick="document.getElementById('inOfficerBadge').value='TR-SI-4219'; document.getElementById('inOfficerPass').value='PATROL@2026'; document.getElementById('inOfficerPin').value='3030';">
-                🚓 Level 2: Patrol SI (PATROL@2026 / 3030)
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('TR-SI-4219', 'PATROL@2026', '3030')">
+                🚓 <strong>Level 2: Patrol SI</strong> (PATROL@2026 / 3030)
               </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px;" onclick="document.getElementById('inOfficerBadge').value='TR-WRD-1102'; document.getElementById('inOfficerPass').value='WARDEN@2026'; document.getElementById('inOfficerPin').value='1010';">
-                🚧 Level 1: Warden (WARDEN@2026 / 1010)
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('TR-WRD-1102', 'WARDEN@2026', '1010')">
+                🚧 <strong>Level 1: Warden</strong> (WARDEN@2026 / 1010)
               </button>
             </div>
           </div>
+
         </div>
-        <div class="modal-footer">
+        
+        <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
           <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
-          <button type="submit" class="btn-action-gold">Verify Pass & Enter Control Room</button>
+          <button type="submit" class="btn-action-gold" style="padding:8px 18px; font-weight:700;">
+            Verify Credentials &amp; Unlock Officer Panel
+          </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- 2. Digital Duty Pass / ID Card View Modal (Printable) -->
+  <!-- 2. Digital Duty Pass Card Modal (Printable) -->
   <div class="modal-backdrop" id="dutyPassViewModal">
     <div class="modal-card" style="max-width:560px;">
       <div class="modal-header">
@@ -833,7 +916,7 @@
           <div class="pass-header">
             <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Seal" class="pass-crest-img">
             <div class="pass-title-main">DIRECTORATE GENERAL OF TRAFFIC POLICE</div>
-            <div style="font-size:10px; color:#64748b;">MINISTRY OF ROAD TRANSPORT & HIGHWAYS • GOVT OF INDIA</div>
+            <div style="font-size:10px; color:#64748b;">MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS • GOVT OF INDIA</div>
           </div>
 
           <div class="pass-body-grid">
@@ -855,18 +938,14 @@
             </div>
             <div style="grid-column:span 2;">
               <span style="font-size:10px; color:#64748b;">ASSIGNED JURISDICTION:</span>
-              <div id="passJurisdiction" style="font-size:11px; font-weight:600;">New Delhi & Central Expressway Division</div>
-            </div>
-            <div style="grid-column:span 2;">
-              <span style="font-size:10px; color:#64748b;">DUTIES & OPERATING MANDATE:</span>
-              <div id="passDuties" style="font-size:11px; color:#475569;">Issuing e-challans, camera matrix access, field barricades</div>
+              <div id="passJurisdiction" style="font-size:11px; font-weight:600;">New Delhi &amp; Central Expressway Division</div>
             </div>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:10px; margin-top:10px;">
             <div style="font-size:10px; color:#64748b;">
               VALID TILL: <strong id="passValidity" style="color:#0a2540;">2026-12-31</strong><br/>
-              <span style="color:#047857;">✓ Biometrically Verified & Stamped</span>
+              <span style="color:#047857;">✓ Biometrically Verified &amp; Stamped</span>
             </div>
             <div class="pass-qr-box">
               QR CODE<br/>VERIFIED
@@ -879,59 +958,6 @@
           <i data-lucide="printer"></i> Print Officer Duty Pass
         </button>
         <button class="btn-action-gold" onclick="App.closeModal('dutyPassViewModal')">Proceed to Control Room</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2B. ISRO Satellite Constellation Specifications Modal -->
-  <div class="modal-backdrop" id="satelliteInfoModal">
-    <div class="modal-card" style="max-width:580px;">
-      <div class="modal-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <i data-lucide="satellite" style="color:#0284c7;"></i>
-          <strong style="color:#0a2540; font-family:var(--font-heading);">ISRO Earth Observation & NavIC Satellite Surveillance</strong>
-        </div>
-        <button class="btn-icon" style="color:#0f172a;" onclick="App.closeModal('satelliteInfoModal')">&times;</button>
-      </div>
-      <div class="modal-body" style="font-size:12px; line-height:1.6; color:#334155;">
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:10px 12px; border-radius:4px; margin-bottom:12px; color:#166534;">
-          <strong>✓ ISRO Telemetry Link: SECURE & SYNCHRONIZED</strong><br/>
-          Integrated with National Remote Sensing Centre (NRSC) & MoRTH Bhoovan Platform.
-        </div>
-
-        <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12px;">
-          <tr style="border-bottom:1px solid #e2e8f0;">
-            <td style="padding:6px; color:#64748b; font-weight:600;">Constellation:</td>
-            <td style="padding:6px; font-weight:700; color:#0a2540;">ISRO Cartosat-3 / EOS-06 & NavIC (IRNSS-1I)</td>
-          </tr>
-          <tr style="border-bottom:1px solid #e2e8f0;">
-            <td style="padding:6px; color:#64748b; font-weight:600;">Orbital Altitude:</td>
-            <td style="padding:6px; font-family:var(--font-mono);">505.2 km (Sun-Synchronous Polar Orbit)</td>
-          </tr>
-          <tr style="border-bottom:1px solid #e2e8f0;">
-            <td style="padding:6px; color:#64748b; font-weight:600;">Ground Resolution:</td>
-            <td style="padding:6px; font-weight:700; color:#b8861c;">0.28m Panchromatic (Sub-meter HD Ground Sampling)</td>
-          </tr>
-          <tr style="border-bottom:1px solid #e2e8f0;">
-            <td style="padding:6px; color:#64748b; font-weight:600;">Sensor Payload:</td>
-            <td style="padding:6px;">High-Resolution Optical PAN + Thermal Infrared Radiometer (TIR)</td>
-          </tr>
-          <tr style="border-bottom:1px solid #e2e8f0;">
-            <td style="padding:6px; color:#64748b; font-weight:600;">NavIC Positioning:</td>
-            <td style="padding:6px; color:#059669; font-weight:600;">L5 & S-Band Dual-Carrier Carrier Locked (Accuracy: &lt; 2.5m)</td>
-          </tr>
-          <tr>
-            <td style="padding:6px; color:#64748b; font-weight:600;">Ground Gateway:</td>
-            <td style="padding:6px;">NRSC Earth Station Shadnagar & Bengaluru Command Center</td>
-          </tr>
-        </table>
-
-        <div style="font-size:11px; color:#64748b;">
-          Satellite imagery is refreshed automatically via cloud-piercing synthetic aperture radar and optical sensors. Telemetry stream is encrypted under Government of India Cyber Security Protocol.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-action-primary" onclick="App.closeModal('satelliteInfoModal')">Close</button>
       </div>
     </div>
   </div>
@@ -951,19 +977,21 @@
           </div>
           <div class="form-group">
             <label class="form-label">Scope of Construction Work</label>
-            <input type="text" id="inRwWork" class="form-control" placeholder="e.g. Flyover expansion joint replacement & resurfacing" required>
+            <input type="text" id="inRwScope" class="form-control" placeholder="e.g. Metro Pier Concreting / Asphalt Recarpeting" required>
           </div>
-          <div class="form-group">
-            <label class="form-label">Contractor / Infrastructure Agency</label>
-            <input type="text" id="inRwContractor" class="form-control" placeholder="e.g. National Highways Authority of India (NHAI)" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Lane Impact & Barricading</label>
-            <input type="text" id="inRwImpact" class="form-control" placeholder="e.g. 2 lanes cordoned off out of 6 lanes">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="form-group">
+              <label class="form-label">Executing Contractor / Agency</label>
+              <input type="text" id="inRwContractor" class="form-control" placeholder="e.g. L&amp;T Infrastructure / NHAI" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lane Impact / Restrictions</label>
+              <input type="text" id="inRwLaneImpact" class="form-control" placeholder="e.g. 2 of 6 Lanes Closed" required>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">Designated Alternate Diversion Route</label>
-            <input type="text" id="inRwDetour" class="form-control" placeholder="e.g. Diverted via Service Road & Parallel Outer Bypass">
+            <input type="text" id="inRwDetour" class="form-control" placeholder="e.g. Heavy vehicles diverted via Mathura Road" required>
           </div>
           <div class="form-group">
             <label class="form-label">Target Completion Date</label>
@@ -972,7 +1000,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('newRoadworkModal')">Cancel</button>
-          <button type="submit" class="btn-action-gold">Register & Plot on GIS Map</button>
+          <button type="submit" class="btn-action-gold">Register &amp; Plot on GIS Map</button>
         </div>
       </form>
     </div>
@@ -985,18 +1013,19 @@
   <footer class="gov-footer">
     <div class="footer-inner">
       <div style="display:flex; align-items:center; gap:10px;">
-        <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Emblem" style="width:34px; height:34px; border-radius:50%;">
+        <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Emblem" style="width:34px; height:34px; border-radius:50%; filter: brightness(2.2);">
         <div>
-          <div style="font-weight:700; color:#ffffff;">NATDAMS - National Automated Traffic Department & Enforcement System</div>
-          <div style="font-size:0.7rem;">Hosted by National Informatics Centre (NIC) • Ministry of Road Transport & Highways, Government of India</div>
+          <div style="font-weight:700; color:#ffffff;">NATDAMS - National Automated Traffic Department &amp; Enforcement System</div>
+          <div style="font-size:0.7rem;">Hosted by National Informatics Centre (NIC) • Ministry of Road Transport &amp; Highways, Government of India</div>
         </div>
       </div>
 
       <div class="footer-links">
-        <a href="#panel-current" onclick="App.switchTab('current')">Control Room</a>
+        <a href="#panel-current" onclick="App.switchTab('current')">GIS Map</a>
+        <a href="#panel-emergency" onclick="App.switchTab('emergency')">Emergency 112</a>
+        <a href="#panel-citizen-report" onclick="App.switchTab('citizen-report')">Citizen Report</a>
         <a href="#panel-roadworks" onclick="App.switchTab('roadworks')">Working Roads</a>
-        <a href="#panel-vehicle-ratios" onclick="App.switchTab('vehicle-ratios')">Vehicle Ratios</a>
-        <a href="#panel-previous" onclick="App.switchTab('previous')">Archives</a>
+        <a href="#panel-admin" onclick="App.switchTab('admin')">Admin</a>
       </div>
     </div>
   </footer>

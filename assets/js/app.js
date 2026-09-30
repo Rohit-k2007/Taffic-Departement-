@@ -1,7 +1,12 @@
 /**
- * NATDAMS - Main Application Orchestrator
- * Integrates Pan-India State/District Location, Roadworks Construction,
- * Vehicle Ratio Forensics, Multi-Level Officer Passes & Camera Control Room.
+ * NATDAMS - Main Application Orchestrator & Flowchart Controller
+ * Integrates:
+ * 1. Series-Wise Left Sidebar & 9-Panel Navigation Flow
+ * 2. High-Level Officer Login (User ID, Pass, Camera Access PIN & Scope)
+ * 3. Citizen Flow: Report Issue -> Evidence + GPS -> AI Pre-Processing -> Track Status -> Feedback/Rating
+ * 4. Officer Flow: Review Cases -> Verify -> Action (Fine/Warning/Patrol) -> Close Case
+ * 5. Emergency Flow: 112 SOS -> Auto GPS -> Dispatch Patrol Unit -> Live Countdown -> Resolve
+ * 6. Clean Front GIS Live Map & Google Maps / ISRO Satellite Surveillance
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -12,9 +17,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 const App = {
   activeTab: 'current',
   activeCameraId: 'CAM-01',
+  currentRole: 'citizen',
+  currentOfficer: null,
+  activeEmergency: null,
+  emergencyTimerId: null,
 
   async init() {
-    // 1. Load initial data from backend API
+    // 1. Load initial data from backend API / local database
     await window.trafficDB.loadInitialData();
 
     // 2. Populate Pan-India State & District Selectors
@@ -23,16 +32,18 @@ const App = {
     // 3. Bind UI Events
     this.bindEvents();
 
-    // 4. Render Components
+    // 4. Render All Views
     this.renderAllViews();
 
     // 5. Start live simulation tick
-    window.liveEngine.start();
+    if (window.liveEngine) window.liveEngine.start();
 
     // 6. Init Map & Charts
-    window.mapController.initMap();
-    window.analyticsController.initHistoricalCharts();
-    window.analyticsController.initPredictiveCharts();
+    if (window.mapController) window.mapController.initMap();
+    if (window.analyticsController) {
+      window.analyticsController.initHistoricalCharts();
+      window.analyticsController.initPredictiveCharts();
+    }
 
     this.showToast("NATDAMS Central National Portal Initialized (State: Delhi NCT)", "info");
   },
@@ -54,22 +65,22 @@ const App = {
       window.trafficDB.selectedState = code;
       this.updateDistrictDropdown(code);
       const stateObj = window.trafficDB.getStateByCode(code);
-      if (stateObj) {
+      if (stateObj && window.mapController) {
         window.mapController.flyToLocation(stateObj.center[0], stateObj.center[1], stateObj.zoom);
       }
       this.renderAllViews();
-      this.showToast(`Jurisdiction Shifted to State: ${stateObj.name}`, "info");
+      this.showToast(`Jurisdiction Shifted to State: ${stateObj ? stateObj.name : code}`, "info");
     });
 
     distSelect.addEventListener('change', (e) => {
       const distId = e.target.value;
       window.trafficDB.selectedDistrict = distId;
       const distObj = window.trafficDB.getDistrictById(window.trafficDB.selectedState, distId);
-      if (distObj) {
+      if (distObj && window.mapController) {
         window.mapController.flyToLocation(distObj.center[0], distObj.center[1], 13);
       }
       this.renderAllViews();
-      this.showToast(`Local Enforcement Focused on District: ${distObj.name}`, "info");
+      this.showToast(`Local Enforcement Focused on District: ${distObj ? distObj.name : distId}`, "info");
     });
 
     // Initialize Vehicle Number Plate Live GPS Tracker
@@ -140,7 +151,6 @@ const App = {
           rtoCode: "DL-01"
         };
 
-    // If state belongs to registered jurisdictions, switch active state
     const matchedState = window.trafficDB.getStateByCode(v.stateCode);
     if (matchedState) {
       if (matchedState.code !== window.trafficDB.selectedState) {
@@ -164,7 +174,9 @@ const App = {
     }
 
     // Plot on GIS/Satellite map
-    window.mapController.trackVehicleOnMap(v.plate, v);
+    if (window.mapController) {
+      window.mapController.trackVehicleOnMap(v.plate, v);
+    }
 
     if (showToastAlert) {
       this.switchTab('current');
@@ -173,15 +185,22 @@ const App = {
   },
 
   bindEvents() {
-    // Navigation Tabs
-    document.querySelectorAll('.nav-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabName = tab.getAttribute('data-tab');
-        this.switchTab(tabName);
+    // Navigation Tabs (Sidebar & any header tabs)
+    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const tabName = item.getAttribute('data-tab');
+        if (tabName) this.switchTab(tabName);
       });
     });
 
-    // Theme Toggle (Classic Light vs Command Dark)
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.getAttribute('data-tab');
+        if (tabName) this.switchTab(tabName);
+      });
+    });
+
+    // Theme Toggle
     const btnTheme = document.getElementById('btnThemeToggle');
     if (btnTheme) {
       btnTheme.addEventListener('click', () => {
@@ -194,7 +213,7 @@ const App = {
 
     // Satellite Surveillance Toggle (ISRO / NavIC Recon Feed)
     const btnSat = document.getElementById('btnToggleSatellite');
-    if (btnSat) {
+    if (btnSat && window.mapController) {
       btnSat.addEventListener('click', () => {
         const isSat = window.mapController.toggleSatelliteSurveillance();
         const btnText = document.getElementById('satBtnText');
@@ -211,11 +230,20 @@ const App = {
       });
     }
 
-    // Role / Officer Pass Switcher
+    // Role / Officer Pass Switcher Button (Header)
     const btnOfficerPass = document.getElementById('btnOfficerPass');
     if (btnOfficerPass) {
       btnOfficerPass.addEventListener('click', () => {
         this.openModal('officerPassModal');
+      });
+    }
+
+    // Citizen Incident Reporting Form
+    const formCitizenReport = document.getElementById('formCitizenReport');
+    if (formCitizenReport) {
+      formCitizenReport.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleCitizenReportSubmit();
       });
     }
 
@@ -267,7 +295,7 @@ const App = {
       });
     }
 
-    // Officer Pass Verification Form
+    // Officer Pass Verification Form Submission
     const formVerifyPass = document.getElementById('formVerifyOfficerPass');
     if (formVerifyPass) {
       formVerifyPass.addEventListener('submit', (e) => {
@@ -287,16 +315,6 @@ const App = {
       filterVehicleType.addEventListener('change', () => this.renderViolationsTable());
     }
 
-    // Scenario Toggles
-    document.querySelectorAll('.btn-ai-toggle').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.btn-ai-toggle').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const scenario = btn.getAttribute('data-scenario');
-        window.analyticsController.render24HourPredictiveChart(scenario);
-      });
-    });
-
     // Real-time Event listeners
     window.addEventListener('traffic-tick', (e) => this.handleTrafficTick(e.detail));
     window.addEventListener('anpr-detection', (e) => this.handleAnprDetection(e.detail));
@@ -308,32 +326,724 @@ const App = {
     this.renderVehicleRatioStats();
     this.renderAuditLogsTable();
     this.renderVahanDashboard();
+    this.renderCasesList();
+    this.renderEmergenciesList();
+    this.searchAndDisplayCase();
+    this.updateCasesBadge();
+  },
+
+  // =========================================================================
+  // ROLE SWITCHER & SIDEBAR FLOW NAVIGATION
+  // =========================================================================
+
+  switchRole(role) {
+    this.currentRole = role;
+
+    // 1. Update pills
+    document.querySelectorAll('.role-pill-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    const pill = document.getElementById(`pillRole${role.charAt(0).toUpperCase() + role.slice(1)}`);
+    if (pill) pill.classList.add('active');
+
+    // 2. Update Header Status & Sidebar Profile Card
+    const dot = document.getElementById('roleIndicatorDot');
+    const roleText = document.getElementById('activeUserRoleText');
+    const sidebarName = document.getElementById('sidebarOfficerName');
+    const sidebarClear = document.getElementById('sidebarOfficerClearance');
+
+    if (role === 'citizen') {
+      if (dot) dot.style.background = '#10b981';
+      if (roleText) roleText.innerHTML = `Mode: <strong>Citizen Public Portal</strong>`;
+      if (sidebarName) sidebarName.innerText = 'Citizen Guest Portal';
+      if (sidebarClear) sidebarClear.innerText = 'Public Access Clearance';
+      this.showToast("Switched to Citizen Public Portal Mode", "info");
+      this.switchTab('citizen-report');
+    } else if (role === 'officer') {
+      if (dot) dot.style.background = '#f59e0b';
+      const off = this.currentOfficer || {
+        name: 'Insp. Rajesh Kumar',
+        rank: 'Traffic Inspector (ANPR Lead)',
+        badgeNumber: 'TR-INSP-5501',
+        clearance: 'Level 3 - Tactical Enforcement'
+      };
+      this.currentOfficer = off;
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">Officer: ${off.name} (${off.badgeNumber})</strong>`;
+      if (sidebarName) sidebarName.innerText = `${off.rank}: ${off.name}`;
+      if (sidebarClear) sidebarClear.innerText = `${off.badgeNumber} • ${off.clearance}`;
+      this.showToast(`Officer Enforcement Mode Active: ${off.name}`, "info");
+      this.switchTab('officer-cases');
+    } else if (role === 'admin') {
+      if (dot) dot.style.background = '#dc2626';
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">National Command Administrator</strong>`;
+      if (sidebarName) sidebarName.innerText = 'Director General / System Admin';
+      if (sidebarClear) sidebarClear.innerText = 'Root Security Clearance (SHA-256)';
+      this.showToast("Administrator Command Console Activated", "info");
+      this.switchTab('admin');
+    }
   },
 
   switchTab(tabName) {
     this.activeTab = tabName;
+    
+    // Sync sidebar buttons
+    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+      const target = item.getAttribute('data-tab');
+      item.classList.toggle('active', target === tabName);
+    });
+
+    // Also sync header nav tabs if present
     document.querySelectorAll('.nav-tab').forEach(t => {
       t.classList.toggle('active', t.getAttribute('data-tab') === tabName);
     });
 
+    // Show selected panel
     document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
     const target = document.getElementById(`panel-${tabName}`);
-    if (target) target.classList.add('active');
+    if (target) {
+      target.classList.add('active');
+    }
 
     if (tabName === 'current') {
-      window.mapController.refresh();
-    } else if (tabName === 'previous') {
-      window.analyticsController.initHistoricalCharts();
-    } else if (tabName === 'future') {
-      window.analyticsController.initPredictiveCharts();
+      if (window.mapController) window.mapController.refresh();
+    } else if (tabName === 'emergency') {
+      this.renderEmergenciesList();
+    } else if (tabName === 'citizen-track') {
+      this.searchAndDisplayCase();
+    } else if (tabName === 'officer-cases') {
+      this.renderCasesList();
+    } else if (tabName === 'violations') {
+      this.renderViolationsTable();
+    } else if (tabName === 'roadworks') {
+      this.renderRoadworksList();
     } else if (tabName === 'vehicle-ratios') {
-      window.analyticsController.renderVehicleRatiosCharts();
-    } else if (tabName === 'vahan-registrations') {
-      this.renderVahanDashboard();
+      if (window.analyticsController) window.analyticsController.renderVehicleRatiosCharts();
+    } else if (tabName === 'admin') {
+      this.renderAuditLogsTable();
     }
 
     if (window.lucide) lucide.createIcons();
   },
+
+  // =========================================================================
+  // OFFICER LOGIN (1. User ID, 2. Password, 3. Camera Access PIN & Scope)
+  // =========================================================================
+
+  fillOfficerPreset(badge, pass, pin, camScope = 'ALL_CAMS') {
+    const badgeEl = document.getElementById('inOfficerBadge');
+    const passEl = document.getElementById('inOfficerPass');
+    const pinEl = document.getElementById('inOfficerPin');
+    const scopeEl = document.getElementById('inOfficerCameraScope');
+
+    if (badgeEl) badgeEl.value = badge;
+    if (passEl) passEl.value = pass;
+    if (pinEl) pinEl.value = pin;
+    if (scopeEl) scopeEl.value = camScope;
+
+    this.showToast(`1-Click Preset Loaded: [${badge}] Pass: ${pass} | PIN: ${pin}`, "info");
+  },
+
+  async handleVerifyOfficerPass() {
+    const badgeEl = document.getElementById('inOfficerBadge');
+    const passEl = document.getElementById('inOfficerPass');
+    const pinEl = document.getElementById('inOfficerPin');
+    const scopeEl = document.getElementById('inOfficerCameraScope');
+
+    const officerId = badgeEl ? badgeEl.value.trim() : '';
+    const passCode = passEl ? passEl.value.trim() : '';
+    const pin = pinEl ? pinEl.value.trim() : '';
+    const scope = scopeEl ? scopeEl.value : 'ALL_CAMS';
+
+    if (!officerId) {
+      this.showToast("Please enter 1. User ID / Officer Badge.", "error");
+      return;
+    }
+    if (!passCode) {
+      this.showToast("Please enter 2. Official Clearance Password.", "error");
+      return;
+    }
+    if (!pin) {
+      this.showToast("Please enter 3. Camera Access PIN.", "error");
+      return;
+    }
+
+    // 1. Try Backend API Verification
+    try {
+      const res = await window.trafficDB.verifyOfficerPass(officerId, passCode, pin);
+      if (res && res.success && res.officer) {
+        this.onOfficerAuthenticated(res.officer, scope);
+        return;
+      }
+    } catch (e) {
+      console.warn("Backend auth call fallback:", e);
+    }
+
+    // 2. Client-side Local Fallback Verification
+    const officers = window.trafficDB.getOfficers();
+    const officer = officers.find(o => 
+      (o.badgeNumber && o.badgeNumber.toLowerCase() === officerId.toLowerCase()) || 
+      (o.id && o.id.toLowerCase() === officerId.toLowerCase())
+    );
+
+    if (!officer) {
+      this.showToast("Officer Badge / ID not registered in National Traffic Directory.", "error");
+      return;
+    }
+
+    const defaultCredentials = {
+      'IPS-8801-CIP': { pass: 'DGP@2026', pin: '9090' },
+      'OFF-DGP-01': { pass: 'DGP@2026', pin: '9090' },
+      'IPS-9244-DEL': { pass: 'SP@2026', pin: '7070' },
+      'OFF-SP-02': { pass: 'SP@2026', pin: '7070' },
+      'IPS-7714-RJ': { pass: 'RAJ@2026', pin: '6060' },
+      'OFF-SP-RJ-06': { pass: 'RAJ@2026', pin: '6060' },
+      'TR-INSP-5501': { pass: 'INSP@2026', pin: '5050' },
+      'OFF-INSP-03': { pass: 'INSP@2026', pin: '5050' },
+      'TR-SI-4219': { pass: 'PATROL@2026', pin: '3030' },
+      'OFF-PATROL-04': { pass: 'PATROL@2026', pin: '3030' },
+      'TR-WRD-1102': { pass: 'WARDEN@2026', pin: '1010' },
+      'OFF-WARDEN-05': { pass: 'WARDEN@2026', pin: '1010' }
+    };
+
+    const targetCreds = defaultCredentials[officer.badgeNumber] || defaultCredentials[officer.id] || { pass: 'INSP@2026', pin: '5050' };
+    const passMatch = passCode && passCode.toUpperCase() === targetCreds.pass.toUpperCase();
+    const pinMatch = pin && pin === targetCreds.pin;
+
+    if (passMatch || pinMatch) {
+      this.onOfficerAuthenticated(officer, scope);
+    } else {
+      this.showToast("Authentication Failed: Invalid Password or Camera PIN.", "error");
+    }
+  },
+
+  onOfficerAuthenticated(officer, cameraScope) {
+    this.currentOfficer = officer;
+    this.displayOfficialDutyPass(officer);
+    this.closeModal('officerPassModal');
+    
+    // Switch to Officer role & unlock case review desk
+    this.switchRole('officer');
+    
+    // Log audit trail entry
+    window.trafficDB.logAudit({
+      user: `${officer.name} (${officer.badgeNumber})`,
+      role: officer.rank,
+      action: "OFFICER_AUTHENTICATED",
+      details: `Successful Level 1-5 Duty Pass Verification. Camera Scope: ${cameraScope}`
+    });
+
+    this.showToast(`✓ Officer Authenticated: ${officer.rank} (${officer.clearance}) - Camera Feed Access PIN Verified!`, "success");
+    this.switchTab('officer-cases');
+  },
+
+  displayOfficialDutyPass(officer) {
+    const card = document.getElementById('digitalDutyPassCard');
+    if (card) {
+      const nameEl = document.getElementById('passOfficerName');
+      if (nameEl) nameEl.innerText = officer.name;
+      const rankEl = document.getElementById('passOfficerRank');
+      if (rankEl) rankEl.innerText = officer.rank;
+      const badgeEl = document.getElementById('passBadgeNumber');
+      if (badgeEl) badgeEl.innerText = officer.badgeNumber;
+      const jurisEl = document.getElementById('passJurisdiction');
+      if (jurisEl) jurisEl.innerText = officer.jurisdiction;
+      const clearEl = document.getElementById('passClearance');
+      if (clearEl) clearEl.innerText = officer.clearance;
+      const valEl = document.getElementById('passValidity');
+      if (valEl) valEl.innerText = officer.passValidity || '2027-12-31';
+      const dutiesEl = document.getElementById('passDuties');
+      if (dutiesEl) dutiesEl.innerText = officer.duties;
+    }
+
+    // Update Header Active Officer Badge to show authenticated session
+    const headerBtn = document.getElementById('btnOfficerPass');
+    if (headerBtn) {
+      headerBtn.innerHTML = `
+        <i data-lucide="shield-check" style="color:#10b981;"></i>
+        <span>✓ ${officer.rank.split(' ')[0]}: ${officer.name.split(' ')[0]} (${officer.badgeNumber})</span>
+      `;
+      headerBtn.style.background = '#064e3b';
+      headerBtn.style.borderColor = '#059669';
+      if (window.lucide) lucide.createIcons();
+    }
+  },
+
+  // =========================================================================
+  // CITIZEN FLOW: REPORT ISSUE -> EVIDENCE + GPS -> AI PROCESSING
+  // =========================================================================
+
+  autoDetectGps() {
+    const coordsEl = document.getElementById('citGpsCoords');
+    const state = window.trafficDB.getStateByCode(window.trafficDB.selectedState);
+    const lat = state && state.center ? state.center[0] : 28.6139;
+    const lng = state && state.center ? state.center[1] : 77.2090;
+    const offsetLat = (Math.random() * 0.02 - 0.01).toFixed(4);
+    const offsetLng = (Math.random() * 0.02 - 0.01).toFixed(4);
+    const finalGps = `${(lat + parseFloat(offsetLat)).toFixed(4)}° N, ${(lng + parseFloat(offsetLng)).toFixed(4)}° E`;
+    if (coordsEl) coordsEl.value = finalGps;
+    this.showToast(`📍 GPS Coordinates Locked via NavIC Satellite (${finalGps})`, "success");
+  },
+
+  async handleCitizenReportSubmit() {
+    const catEl = document.getElementById('citCategory');
+    const locEl = document.getElementById('citLocation');
+    const descEl = document.getElementById('citDescription');
+    const gpsEl = document.getElementById('citGpsCoords');
+
+    const cat = catEl ? catEl.value : 'Traffic Violation';
+    const loc = locEl ? locEl.value.trim() : 'Ring Road Corridor';
+    const desc = descEl ? descEl.value.trim() : 'Incident reported by citizen';
+    const gps = gpsEl ? gpsEl.value.trim() : '28.6250° N, 77.2100° E';
+
+    if (!desc) {
+      this.showToast("Please provide an incident description.", "error");
+      return;
+    }
+
+    // AI Pre-Processing Engine Simulation
+    const isAccident = cat.includes('Accident');
+    const isReckless = cat.includes('Violation') || cat.includes('Drunken');
+    const aiPriority = isAccident ? "HIGH" : (isReckless ? "MEDIUM" : "NORMAL");
+    const aiRisk = isAccident ? "Severe Crash Detected" : (isReckless ? "High-Speed Dangerous Driving" : "Roadway Disruption");
+    const actionNeeded = isAccident ? "Dispatch Emergency Ambulance & Patrol" : "Review Evidence & Issue e-Challan";
+
+    const newCase = {
+      id: "CASE-2026-" + Math.floor(100 + Math.random() * 900),
+      category: cat,
+      location: loc,
+      description: desc,
+      gpsCoords: gps,
+      dateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: "Under Review",
+      stepIndex: 2, // 1: Submitted, 2: Under Review, 3: Action Taken, 4: Closed
+      evidenceFile: "photo_dashcam_evidence.jpg",
+      aiClassification: {
+        priority: aiPriority,
+        risk: aiRisk,
+        duplicateFound: false,
+        recommendedAction: actionNeeded
+      },
+      assignedOfficer: {
+        name: "Insp. Rajesh Kumar",
+        badge: "TR-INSP-5501",
+        unit: "PCR Gantry 04 Interceptor"
+      },
+      officerDecision: null,
+      fineAmount: isReckless ? 2000 : 0,
+      userNotified: true,
+      feedbackRating: null,
+      feedbackComment: null
+    };
+
+    const saved = await window.trafficDB.addCase(newCase);
+    this.updateCasesBadge();
+
+    // Auto-populate Case Search and Switch to Case Tracking View
+    const inputSearch = document.getElementById('inputCaseSearch');
+    if (inputSearch) inputSearch.value = saved.id;
+    
+    this.switchTab('citizen-track');
+    this.searchAndDisplayCase(saved.id);
+
+    this.showToast(`✓ Case #${saved.id} Submitted! AI Classified as [${aiPriority} PRIORITY] & assigned to Officer.`, "success");
+  },
+
+  // =========================================================================
+  // CITIZEN STATUS TRACKER & 4-STEP VISUAL PROGRESSION + 5-STAR RATING
+  // =========================================================================
+
+  searchAndDisplayCase(targetId = null) {
+    const inputSearch = document.getElementById('inputCaseSearch');
+    const query = (targetId || (inputSearch ? inputSearch.value.trim().toUpperCase() : '')) || 'CASE-2026-801';
+    const container = document.getElementById('caseTrackerDisplay');
+    if (!container) return;
+
+    let cases = window.trafficDB.getCases();
+    let c = cases.find(item => item.id.toUpperCase() === query || (item.category && item.category.toUpperCase().includes(query)));
+
+    if (!c && cases.length > 0) {
+      c = cases[0];
+    }
+
+    if (!c) {
+      container.innerHTML = `<div style="text-align:center; padding:24px; color:#64748b;">No active case record found for "${query}". Try reporting an issue first.</div>`;
+      return;
+    }
+
+    const step = c.stepIndex || 2;
+    const isStep1Done = step >= 1;
+    const isStep2Done = step >= 2;
+    const isStep3Done = step >= 3;
+    const isStep4Done = step >= 4;
+
+    container.innerHTML = `
+      <!-- Case Header Card -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:14px;">
+        <div>
+          <div style="display:flex; gap:6px; align-items:center; margin-bottom:4px;">
+            <span style="background:#111827; color:#fff; font-family:var(--font-mono); font-size:12px; font-weight:800; padding:2px 8px; border-radius:3px;">
+              ${c.id}
+            </span>
+            <span style="background:${c.status === 'Closed' ? '#f0fdf4' : '#fffbeb'}; color:${c.status === 'Closed' ? '#15803d' : '#b45309'}; border:1px solid ${c.status === 'Closed' ? '#86efac' : '#fde68a'}; font-size:11px; font-weight:700; padding:2px 8px; border-radius:3px;">
+              ${c.status}
+            </span>
+            <span style="background:#f1f5f9; color:#0f172a; font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px;">
+              ${c.category}
+            </span>
+          </div>
+          <div style="font-size:14px; font-weight:800; color:#0a2540;">
+            ${c.location}
+          </div>
+          <div style="font-size:11px; color:#64748b; font-family:var(--font-mono); margin-top:2px;">
+            📍 GPS: ${c.gpsCoords || '28.6250° N, 77.2100° E'} • Reported: ${c.dateTime}
+          </div>
+        </div>
+
+        <div style="text-align:right;">
+          <div style="font-size:11px; color:#64748b;">Assigned Officer:</div>
+          <div style="font-weight:700; color:#0f172a; font-size:12px;">${c.assignedOfficer ? c.assignedOfficer.name : 'Insp. Rajesh Kumar'}</div>
+          <div style="font-size:10px; color:#059669; font-weight:600;">${c.assignedOfficer ? c.assignedOfficer.badge : 'TR-INSP-5501'}</div>
+        </div>
+      </div>
+
+      <!-- 4-STEP VISUAL PROGRESSION STEPPER -->
+      <div class="case-progress-stepper">
+        
+        <div class="case-step ${isStep1Done ? (step === 1 ? 'active' : 'completed') : ''}">
+          <div class="case-step-circle">${isStep1Done && step > 1 ? '✓' : '1'}</div>
+          <div class="case-step-label">Submitted</div>
+          <div style="font-size:10px; color:#64748b;">Evidence Logged</div>
+        </div>
+
+        <div class="case-step ${isStep2Done ? (step === 2 ? 'active' : 'completed') : ''}">
+          <div class="case-step-circle">${isStep2Done && step > 2 ? '✓' : '2'}</div>
+          <div class="case-step-label">AI &amp; Under Review</div>
+          <div style="font-size:10px; color:#64748b;">Officer Reviewing</div>
+        </div>
+
+        <div class="case-step ${isStep3Done ? (step === 3 ? 'active' : 'completed') : ''}">
+          <div class="case-step-circle">${isStep3Done && step > 3 ? '✓' : '3'}</div>
+          <div class="case-step-label">Action Taken</div>
+          <div style="font-size:10px; color:#64748b;">e-Challan / Patrol</div>
+        </div>
+
+        <div class="case-step ${isStep4Done ? 'completed' : ''}">
+          <div class="case-step-circle">${isStep4Done ? '✓' : '4'}</div>
+          <div class="case-step-label">Case Closed</div>
+          <div style="font-size:10px; color:#64748b;">Feedback / Rating</div>
+        </div>
+
+      </div>
+
+      <!-- Details Grid: Description, AI Findings & Officer Action -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
+        
+        <!-- Column 1: Citizen Description & Evidence -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:10px 12px; font-size:11px;">
+          <div style="font-weight:700; color:#0f172a; margin-bottom:4px;">📝 Citizen Statement &amp; Evidence</div>
+          <div style="color:#334155; line-height:1.5;">${c.description}</div>
+          <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
+            <span style="background:#111827; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px;">📷 Photo Evidence Attached</span>
+            <span style="color:#059669; font-size:10px;">✓ SHA-256 Integrity Verified</span>
+          </div>
+        </div>
+
+        <!-- Column 2: AI Pre-Processing & Officer Action -->
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:4px; padding:10px 12px; font-size:11px;">
+          <div style="font-weight:700; color:#14532d; margin-bottom:4px;">🤖 AI Processing &amp; Officer Action Status</div>
+          <div style="color:#166534; line-height:1.4;">
+            • <strong>AI Priority:</strong> <span style="font-weight:800;">${c.aiClassification ? c.aiClassification.priority : 'HIGH'}</span><br/>
+            • <strong>Risk Assessment:</strong> ${c.aiClassification ? c.aiClassification.risk : 'Vehicle Breach'}<br/>
+            • <strong>Action Required:</strong> ${c.officerDecision ? c.officerDecision : (c.aiClassification ? c.aiClassification.recommendedAction : 'Under Traffic Police Investigation')}<br/>
+            ${c.fineAmount ? `• <strong style="color:#b45309;">e-Challan Penalty: ₹${c.fineAmount.toLocaleString()}</strong>` : ''}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STEP 4: CITIZEN FEEDBACK & 5-STAR RATING WIDGET -->
+      <div style="margin-top:14px; background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <div style="font-weight:700; color:#92400e; font-size:12px;">
+              ⭐ Citizen Feedback &amp; Service Rating
+            </div>
+            <div style="font-size:10px; color:#78350f;">
+              Help the Traffic Department improve by rating the response speed and resolution of this case.
+            </div>
+          </div>
+
+          ${c.feedbackRating ? `
+            <div style="background:#fff; border:1px solid #f59e0b; padding:4px 10px; border-radius:4px; font-size:12px; font-weight:700; color:#b45309;">
+              ✓ You Rated: ${'⭐'.repeat(c.feedbackRating)} (${c.feedbackRating} / 5 Stars)
+            </div>
+          ` : `
+            <div style="display:flex; gap:6px; align-items:center;">
+              <div style="display:flex; gap:2px; font-size:18px; cursor:pointer;" id="starRatingContainer">
+                <span onclick="App.submitCaseRating('${c.id}', 1)">⭐</span>
+                <span onclick="App.submitCaseRating('${c.id}', 2)">⭐</span>
+                <span onclick="App.submitCaseRating('${c.id}', 3)">⭐</span>
+                <span onclick="App.submitCaseRating('${c.id}', 4)">⭐</span>
+                <span onclick="App.submitCaseRating('${c.id}', 5)">⭐</span>
+              </div>
+              <span style="font-size:11px; color:#92400e; font-weight:600;">(Click stars to submit rating)</span>
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+
+    if (window.lucide) lucide.createIcons();
+  },
+
+  async submitCaseRating(caseId, rating) {
+    await window.trafficDB.submitCaseFeedback(caseId, rating, "Resolved promptly by Traffic Enforcement");
+    this.searchAndDisplayCase(caseId);
+    this.renderCasesList();
+    this.showToast(`Thank you! Your feedback (${rating} Stars) has been recorded and case marked Closed.`, "success");
+  },
+
+  // =========================================================================
+  // OFFICER FLOW: ASSIGNED CASES QUEUE & REVIEW / ACTION
+  // =========================================================================
+
+  renderCasesList() {
+    const container = document.getElementById('officerCasesContainer');
+    if (!container) return;
+
+    const list = window.trafficDB.getCases();
+    if (list.length === 0) {
+      container.innerHTML = `<div style="padding:16px; color:#64748b; font-size:12px;">No complaints or cases currently pending officer review.</div>`;
+      return;
+    }
+
+    container.innerHTML = list.map(c => {
+      const isClosed = c.status === 'Closed';
+      const isActionTaken = c.stepIndex >= 3;
+
+      return `
+        <div style="border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:12px; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+          
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+            <div>
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:4px;">
+                <span style="background:#111827; color:#fff; font-family:var(--font-mono); font-size:11px; font-weight:800; padding:2px 7px; border-radius:3px;">
+                  ${c.id}
+                </span>
+                <span style="background:#fef2f2; color:#b91c1c; font-weight:700; font-size:11px; padding:2px 7px; border-radius:3px; border:1px solid #fca5a5;">
+                  ${c.category}
+                </span>
+                <span style="background:${c.status === 'Closed' ? '#f0fdf4' : '#fffbeb'}; color:${c.status === 'Closed' ? '#15803d' : '#b45309'}; font-size:11px; font-weight:700; padding:2px 7px; border-radius:3px;">
+                  Status: ${c.status}
+                </span>
+              </div>
+              <div style="font-weight:800; color:#0a2540; font-size:13px;">${c.location}</div>
+              <div style="font-size:11px; color:#64748b; font-family:var(--font-mono);">
+                📍 ${c.gpsCoords || '28.6250° N, 77.2100° E'} • Logged: ${c.dateTime}
+              </div>
+            </div>
+
+            <div style="text-align:right;">
+              <span style="background:#f1f5f9; color:#0f172a; font-size:10px; font-weight:700; padding:3px 8px; border-radius:3px;">
+                AI Priority: ${c.aiClassification ? c.aiClassification.priority : 'HIGH'}
+              </span>
+            </div>
+          </div>
+
+          <div style="font-size:12px; color:#334155; line-height:1.5; margin-bottom:10px; background:#f8fafc; padding:8px 10px; border-radius:4px;">
+            <strong>Incident Details:</strong> ${c.description}
+          </div>
+
+          <!-- Officer Action Flow Buttons -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; border-top:1px solid #f1f5f9; padding-top:8px;">
+            <div style="font-size:11px; color:#64748b;">
+              ${c.officerDecision ? `Action: <strong style="color:#059669;">${c.officerDecision}</strong>` : 'Action Pending Officer Review'}
+            </div>
+
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              ${!isActionTaken ? `
+                <button class="btn-action-primary" style="font-size:11px; padding:4px 8px; background:#f0fdf4; border-color:#86efac; color:#15803d;" onclick="App.handleOfficerCaseAction('${c.id}', 'VALIDATE')">
+                  ✓ Valid Report
+                </button>
+                <button class="btn-action-primary" style="font-size:11px; padding:4px 8px; background:#fef2f2; border-color:#fca5a5; color:#b91c1c;" onclick="App.handleOfficerCaseAction('${c.id}', 'REJECT')">
+                  ✗ Reject / Info
+                </button>
+                <button class="btn-action-primary" style="font-size:11px; padding:4px 8px; background:#fffbeb; border-color:#fde68a; color:#b45309;" onclick="App.handleOfficerCaseAction('${c.id}', 'CHALLAN')">
+                  Issue e-Challan (₹2,000)
+                </button>
+                <button class="btn-action-primary" style="font-size:11px; padding:4px 8px; background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8;" onclick="App.handleOfficerCaseAction('${c.id}', 'DISPATCH')">
+                  Dispatch Patrol Unit
+                </button>
+              ` : `
+                ${!isClosed ? `
+                  <button class="btn-action-primary" style="font-size:11px; padding:4px 8px; background:#0f172a; border-color:#0f172a; color:#fff;" onclick="App.handleOfficerCaseAction('${c.id}', 'CLOSE')">
+                    Close Case &amp; Notify Citizen
+                  </button>
+                ` : `
+                  <span style="font-size:11px; color:#059669; font-weight:700;">✓ Case Closed (Feedback Recorded)</span>
+                `}
+              `}
+            </div>
+          </div>
+
+        </div>
+      `;
+    }).join('');
+  },
+
+  async handleOfficerCaseAction(caseId, actionType) {
+    let patch = {};
+    if (actionType === 'VALIDATE') {
+      patch = {
+        status: "Under Review (Validated)",
+        stepIndex: 2,
+        officerDecision: "Verified by Officer - Evidence Validated"
+      };
+      this.showToast(`Case #${caseId} marked as Validated. Investigation ongoing.`, "info");
+    } else if (actionType === 'REJECT') {
+      patch = {
+        status: "Closed (Rejected)",
+        stepIndex: 4,
+        officerDecision: "Rejected - Insufficient Evidence or Duplicate"
+      };
+      this.showToast(`Case #${caseId} Rejected & Closed. Citizen notified.`, "info");
+    } else if (actionType === 'CHALLAN') {
+      patch = {
+        status: "Action Taken (Fine Issued)",
+        stepIndex: 3,
+        fineAmount: 2000,
+        officerDecision: "Statutory e-Challan ₹2,000 Issued under Motor Vehicles Act"
+      };
+      this.showToast(`Official e-Challan of ₹2,000 Issued for Case #${caseId}!`, "success");
+    } else if (actionType === 'DISPATCH') {
+      patch = {
+        status: "Action Taken (Patrol Dispatched)",
+        stepIndex: 3,
+        officerDecision: "Nearest Highway Patrol Unit Dispatched to GPS Location"
+      };
+      this.showToast(`Patrol Interceptor Dispatched for Case #${caseId}!`, "success");
+    } else if (actionType === 'CLOSE') {
+      patch = {
+        status: "Closed",
+        stepIndex: 4,
+        officerDecision: "Case Resolved by Traffic Officer. Ready for Citizen Feedback."
+      };
+      this.showToast(`Case #${caseId} Closed successfully.`, "success");
+    }
+
+    await window.trafficDB.updateCase(caseId, patch);
+    this.renderCasesList();
+    this.updateCasesBadge();
+    this.searchAndDisplayCase(caseId);
+  },
+
+  updateCasesBadge() {
+    const badge = document.getElementById('badgeCasesCount');
+    if (!badge) return;
+    const cases = window.trafficDB.getCases();
+    const openCount = cases.filter(c => c.status !== 'Closed').length;
+    badge.innerText = openCount;
+  },
+
+  // =========================================================================
+  // EMERGENCY FLOW (112 SOS -> TYPE -> GPS -> DISPATCH -> COUNTDOWN -> RESOLVE)
+  // =========================================================================
+
+  async triggerEmergencyType(type) {
+    const banner = document.getElementById('emergencyStatusBanner');
+    const title = document.getElementById('emgBannerTitle');
+    const desc = document.getElementById('emgBannerDesc');
+    const countdown = document.getElementById('emgCountdown');
+
+    const state = window.trafficDB.getStateByCode(window.trafficDB.selectedState);
+    const locName = state ? `${state.name} Highway Corridor` : 'Central Express Corridor';
+
+    const patrolUnits = {
+      'Accident': 'Highway Rescue Unit 09 (Innova Patrol)',
+      'Medical': 'Ambulance 108 Green Corridor Escort',
+      'Fire': 'Rapid Response Fire Tender 04',
+      'Police': 'Interceptor PCR 12 (Armed SI Team)'
+    };
+
+    const assigned = patrolUnits[type] || 'Emergency Response Unit 01';
+    const emgRecord = {
+      id: "SOS-112-" + Math.floor(100 + Math.random() * 900),
+      type: type,
+      location: locName,
+      status: "Patrol Dispatched",
+      assignedPatrol: assigned,
+      etaMinutes: 3,
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19)
+    };
+
+    this.activeEmergency = await window.trafficDB.triggerEmergency(emgRecord);
+
+    if (banner) banner.style.display = 'block';
+    if (title) title.innerText = `${type.toUpperCase()} EMERGENCY BROADCASTED`;
+    if (desc) desc.innerText = `Nearest Response Team: ${assigned} • GPS Locked`;
+    
+    // Start Live ETA Countdown
+    let remainingSecs = 180;
+    if (this.emergencyTimerId) clearInterval(this.emergencyTimerId);
+
+    if (countdown) countdown.innerText = "ETA: 3 MINS";
+
+    this.emergencyTimerId = setInterval(() => {
+      remainingSecs -= 1;
+      if (remainingSecs <= 0) {
+        clearInterval(this.emergencyTimerId);
+        if (countdown) countdown.innerText = "UNIT ON SCENE";
+        if (desc) desc.innerText = `Patrol Unit Arrived at ${locName} • Incident Handled`;
+      } else {
+        const mins = Math.floor(remainingSecs / 60);
+        const secs = remainingSecs % 60;
+        if (countdown) countdown.innerText = `ETA: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+    }, 1000);
+
+    this.renderEmergenciesList();
+    this.showToast(`🚨 112 SOS Dispatched: ${type} Team en route to ${locName}!`, "error");
+  },
+
+  resolveCurrentEmergency() {
+    if (this.emergencyTimerId) clearInterval(this.emergencyTimerId);
+    const banner = document.getElementById('emergencyStatusBanner');
+    if (banner) banner.style.display = 'none';
+
+    if (this.activeEmergency) {
+      this.activeEmergency.status = "Resolved";
+    }
+
+    this.renderEmergenciesList();
+    this.showToast("✓ Emergency Incident Handled & Marked Resolved.", "success");
+  },
+
+  renderEmergenciesList() {
+    const tbody = document.getElementById('emergencyTableBody');
+    if (!tbody) return;
+
+    const list = window.trafficDB.getEmergencies();
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:16px; color:#64748b;">No active 112 emergency calls reported.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(e => `
+      <tr>
+        <td><strong style="color:#b91c1c; font-family:var(--font-mono);">${e.id}</strong></td>
+        <td><span style="background:#fef2f2; color:#b91c1c; font-weight:700; padding:2px 6px; border-radius:3px; font-size:11px;">${e.type}</span></td>
+        <td>${e.location}</td>
+        <td><span style="background:${e.status === 'Resolved' ? '#f0fdf4' : '#fffbeb'}; color:${e.status === 'Resolved' ? '#15803d' : '#b45309'}; padding:2px 6px; border-radius:3px; font-size:11px; font-weight:700;">${e.status}</span></td>
+        <td><strong>${e.assignedPatrol}</strong></td>
+        <td><strong style="color:#dc2626; font-family:var(--font-mono);">${e.status === 'Resolved' ? 'Completed' : (e.etaMinutes + ' mins')}</strong></td>
+        <td style="font-family:var(--font-mono); font-size:10px; color:#64748b;">${e.timestamp}</td>
+      </tr>
+    `).join('');
+  },
+
+  // =========================================================================
+  // REAL-TIME RADAR TELEMETRY & OPTICAL ANPR
+  // =========================================================================
 
   handleTrafficTick(detail) {
     const m = detail.metrics;
@@ -517,7 +1227,6 @@ const App = {
       return `
       <div class="construction-card" style="border:1px solid #e2e8f0; border-radius:6px; padding:14px; margin-bottom:12px; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
         
-        <!-- Header: Agency & Status Badges -->
         <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
           <div>
             <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:4px;">
@@ -547,13 +1256,11 @@ const App = {
           </div>
         </div>
 
-        <!-- Scope & Contractor -->
         <div style="font-size:12px; color:#334155; line-height:1.5; margin-bottom:8px;">
           <strong>Scope of Work:</strong> ${rw.workType}<br/>
           <strong>Contractor / Executing Agency:</strong> <em>${rw.contractor}</em>
         </div>
 
-        <!-- Progress Bar -->
         <div style="margin-bottom:10px;">
           <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
             <span style="color:#64748b;">Civil Works Progress:</span>
@@ -564,7 +1271,6 @@ const App = {
           </div>
         </div>
 
-        <!-- Google Mobility AI Traffic Advisory Strip -->
         <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:4px; padding:8px 10px; font-size:11px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
           <div>
             <span style="font-weight:700; color:#0f172a;">⚡ Google Mobility AI Telemetry:</span>
@@ -579,7 +1285,6 @@ const App = {
           </div>
         </div>
 
-        <!-- Traffic Impact & Diversion Route -->
         <div style="background:#fffbeb; border:1px solid #fef3c7; padding:9px 11px; border-radius:4px; font-size:11px; color:#92400e; margin-bottom:10px; line-height:1.5;">
           <div>⚠️ <strong>Traffic Restriction:</strong> ${rw.laneImpact} (${rw.speedLimitReduction})</div>
           <div>↪️ <strong>Designated Diversion Route:</strong> ${rw.diversionRoute}</div>
@@ -587,7 +1292,6 @@ const App = {
           ${rw.safetyBarricades ? `<div style="margin-top:2px; color:#64748b;">🛡️ <strong>Safety Barricades:</strong> ${rw.safetyBarricades}</div>` : ''}
         </div>
 
-        <!-- Google Maps & Satellite Corridor Quick Launchers -->
         <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
           <a href="${gmapsSearchUrl}" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="padding:4px 10px; font-size:11px; text-decoration:none;">
             🗺️ Open Corridor in Google Maps
@@ -649,22 +1353,16 @@ const App = {
     const vahan = window.trafficDB.getVahanData();
     if (!vahan) return;
 
-    // Part 1: National Multi-Year Fleet Progression (1995-2026) Line Chart
     if (window.analyticsController && typeof window.analyticsController.renderVahanProgressionChart === 'function') {
       window.analyticsController.renderVahanProgressionChart(vahan.growthTimeline);
     }
 
-    // Part 2: Top 10 Indian States / UTs Registration League Table
     const stateTbody = document.getElementById('vahanStateTableBody');
     if (stateTbody && vahan.stateLeague) {
       stateTbody.innerHTML = vahan.stateLeague.map(s => `
         <tr>
-          <td>
-            <strong>${s.rank}. ${s.state}</strong>
-          </td>
-          <td>
-            <span style="background:#111827; color:#fff; padding:2px 7px; border-radius:3px; font-family:var(--font-mono); font-weight:700; font-size:11px;">${s.code}</span>
-          </td>
+          <td><strong>${s.rank}. ${s.state}</strong></td>
+          <td><span style="background:#111827; color:#fff; padding:2px 7px; border-radius:3px; font-family:var(--font-mono); font-weight:700; font-size:11px;">${s.code}</span></td>
           <td><strong>${(s.cumulative / 10000000).toFixed(2)} Cr</strong> <span style="font-size:10px; color:#64748b;">(${s.cumulative.toLocaleString()})</span></td>
           <td><span style="color:#b45309; font-weight:700;">+${(s.ytd2026 / 100000).toFixed(2)} Lakhs</span></td>
           <td><span style="font-size:11px; color:#334155;">${s.primarySegment}</span></td>
@@ -680,7 +1378,6 @@ const App = {
       `).join('');
     }
 
-    // Part 3: 5-Vehicle Category Fleet Composition Cards
     const classContainer = document.getElementById('vahanClassCardsContainer');
     if (classContainer && vahan.vehicleClasses) {
       classContainer.innerHTML = vahan.vehicleClasses.map(c => `
@@ -702,7 +1399,6 @@ const App = {
       `).join('');
     }
 
-    // Part 5: Verified MoRTH Database Registry Entries Table (from SQL Schema)
     const recordsTbody = document.getElementById('vahanRecordsTableBody');
     if (recordsTbody && vahan.sqlRecords) {
       recordsTbody.innerHTML = vahan.sqlRecords.map(r => `
@@ -718,124 +1414,13 @@ const App = {
     }
   },
 
-  openCameraControl(camId) {
-    this.activeCameraId = camId;
-    const feed = document.getElementById('liveCctvFeed');
-    const label = document.getElementById('currentCamLabel');
-    if (label) label.innerText = `SURVEILLANCE NODE: ${camId}`;
-    this.showToast(`Control Room Switched to Camera Node ${camId}`, "info");
-    this.switchTab('current');
-  },
-
-  async handleVerifyOfficerPass() {
-    const badgeEl = document.getElementById('inOfficerBadge');
-    const passEl = document.getElementById('inOfficerPass');
-    const pinEl = document.getElementById('inOfficerPin');
-
-    const officerId = badgeEl ? badgeEl.value.trim() : '';
-    const passCode = passEl ? passEl.value.trim() : '';
-    const pin = pinEl ? pinEl.value.trim() : '';
-
-    if (!officerId) {
-      this.showToast("Please enter an Officer Badge / ID.", "error");
-      return;
-    }
-
-    // 1. Try Backend API Verification
-    try {
-      const res = await window.trafficDB.verifyOfficerPass(officerId, passCode, pin);
-      if (res && res.success && res.officer) {
-        this.displayOfficialDutyPass(res.officer);
-        this.closeModal('officerPassModal');
-        this.showToast(`Pass Verified: ${res.officer.name} (${res.officer.rank})`, "success");
-        return;
-      }
-    } catch (e) {
-      console.warn("Backend auth call fallback:", e);
-    }
-
-    // 2. Client-side Local Fallback Verification
-    const officers = window.trafficDB.getOfficers();
-    const officer = officers.find(o => 
-      (o.badgeNumber && o.badgeNumber.toLowerCase() === officerId.toLowerCase()) || 
-      (o.id && o.id.toLowerCase() === officerId.toLowerCase())
-    );
-
-    if (!officer) {
-      this.showToast("Officer Badge / ID not registered in National Traffic Directory.", "error");
-      return;
-    }
-
-    const defaultCredentials = {
-      'IPS-8801-CIP': { pass: 'DGP@2026', pin: '9090' },
-      'OFF-DGP-01': { pass: 'DGP@2026', pin: '9090' },
-      'IPS-9244-DEL': { pass: 'SP@2026', pin: '7070' },
-      'OFF-SP-02': { pass: 'SP@2026', pin: '7070' },
-      'IPS-7714-RJ': { pass: 'RAJ@2026', pin: '6060' },
-      'OFF-SP-RJ-06': { pass: 'RAJ@2026', pin: '6060' },
-      'TR-INSP-5501': { pass: 'INSP@2026', pin: '5050' },
-      'OFF-INSP-03': { pass: 'INSP@2026', pin: '5050' },
-      'TR-SI-4219': { pass: 'PATROL@2026', pin: '3030' },
-      'OFF-PATROL-04': { pass: 'PATROL@2026', pin: '3030' },
-      'TR-WRD-1102': { pass: 'WARDEN@2026', pin: '1010' },
-      'OFF-WARDEN-05': { pass: 'WARDEN@2026', pin: '1010' }
-    };
-
-    const targetCreds = defaultCredentials[officer.badgeNumber] || defaultCredentials[officer.id] || { pass: 'INSP@2026', pin: '5050' };
-
-    const passMatch = passCode && passCode.toUpperCase() === targetCreds.pass.toUpperCase();
-    const pinMatch = pin && pin === targetCreds.pin;
-
-    if (passMatch || pinMatch) {
-      this.displayOfficialDutyPass(officer);
-      this.closeModal('officerPassModal');
-      this.showToast(`Duty Pass Verified: ${officer.rank} (${officer.clearance})`, "success");
-    } else {
-      this.showToast("Verification Failed: Invalid PassCode or Security PIN.", "error");
-    }
-  },
-
-  displayOfficialDutyPass(officer) {
-    const card = document.getElementById('digitalDutyPassCard');
-    if (!card) return;
-
-    const nameEl = document.getElementById('passOfficerName');
-    if (nameEl) nameEl.innerText = officer.name;
-    const rankEl = document.getElementById('passOfficerRank');
-    if (rankEl) rankEl.innerText = officer.rank;
-    const badgeEl = document.getElementById('passBadgeNumber');
-    if (badgeEl) badgeEl.innerText = officer.badgeNumber;
-    const jurisEl = document.getElementById('passJurisdiction');
-    if (jurisEl) jurisEl.innerText = officer.jurisdiction;
-    const clearEl = document.getElementById('passClearance');
-    if (clearEl) clearEl.innerText = officer.clearance;
-    const valEl = document.getElementById('passValidity');
-    if (valEl) valEl.innerText = officer.passValidity || '2027-12-31';
-    const dutiesEl = document.getElementById('passDuties');
-    if (dutiesEl) dutiesEl.innerText = officer.duties;
-
-    // Update Header Active Officer Badge to show authenticated session
-    const headerBtn = document.getElementById('btnOfficerPass');
-    if (headerBtn) {
-      headerBtn.innerHTML = `
-        <i data-lucide="shield-check" style="color:#10b981;"></i>
-        <span>✓ ${officer.rank.split(' ')[0]}: ${officer.name.split(' ')[0]} (${officer.badgeNumber})</span>
-      `;
-      headerBtn.style.background = '#064e3b';
-      headerBtn.style.borderColor = '#059669';
-      if (window.lucide) lucide.createIcons();
-    }
-
-    this.openModal('dutyPassViewModal');
-  },
-
   handleCreateRoadwork() {
-    const road = document.getElementById('inRwRoad').value.trim();
-    const work = document.getElementById('inRwWork').value.trim();
-    const contractor = document.getElementById('inRwContractor').value.trim();
-    const impact = document.getElementById('inRwImpact').value.trim();
-    const detour = document.getElementById('inRwDetour').value.trim();
-    const target = document.getElementById('inRwTarget').value.trim();
+    const road = document.getElementById('inRwRoad')?.value.trim();
+    const work = document.getElementById('inRwWork')?.value.trim();
+    const contractor = document.getElementById('inRwContractor')?.value.trim();
+    const impact = document.getElementById('inRwImpact')?.value.trim();
+    const detour = document.getElementById('inRwDetour')?.value.trim();
+    const target = document.getElementById('inRwTarget')?.value.trim();
 
     if (!road || !work || !contractor) {
       this.showToast("Please fill all mandatory roadwork fields.", "error");
@@ -858,7 +1443,7 @@ const App = {
     window.trafficDB.addRoadwork(newRw);
     this.closeModal('newRoadworkModal');
     this.renderRoadworksList();
-    window.mapController.renderConstructionZones();
+    if (window.mapController) window.mapController.renderConstructionZones();
     this.showToast(`Construction Zone Registered: ${road}`, "success");
   },
 

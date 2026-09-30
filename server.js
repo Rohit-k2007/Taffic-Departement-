@@ -1010,6 +1010,94 @@ function requestHandler(req, res) {
     });
   }
 
+  // 12. GET /api/cases (Citizen Reports & Assigned Officer Cases)
+  if (pathname === '/api/cases' && req.method === 'GET') {
+    const status = urlObj.searchParams.get('status');
+    let list = db.cases || [];
+    if (status && status !== 'ALL') {
+      list = list.filter(c => c.status === status);
+    }
+    return sendJSON(res, 200, { success: true, count: list.length, cases: list });
+  }
+
+  // 13. POST /api/cases (Citizen File New Report with Evidence & AI Pre-Processing)
+  if (pathname === '/api/cases' && req.method === 'POST') {
+    return getBody(req, data => {
+      const newCase = Object.assign({
+        id: "CASE-2026-" + Math.floor(1000 + Math.random() * 9000),
+        dateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        aiPriority: data.category && data.category.includes('Accident') ? 'Critical' : 'High',
+        aiClassification: `AI Analyzed: ${data.category || 'Traffic Issue'} (Confidence: 95%)`,
+        aiDuplicateDetected: false,
+        status: "Under Review",
+        verificationStatus: "Pending Review",
+        assignedOfficer: "Inspector Rajeshwar Nath (TR-INSP-5501)",
+        userNotified: true,
+        feedbackRating: null,
+        feedbackComment: null
+      }, data);
+      if (!db.cases) db.cases = [];
+      db.cases.unshift(newCase);
+      saveDB();
+      return sendJSON(res, 201, { success: true, caseRecord: newCase });
+    });
+  }
+
+  // 14. PUT /api/cases/:id (Officer Review, Verify & Action)
+  if (pathname.startsWith('/api/cases/') && req.method === 'PUT') {
+    const parts = pathname.split('/');
+    const caseId = parts[3];
+    return getBody(req, patch => {
+      if (!db.cases) db.cases = [];
+      const item = db.cases.find(c => c.id === caseId);
+      if (item) {
+        Object.assign(item, patch);
+        saveDB();
+        return sendJSON(res, 200, { success: true, caseRecord: item });
+      }
+      return sendJSON(res, 404, { success: false, message: "Case not found" });
+    });
+  }
+
+  // 15. POST /api/cases/:id/feedback (Citizen Feedback Rating)
+  if (pathname.match(/^\/api\/cases\/[^/]+\/feedback$/) && req.method === 'POST') {
+    const caseId = pathname.split('/')[3];
+    return getBody(req, fb => {
+      if (!db.cases) db.cases = [];
+      const item = db.cases.find(c => c.id === caseId);
+      if (item) {
+        item.feedbackRating = fb.rating || 5;
+        item.feedbackComment = fb.comment || "Case resolved satisfactorily.";
+        item.status = "Closed";
+        saveDB();
+        return sendJSON(res, 200, { success: true, caseRecord: item });
+      }
+      return sendJSON(res, 404, { success: false, message: "Case not found" });
+    });
+  }
+
+  // 16. GET /api/emergencies (Active 112 / SOS Dispatch Queue)
+  if (pathname === '/api/emergencies' && req.method === 'GET') {
+    return sendJSON(res, 200, { success: true, count: (db.emergencies || []).length, emergencies: db.emergencies || [] });
+  }
+
+  // 17. POST /api/emergencies (Trigger Emergency SOS Alert)
+  if (pathname === '/api/emergencies' && req.method === 'POST') {
+    return getBody(req, emg => {
+      const newEmg = Object.assign({
+        id: "EMG-2026-" + Math.floor(10 + Math.random() * 90),
+        status: "Patrol Dispatched",
+        assignedPatrol: "Interceptor Unit 04 (Sub-Insp. Priya Sharma)",
+        etaMinutes: 4,
+        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19)
+      }, emg);
+      if (!db.emergencies) db.emergencies = [];
+      db.emergencies.unshift(newEmg);
+      saveDB();
+      return sendJSON(res, 201, { success: true, emergency: newEmg });
+    });
+  }
+
   // --- STATIC FILE SERVING ---
   let reqPath = pathname;
   if (reqPath === '/') reqPath = '/index.html';
