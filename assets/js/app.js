@@ -4306,6 +4306,75 @@ const App = {
 
     this.showToast(`Active Dashboard View: ${sectorNames[sector] || sector}`, 'info');
     if (window.lucide) lucide.createIcons();
+  },
+
+  /* =========================================================================
+     DOWNLOAD MOBILE APP CONTROLLER
+     ========================================================================= */
+  openDownloadAppModal(edition = 'citizen') {
+    this.openModal('downloadAppModal');
+    this.switchDownloadAppTab(edition);
+    if (window.lucide) lucide.createIcons();
+  },
+
+  switchDownloadAppTab(tab) {
+    const btnCit = document.getElementById('btnDownloadTabCitizen');
+    const btnPol = document.getElementById('btnDownloadTabPolice');
+    const viewCit = document.getElementById('viewDownloadCitizen');
+    const viewPol = document.getElementById('viewDownloadPolice');
+
+    if (tab === 'police') {
+      if (btnCit) btnCit.classList.remove('active');
+      if (btnPol) btnPol.classList.add('active');
+      if (viewCit) viewCit.style.display = 'none';
+      if (viewPol) viewPol.style.display = 'block';
+    } else {
+      if (btnPol) btnPol.classList.remove('active');
+      if (btnCit) btnCit.classList.add('active');
+      if (viewPol) viewPol.style.display = 'none';
+      if (viewCit) viewCit.style.display = 'block';
+    }
+    if (window.lucide) lucide.createIcons();
+  },
+
+  downloadApk(edition) {
+    const isPolice = edition === 'police';
+    const filename = isPolice ? 'TRAFIX-Police-MDT-v4.2.1.apk' : 'TRAFIX-Citizen-v4.2.1.apk';
+    const filesize = isPolice ? '34.8 MB' : '28.4 MB';
+
+    // Trigger instant package download
+    const dummyBlob = new Blob([`TRAFIX Official Signed Mobile Application Package (${filename}) - Ministry of Road Transport & Highways, Govt of India`], { type: 'application/vnd.android.package-archive' });
+    const url = URL.createObjectURL(dummyBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    this.showToast(`Downloading ${filename} (${filesize}). Check your downloads folder.`, 'success');
+  },
+
+  simulateStoreOpen(storeName) {
+    this.showToast(`Redirecting to official ${storeName} listing for TRAFIX...`, 'info');
+  },
+
+  installPwa() {
+    this.showToast('To install TRAFIX: Open browser menu (or Share) and select "Add to Home screen"', 'info');
+  },
+
+  copyDownloadLink() {
+    const link = window.location.origin + '/#download-app';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(link).then(() => {
+        this.showToast('Download URL copied to clipboard: ' + link, 'success');
+      }).catch(() => {
+        this.showToast('Direct download URL: ' + link, 'info');
+      });
+    } else {
+      this.showToast('Direct download URL: ' + link, 'info');
+    }
   }
 };
 

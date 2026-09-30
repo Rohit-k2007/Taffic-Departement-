@@ -82,6 +82,11 @@
           <span id="activeUserRoleText">Mode: <strong>Citizen Public Portal</strong></span>
         </div>
 
+        <button class="btn-action-primary" id="btnDownloadApp" onclick="App.openDownloadAppModal()" title="Download TRAFIX Mobile App (Android APK &amp; iOS PWA)" style="background:#1e40af; border-color:#1e3a8a; color:#fff; font-weight:700;">
+          <i data-lucide="smartphone"></i>
+          <span>Download App</span>
+        </button>
+
         <button class="btn-action-primary" id="btnAppLogin" onclick="App.openAppLoginModal()" title="Universal App Login (Citizen / Police / Commissioner / Control Room)" style="background:#0284c7; border-color:#0284c7; color:#fff; font-weight:700;">
           <i data-lucide="key-round"></i>
           <span>App Login</span>
@@ -172,6 +177,23 @@
           <div id="sidebarOfficerClearance" style="font-size:10px; color:#059669; font-weight:600; margin-top:2px;">
             Public Access Clearance
           </div>
+        </div>
+      </div>
+
+      <!-- Quick Download App Link Card (Sidebar) -->
+      <div class="sidebar-app-download-card" onclick="App.openDownloadAppModal('citizen')" title="Download TRAFIX Mobile App (Android &amp; iOS)">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="app-icon-mini-box">
+            <i data-lucide="smartphone" style="width:16px; height:16px; color:#1e40af;"></i>
+          </div>
+          <div>
+            <div style="font-size:11px; font-weight:800; color:#0f2e5a;">TRAFIX Mobile App</div>
+            <div style="font-size:9.5px; color:#64748b;">Android APK &amp; iOS PWA</div>
+          </div>
+        </div>
+        <div class="badge-download-pill">
+          <i data-lucide="download" style="width:11px; height:11px;"></i>
+          <span>GET</span>
         </div>
       </div>
 
@@ -3268,6 +3290,253 @@
   <!-- =========================================================================
        MODALS
        ========================================================================= -->
+
+  <!-- =========================================================================
+       OFFICIAL TRAFIX MOBILE APP DOWNLOAD MODAL (BLUE & WHITE MASTER THEME)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="downloadAppModal">
+    <div class="modal-card download-app-modal-card">
+      <div class="modal-header" style="background:linear-gradient(135deg, #07172c 0%, #0f2e5a 60%, #1e3a8a 100%); color:#fff; border-bottom:2px solid #3b82f6; padding:14px 20px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="background:#1e40af; border:1.5px solid #60a5fa; border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; color:#fff; flex-shrink:0;">
+            <i data-lucide="smartphone" style="width:20px; height:20px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:800; font-size:15px; letter-spacing:0.04em;">DOWNLOAD TRAFIX OFFICIAL MOBILE APP</div>
+            <div style="font-size:10.5px; color:#bfdbfe;">Ministry of Road Transport &amp; Highways • National Digital Platform</div>
+          </div>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('downloadAppModal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding:18px 22px; max-height:calc(85vh - 120px); overflow-y:auto;">
+        
+        <!-- Edition Selector Tabs -->
+        <div class="download-tabs-row">
+          <button type="button" class="download-tab-btn active" id="btnDownloadTabCitizen" onclick="App.switchDownloadAppTab('citizen')">
+            <i data-lucide="user" style="width:14px; height:14px;"></i>
+            <span>Citizen Motorist Edition (v4.2.1)</span>
+          </button>
+          <button type="button" class="download-tab-btn" id="btnDownloadTabPolice" onclick="App.switchDownloadAppTab('police')">
+            <i data-lucide="shield" style="width:14px; height:14px;"></i>
+            <span>Traffic Police MDT Edition (v4.2.1)</span>
+          </button>
+        </div>
+
+        <!-- VIEW 1: CITIZEN MOTORIST EDITION -->
+        <div id="viewDownloadCitizen">
+          <div class="app-download-grid">
+            
+            <!-- Left: Download Options -->
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span style="font-size:10px; font-weight:800; background:#eff6ff; color:#1e40af; border:1px solid #bfdbfe; padding:2px 8px; border-radius:4px;">
+                  FOR CITIZENS &amp; MOTORISTS
+                </span>
+                <span style="font-size:10px; color:#64748b;">Build: 2026.09.30 • 28.4 MB</span>
+              </div>
+              <h3 style="font-size:15px; font-weight:800; color:#0f2e5a; margin:0 0 6px 0;">
+                TRAFIX Citizen: VAHAN, e-Challan &amp; DL Services
+              </h3>
+              <p style="font-size:11px; color:#475569; line-height:1.5; margin:0 0 14px 0;">
+                Access official VAHAN RC lookups, instant e-Challan UPI settlement, SARATHI Driving Licence slot booking &amp; 1-tap 112 emergency dispatch on your smartphone.
+              </p>
+
+              <!-- Download Action Buttons -->
+              <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+                <!-- Direct APK Download Button -->
+                <button type="button" class="store-badge-btn apk-direct" onclick="App.downloadApk('citizen')" style="width:100%; justify-content:center; padding:11px 16px;">
+                  <i data-lucide="download" style="width:18px; height:18px;"></i>
+                  <div style="text-align:left;">
+                    <div style="font-size:9.5px; opacity:0.9; text-transform:uppercase;">Direct Package Install</div>
+                    <div style="font-size:12.5px; font-weight:800;">Download Android APK (v4.2.1)</div>
+                  </div>
+                </button>
+
+                <!-- Store Row -->
+                <div class="store-badge-row">
+                  <a href="javascript:void(0)" class="store-badge-btn" onclick="App.simulateStoreOpen('Google Play Store')" title="Get it on Google Play">
+                    <i data-lucide="play" style="width:16px; height:16px; color:#60a5fa;"></i>
+                    <div style="text-align:left;">
+                      <div style="font-size:8.5px; opacity:0.8;">GET IT ON</div>
+                      <div style="font-size:11px; font-weight:700;">Google Play</div>
+                    </div>
+                  </a>
+
+                  <a href="javascript:void(0)" class="store-badge-btn" onclick="App.simulateStoreOpen('Apple App Store')" title="Download on App Store">
+                    <i data-lucide="apple" style="width:16px; height:16px; color:#ffffff;"></i>
+                    <div style="text-align:left;">
+                      <div style="font-size:8.5px; opacity:0.8;">DOWNLOAD ON</div>
+                      <div style="font-size:11px; font-weight:700;">App Store (iOS)</div>
+                    </div>
+                  </a>
+                </div>
+
+                <!-- PWA Install Button -->
+                <button type="button" class="btn-action-outline" onclick="App.installPwa()" style="width:100%; justify-content:center; padding:9px 14px; font-size:11.5px; font-weight:700; background:#ffffff; color:#1e40af; border:1.5px solid #bfdbfe;">
+                  <i data-lucide="plus-circle" style="width:15px; height:15px;"></i>
+                  <span>Install Web App (PWA) on Mobile Home Screen</span>
+                </button>
+              </div>
+
+              <!-- Feature Bullets -->
+              <div class="app-feature-list">
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>Instant SMS push notification for speed &amp; signal citations</span>
+                </div>
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>Digital DigiLocker integration for valid RC, DL &amp; PUC storage</span>
+                </div>
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>ADTT driving test appointment booking with printable Hall Ticket</span>
+                </div>
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>High-priority National Emergency 112 SOS GPS locator</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: QR Code Scanner -->
+            <div>
+              <div class="app-qr-box">
+                <div style="font-size:11px; font-weight:800; color:#0f2e5a; margin-bottom:6px;">
+                  SCAN TO INSTALL ON MOBILE
+                </div>
+                <!-- Simulated Clean SVG QR Code -->
+                <svg class="app-qr-code-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- QR Matrix Design -->
+                  <rect width="100" height="100" fill="#ffffff"/>
+                  <!-- Position Markers Top Left -->
+                  <rect x="8" y="8" width="26" height="26" stroke="#0f2e5a" stroke-width="4" fill="none"/>
+                  <rect x="15" y="15" width="12" height="12" fill="#1e40af"/>
+                  <!-- Position Markers Top Right -->
+                  <rect x="66" y="8" width="26" height="26" stroke="#0f2e5a" stroke-width="4" fill="none"/>
+                  <rect x="73" y="15" width="12" height="12" fill="#1e40af"/>
+                  <!-- Position Markers Bottom Left -->
+                  <rect x="8" y="66" width="26" height="26" stroke="#0f2e5a" stroke-width="4" fill="none"/>
+                  <rect x="15" y="73" width="12" height="12" fill="#1e40af"/>
+                  <!-- Random Code Modules -->
+                  <rect x="42" y="12" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="52" y="18" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="42" y="26" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="12" y="42" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="22" y="46" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="46" y="42" width="8" height="8" fill="#1e40af"/>
+                  <rect x="60" y="44" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="74" y="42" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="86" y="48" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="42" y="60" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="54" y="66" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="66" y="60" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="78" y="68" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="42" y="82" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="56" y="86" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="70" y="82" width="6" height="6" fill="#0f2e5a"/>
+                  <rect x="84" y="86" width="6" height="6" fill="#0f2e5a"/>
+                </svg>
+                <div style="font-size:10px; color:#475569; line-height:1.4; margin-bottom:8px;">
+                  Open camera app on Android or iPhone to scan and download.
+                </div>
+                <button type="button" class="btn-action-primary" onclick="App.copyDownloadLink()" style="font-size:10.5px; padding:6px 12px; width:100%; justify-content:center;">
+                  <i data-lucide="copy" style="width:13px; height:13px;"></i>
+                  <span>Copy Download URL</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- VIEW 2: TRAFFIC POLICE & ENFORCEMENT MDT EDITION -->
+        <div id="viewDownloadPolice" style="display:none;">
+          <div class="app-download-grid">
+            
+            <!-- Left: Police Details -->
+            <div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <span style="font-size:10px; font-weight:800; background:#f0f7ff; color:#0f2e5a; border:1px solid #93c5fd; padding:2px 8px; border-radius:4px;">
+                  OFFICIAL ENFORCEMENT MDT
+                </span>
+                <span style="font-size:10px; color:#b91c1c; font-weight:700;">2FA OTP Protected</span>
+              </div>
+              <h3 style="font-size:15px; font-weight:800; color:#0f2e5a; margin:0 0 6px 0;">
+                TRAFIX Officer MDT: Tactical ANPR &amp; E-Citation Terminal
+              </h3>
+              <p style="font-size:11px; color:#475569; line-height:1.5; margin:0 0 14px 0;">
+                Field Mobile Data Terminal application for Traffic Police Inspectors and Sub-Inspectors. Real-time OCR number plate scanning, Section 183/194 challan dispatch, and crash investigation forensics.
+              </p>
+
+              <!-- Police Download Button -->
+              <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+                <button type="button" class="store-badge-btn apk-direct" onclick="App.downloadApk('police')" style="width:100%; justify-content:center; padding:11px 16px; background:#0f2e5a; border-color:#1e3a8a;">
+                  <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
+                  <div style="text-align:left;">
+                    <div style="font-size:9.5px; opacity:0.9; text-transform:uppercase;">Authorized Police Package</div>
+                    <div style="font-size:12.5px; font-weight:800;">Download Police MDT APK (v4.2.1 • 34.8 MB)</div>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Police Feature Bullets -->
+              <div class="app-feature-list">
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>Live optical ANPR camera scanning directly from smartphone</span>
+                </div>
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>Instant VAHAN registry stolen/hotlist vehicle intercept alerts</span>
+                </div>
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>Direct Bluetooth thermal printer connectivity for statutory paper receipts</span>
+                </div>
+                <div class="app-feature-item">
+                  <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+                  <span>Accident scene telemetry, GPS photo tagging &amp; CCTNS link</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Security Verification Info -->
+            <div>
+              <div class="download-channel-card" style="background:#ffffff; border:1.5px solid #bfdbfe;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <i data-lucide="lock" style="width:18px; height:18px; color:#1e40af;"></i>
+                  <strong style="font-size:12px; color:#0f2e5a;">Security &amp; Device Integrity</strong>
+                </div>
+                <div style="font-size:10.5px; color:#475569; line-height:1.5;">
+                  Police MDT app requires hardware MDM registration, Officer Badge ID (e.g. <code>TR-INSP-5501</code>), and 2FA SMS OTP dispatch to verify official field duty.
+                </div>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:8px; font-size:10px; font-family:var(--font-mono); color:#1e293b;">
+                  <div>SHA-256 Checksum:</div>
+                  <div style="word-break:break-all; color:#1e40af; margin-top:2px;">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</div>
+                </div>
+                <button type="button" class="btn-action-gold" onclick="App.openModal('officerPassModal'); App.closeModal('downloadAppModal');" style="font-size:11px; padding:7px 12px; width:100%; justify-content:center;">
+                  <span>Authenticate Officer Duty Pass</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:12px 20px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:11px; color:#64748b;">
+          National Informatics Centre (NIC) • Verified &amp; Signed Android Package (.APK)
+        </span>
+        <button type="button" class="btn-action-outline" onclick="App.closeModal('downloadAppModal')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- =========================================================================
        DEDICATED APP LOGIN PAGE & 2FA ACCESS GATEWAY

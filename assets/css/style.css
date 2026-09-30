@@ -3446,3 +3446,213 @@ body {
   flex-wrap: wrap;
   gap: 8px;
 }
+
+/* =========================================================================
+   DOWNLOAD APP COMPONENT STYLES (BLUE & WHITE MASTER THEME)
+   ========================================================================= */
+.sidebar-app-download-card {
+  background: #f0f7ff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 2px;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.06);
+}
+
+.sidebar-app-download-card:hover {
+  background: #e0edfe;
+  border-color: #3b82f6;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+  transform: translateY(-1px);
+}
+
+.app-icon-mini-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.badge-download-pill {
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.3);
+}
+
+/* Download App Modal Card */
+.download-app-modal-card {
+  max-width: 720px;
+  width: 95%;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #bfdbfe;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(15, 46, 90, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.download-tabs-row {
+  display: flex;
+  gap: 6px;
+  background: #f0f7ff;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1.5px solid #bfdbfe;
+  margin-bottom: 18px;
+}
+
+.download-tab-btn {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e3a8a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.download-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.download-tab-btn.active {
+  background: #1e3a8a;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(30, 58, 138, 0.25);
+}
+
+.download-tab-btn.active i {
+  color: #ffffff !important;
+}
+
+.app-download-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 18px;
+}
+
+@media (max-width: 650px) {
+  .app-download-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.download-channel-card {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.download-channel-card:hover {
+  border-color: #93c5fd;
+}
+
+.store-badge-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.store-badge-btn {
+  flex: 1;
+  min-width: 140px;
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-decoration: none;
+}
+
+.store-badge-btn:hover {
+  background: #1e293b;
+  border-color: #60a5fa;
+  transform: translateY(-1px);
+}
+
+.store-badge-btn.apk-direct {
+  background: #2563eb;
+  border-color: #1d4ed8;
+}
+
+.store-badge-btn.apk-direct:hover {
+  background: #1d4ed8;
+  border-color: #1e40af;
+}
+
+.app-qr-box {
+  background: #ffffff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.05);
+}
+
+.app-qr-code-svg {
+  width: 130px;
+  height: 130px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px;
+  margin-bottom: 8px;
+}
+
+.app-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.app-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #334155;
+}
+
+.app-feature-item i {
+  color: #059669;
+  flex-shrink: 0;
+}
