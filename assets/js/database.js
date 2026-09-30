@@ -32,6 +32,13 @@ class TrafficDatabase {
     this.vahanData = null;
   }
 
+  authHeaders() {
+    const token = (window.govAuth && window.govAuth.currentUser && window.govAuth.currentUser.token) || '';
+    const h = { 'Content-Type': 'application/json' };
+    if (token) h['Authorization'] = `Bearer ${token}`;
+    return h;
+  }
+
   async loadInitialData() {
     try {
       // 1. Fetch States & Districts
@@ -332,7 +339,7 @@ class TrafficDatabase {
     try {
       const res = await fetch(`${this.apiBase}/api/violations`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.authHeaders(),
         body: JSON.stringify(vData)
       });
       if (res.ok) {
@@ -389,7 +396,7 @@ class TrafficDatabase {
       try {
         fetch(`${this.apiBase}/api/violations/${id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this.authHeaders(),
           body: JSON.stringify({ status: newStatus, receiptNumber: item.receiptNumber })
         });
       } catch (e) { }
@@ -430,7 +437,7 @@ class TrafficDatabase {
     try {
       const res = await fetch(`${this.apiBase}/api/officers`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.authHeaders(),
         body: JSON.stringify(officerData)
       });
       if (res.ok) {
@@ -458,7 +465,10 @@ class TrafficDatabase {
     if (u) {
       u.licenseStatus = u.licenseStatus === 'Active' ? 'Suspended / Revoked' : 'Active';
       try {
-        fetch(`${this.apiBase}/api/users/${userId}/toggle`, { method: 'PUT' });
+        fetch(`${this.apiBase}/api/users/${userId}/toggle`, { 
+          method: 'PUT',
+          headers: this.authHeaders()
+        });
       } catch (e) { }
       return u;
     }
@@ -537,7 +547,7 @@ class TrafficDatabase {
       try {
         fetch(`${this.apiBase}/api/cases/${id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this.authHeaders(),
           body: JSON.stringify(patch)
         });
       } catch (e) { }
@@ -639,7 +649,7 @@ class TrafficDatabase {
       try {
         fetch(`${this.apiBase}/api/rto-applications/${id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this.authHeaders(),
           body: JSON.stringify(patch)
         });
       } catch (e) { }

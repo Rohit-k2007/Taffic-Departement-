@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NATDAMS - National Automated Traffic Department & Enforcement System | Govt of India</title>
+  <meta name="description" content="TRAFIX - Government of India National Centralized Digital Platform for Traffic Police, RTO Management, Citizen Services, and AI-Assisted Risk Intelligence.">
+  <title>TRAFIX - National Traffic Police, RTO Management &amp; Risk Intelligence Platform | Govt of India</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,8 +35,8 @@
           <div class="gov-title-hi">भारत सरकार • सड़क परिवहन और राजमार्ग मंत्रालय</div>
           <div class="gov-title-en">GOVERNMENT OF INDIA • MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS</div>
           <div class="portal-brand-title">
-            <span>राष्ट्रीय स्वचालित यातायात विभाग</span>
-            <span class="portal-acronym">NATDAMS</span>
+            <span>राष्ट्रीय यातायात पुलिस एवं आरटीओ प्रबंधन मंच</span>
+            <span class="portal-acronym">TRAFIX</span>
           </div>
         </div>
       </div>
@@ -1731,116 +1732,227 @@
        ========================================================================= -->
 
   <!-- 1. Redesigned Officer Duty Pass & Login Modal (High-Level, Clean, 3 Required Fields) -->
+  <!-- 1. TRAFIX Multi-Portal Sovereign Government Access Gateway (Divided Roles) -->
   <div class="modal-backdrop" id="officerPassModal">
-    <div class="modal-card" style="max-width:540px;">
+    <div class="modal-card" style="max-width:620px;">
       
-      <div class="modal-header" style="background:#111827; color:#fff; border-bottom:2px solid #b45309;">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div style="background:#b45309; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#fff;">
-            <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
+      <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #b45309; padding:14px 20px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="background:#b45309; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:#fff;">
+            <i data-lucide="shield-check" style="width:20px; height:20px;"></i>
           </div>
           <div>
-            <div style="font-weight:800; font-size:14px; letter-spacing:0.02em;">OFFICER DUTY CLEARANCE &amp; LOGIN</div>
-            <div style="font-size:10px; color:#cbd5e1;">Government of India Traffic Police Command Desk</div>
+            <div style="font-weight:800; font-size:14px; letter-spacing:0.04em;">TRAFIX • SOVEREIGN GOVERNMENT ACCESS GATEWAY</div>
+            <div style="font-size:10px; color:#cbd5e1;">Ministry of Road Transport &amp; Highways • State Traffic Police &amp; RTO Directorate</div>
           </div>
         </div>
         <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('officerPassModal')">&times;</button>
       </div>
 
-      <form id="formVerifyOfficerPass">
-        <div class="modal-body" style="padding:18px 20px;">
-          
-          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:10px 12px; margin-bottom:14px; font-size:11px; color:#334155;">
-            🔒 <strong>Statutory Authentication Mandate:</strong> Enter your Officer User ID, Clearance Password, and Camera Control PIN.
-          </div>
+      <!-- Divided Role Portal Navigation Selector Tabs -->
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); background:#f1f5f9; border-bottom:1px solid #cbd5e1; padding:4px 8px; gap:4px;">
+        <button type="button" class="btn-action-primary" id="loginTabBtnCitizen" onclick="App.switchLoginPortalTab('citizen')" style="font-size:11px; padding:8px 4px; justify-content:center; background:#fff; font-weight:700; border-color:#cbd5e1; color:#0f172a;">
+          🛡️ Citizen
+        </button>
+        <button type="button" class="btn-action-primary" id="loginTabBtnPolice" onclick="App.switchLoginPortalTab('police')" style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
+          👮 Police
+        </button>
+        <button type="button" class="btn-action-primary" id="loginTabBtnRto" onclick="App.switchLoginPortalTab('rto')" style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
+          🏛️ RTO
+        </button>
+        <button type="button" class="btn-action-primary" id="loginTabBtnAdmin" onclick="App.switchLoginPortalTab('admin')" style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
+          ⚡ Admin
+        </button>
+      </div>
 
-          <!-- Required 1: User ID / Officer Badge -->
-          <div class="form-group" style="margin-bottom:12px;">
-            <label class="form-label" style="font-weight:700; color:#0f172a; display:flex; justify-content:space-between;">
-              <span>1. User ID / Officer Badge ID *</span>
-              <span style="font-size:10px; color:#b45309; font-weight:600;">(Official IPS / Traffic ID)</span>
-            </label>
-            <div style="position:relative;">
-              <input type="text" id="inOfficerBadge" class="form-control" value="TR-INSP-5501" placeholder="e.g. TR-INSP-5501, IPS-8801-CIP, IPS-7714-RJ" required style="padding-left:32px; font-weight:600;">
-              <span style="position:absolute; left:10px; top:9px; color:#64748b;">🪪</span>
+      <!-- PORTAL 1: CITIZEN MOTORIST PORTAL -->
+      <div id="portalSectionCitizen" class="login-portal-section">
+        <form id="formLoginCitizen" onsubmit="App.handleCitizenLogin(event)">
+          <div class="modal-body" style="padding:16px 20px;">
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#166534;">
+              🛡️ <strong>Citizen Public Services Portal:</strong> Pay e-Challans online, view your DigiLocker DL &amp; RC records, file incident complaints, and report emergency accidents.
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">Citizen Mobile Number, Email, or Aadhaar ID *</label>
+              <input type="text" id="inCitizenLoginId" class="form-control" placeholder="e.g. 9810123456 or citizen@trafix.gov.in" value="citizen@trafix.gov.in" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">Password / Security PIN *</label>
+              <input type="password" id="inCitizenLoginPass" class="form-control" value="Citizen@2026" required>
+            </div>
+
+            <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:10px;">
+              <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:4px;">Demo Citizen Motorist Profile:</div>
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;" onclick="App.fillCitizenLoginPreset('citizen@trafix.gov.in', 'Citizen@2026')">
+                👤 Autofill: Vikramaditya Sharma (citizen@trafix.gov.in)
+              </button>
             </div>
           </div>
 
-          <!-- Required 2: Password -->
-          <div class="form-group" style="margin-bottom:12px;">
-            <label class="form-label" style="font-weight:700; color:#0f172a; display:flex; justify-content:space-between;">
-              <span>2. Official Clearance Password *</span>
-              <span style="font-size:10px; color:#64748b;">(Encrypted PassCode)</span>
-            </label>
-            <div style="position:relative;">
-              <input type="password" id="inOfficerPass" class="form-control" value="INSP@2026" placeholder="e.g. INSP@2026, DGP@2026, SP@2026" required style="padding-left:32px;">
-              <span style="position:absolute; left:10px; top:9px; color:#64748b;">🔑</span>
-            </div>
+          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:700; padding:8px 18px;">
+              ✓ Login to Citizen Portal
+            </button>
           </div>
+        </form>
+      </div>
 
-          <!-- Required 3: Camera / Telemetry PIN & Scope -->
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-            <div class="form-group">
-              <label class="form-label" style="font-weight:700; color:#0f172a;">
-                3. Camera Access PIN *
-              </label>
-              <div style="position:relative;">
-                <input type="password" id="inOfficerPin" class="form-control" value="5050" placeholder="e.g. 5050, 9090, 7070" maxlength="6" required style="padding-left:32px; font-family:var(--font-mono); font-weight:700;">
-                <span style="position:absolute; left:10px; top:9px; color:#64748b;">🔢</span>
+      <!-- PORTAL 2: TRAFFIC POLICE OFFICER GATEWAY -->
+      <div id="portalSectionPolice" class="login-portal-section" style="display:none;">
+        <form id="formVerifyOfficerPass" onsubmit="App.handlePoliceLogin(event)">
+          <div class="modal-body" style="padding:16px 20px;">
+            <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#92400e;">
+              👮 <strong>Traffic Police Enforcement Gate:</strong> Requires 1. Officer Badge / User ID, 2. Clearance Password, 3. Camera Access PIN &amp; Gantry Scope.
+            </div>
+
+            <!-- Required 1: User ID / Officer Badge -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">1. User ID / Officer Badge ID *</label>
+              <input type="text" id="inOfficerBadge" class="form-control" value="TR-INSP-5501" placeholder="e.g. TR-INSP-5501, TR-SI-4219" required>
+            </div>
+
+            <!-- Required 2: Password -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">2. Official Clearance Password *</label>
+              <input type="password" id="inOfficerPass" class="form-control" value="INSP@2026" placeholder="e.g. INSP@2026, PATROL@2026" required>
+            </div>
+
+            <!-- Required 3: Camera / Telemetry PIN & Scope -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+              <div class="form-group">
+                <label class="form-label" style="font-weight:700; color:#0f172a;">3. Camera Access PIN *</label>
+                <input type="password" id="inOfficerPin" class="form-control" value="5050" maxlength="6" required style="font-family:var(--font-mono); font-weight:700;">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-weight:700; color:#0f172a;">Camera / Gantry Scope</label>
+                <select id="inOfficerCameraScope" class="form-control" style="font-size:11px;">
+                  <option value="ALL_CAMS">All ANPR &amp; Speed Gantries</option>
+                  <option value="CAM-01">Gantry 04 (Ring Road Flyover)</option>
+                  <option value="CAM-02">Central Plaza Junction 03</option>
+                  <option value="CAM-03">Airport Expressway Toll</option>
+                  <option value="ISRO_SAT">ISRO Cartosat-3 Satellite</option>
+                </select>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label" style="font-weight:700; color:#0f172a;">
-                Which Camera / Scope
-              </label>
-              <select id="inOfficerCameraScope" class="form-control" style="font-size:11px;">
-                <option value="ALL_CAMS">All ANPR &amp; Speed Gantries</option>
-                <option value="CAM-01">Gantry 04 (Ring Road Flyover)</option>
-                <option value="CAM-02">Central Plaza Junction 03</option>
-                <option value="CAM-03">Airport Expressway Toll</option>
-                <option value="ISRO_SAT">ISRO Cartosat-3 Satellite</option>
-              </select>
+            <!-- One-Click Fast Hierarchy Presets -->
+            <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:8px;">
+              <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:6px;">⚡ Officer Hierarchy Presets:</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+                <button type="button" class="btn-action-primary" style="font-size:10px; padding:5px 6px; text-align:left;" onclick="App.fillOfficerPreset('TR-INSP-5501', 'INSP@2026', '5050')">
+                  👮 <strong>TI Rajeshwar Nath</strong> (5501/5050)
+                </button>
+                <button type="button" class="btn-action-primary" style="font-size:10px; padding:5px 6px; text-align:left;" onclick="App.fillOfficerPreset('TR-SI-4219', 'PATROL@2026', '3030')">
+                  🚓 <strong>SI Priya Sharma</strong> (4219/3030)
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- 1-Click Fast Login Presets (Clear and Easy to Test) -->
-          <div style="border-top:1px dashed #cbd5e1; padding-top:10px; margin-top:6px;">
-            <div style="font-size:11px; font-weight:700; color:#334155; margin-bottom:6px;">
-              ⚡ One-Click Officer Hierarchy Credentials (Click to Auto-Fill):
+          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-gold" style="font-weight:700; padding:8px 18px;">
+              ✓ Verify Police Credentials
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PORTAL 3: RTO STATUTORY OFFICER PORTAL -->
+      <div id="portalSectionRto" class="login-portal-section" style="display:none;">
+        <form id="formLoginRto" onsubmit="App.handleRtoLogin(event)">
+          <div class="modal-body" style="padding:16px 20px;">
+            <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#92400e;">
+              🏛️ <strong>Regional Transport Office (RTO) Statutory Portal:</strong> Vehicle registration approvals (RC), Driving Licence issuance (DL), fitness endorsements, and applicant verification.
             </div>
-            
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('IPS-8801-CIP', 'DGP@2026', '9090')">
-                ⭐ <strong>Level 5: DGP</strong> (DGP@2026 / 9090)
-              </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('IPS-9244-DEL', 'SP@2026', '7070')">
-                🎖️ <strong>Level 4: DCP Delhi</strong> (SP@2026 / 7070)
-              </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('IPS-7714-RJ', 'RAJ@2026', '6060')">
-                🎖️ <strong>Level 4: SP Rajasthan</strong> (RAJ@2026 / 6060)
-              </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('TR-INSP-5501', 'INSP@2026', '5050')">
-                👮 <strong>Level 3: Inspector</strong> (INSP@2026 / 5050)
-              </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('TR-SI-4219', 'PATROL@2026', '3030')">
-                🚓 <strong>Level 2: Patrol SI</strong> (PATROL@2026 / 3030)
-              </button>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:6px; text-align:left; justify-content:flex-start;" onclick="App.fillOfficerPreset('TR-WRD-1102', 'WARDEN@2026', '1010')">
-                🚧 <strong>Level 1: Warden</strong> (WARDEN@2026 / 1010)
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">1. RTO Officer Employee ID / State Code *</label>
+              <input type="text" id="inRtoEmpId" class="form-control" value="RTO-DL-4402" placeholder="e.g. RTO-DL-4402 or officer.rto@natdams.gov.in" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">2. Statutory Access Password *</label>
+              <input type="password" id="inRtoPass" class="form-control" value="Rto@2026" required>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+              <div class="form-group">
+                <label class="form-label" style="font-weight:700; color:#0f172a;">3. Verification PIN *</label>
+                <input type="password" id="inRtoPin" class="form-control" value="7788" maxlength="6" required style="font-family:var(--font-mono); font-weight:700;">
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-weight:700; color:#0f172a;">Designated RTO Division</label>
+                <select id="inRtoDivision" class="form-control" style="font-size:11px;">
+                  <option value="DL-01">DL-01 (Mall Road, North Delhi)</option>
+                  <option value="DL-04">DL-04 (Janakpuri, West Delhi)</option>
+                  <option value="DL-07">DL-07 (Sheikh Sarai, South Delhi)</option>
+                  <option value="MH-01">MH-01 (Tardeo, Mumbai Central)</option>
+                  <option value="KA-01">KA-01 (Koramangala, Bengaluru)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:8px;">
+              <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:4px;">Demo RTO Officer Profile:</div>
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;" onclick="App.fillRtoLoginPreset('RTO-DL-4402', 'Rto@2026', '7788')">
+                🏛️ Autofill: RTO Meenakshi Sundaram (RTO-DL-4402)
               </button>
             </div>
           </div>
 
-        </div>
-        
-        <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-          <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
-          <button type="submit" class="btn-action-gold" style="padding:8px 18px; font-weight:700;">
-            Verify Credentials &amp; Unlock Officer Panel
-          </button>
-        </div>
-      </form>
+          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-primary" style="background:#b45309; border-color:#b45309; color:#fff; font-weight:700; padding:8px 18px;">
+              ✓ Connect RTO Statutory Desk
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PORTAL 4: DIRECTORATE ADMINISTRATOR COMMAND -->
+      <div id="portalSectionAdmin" class="login-portal-section" style="display:none;">
+        <form id="formLoginAdmin" onsubmit="App.handleAdminLogin(event)">
+          <div class="modal-body" style="padding:16px 20px;">
+            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#991b1b;">
+              ⚡ <strong>Directorate Administrator Command:</strong> Level-4 Sovereign Root Clearance. Global audit trails (SHA-256), staff commissioning, advisory broadcast, and system policies.
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">1. Administrator User ID / Email *</label>
+              <input type="text" id="inAdminId" class="form-control" value="IPS-8801-CIP" placeholder="e.g. IPS-8801-CIP or admin@trafix.gov.in" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">2. Root Clearance Password *</label>
+              <input type="password" id="inAdminPass" class="form-control" value="Admin@2026" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">3. Security PIN / CIP Root Key *</label>
+              <input type="password" id="inAdminPin" class="form-control" value="9090" maxlength="6" required style="font-family:var(--font-mono); font-weight:700;">
+            </div>
+
+            <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:8px;">
+              <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:4px;">Demo Administrator Profile:</div>
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;" onclick="App.fillAdminLoginPreset('IPS-8801-CIP', 'Admin@2026', '9090')">
+                ⭐ Autofill: DG A. K. Saxena, IPS (IPS-8801-CIP)
+              </button>
+            </div>
+          </div>
+
+          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-primary" style="background:#dc2626; border-color:#dc2626; color:#fff; font-weight:700; padding:8px 18px;">
+              ✓ Authenticate Directorate Command
+            </button>
+          </div>
+        </form>
+      </div>
+
     </div>
   </div>
 

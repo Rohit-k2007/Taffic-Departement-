@@ -372,6 +372,13 @@ const App = {
   // ROLE SWITCHER & SIDEBAR FLOW NAVIGATION (4 OFFICIAL GOVT ROLES)
   // =========================================================================
 
+  ROLE_TABS: {
+    citizen: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-rto-apps', 'roadworks'],
+    officer: ['citizen-dashboard', 'current', 'emergency', 'officer-cases', 'violations', 'officer-accidents', 'risk-center', 'roadworks'],
+    rto: ['citizen-dashboard', 'current', 'rto-desk', 'citizen-vehicles', 'vehicle-ratios', 'roadworks'],
+    admin: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-rto-apps', 'officer-cases', 'violations', 'officer-accidents', 'rto-desk', 'risk-center', 'roadworks', 'vehicle-ratios', 'admin']
+  },
+
   switchRole(role) {
     this.currentRole = role;
 
@@ -382,7 +389,18 @@ const App = {
     const pill = document.getElementById(`pillRole${role.charAt(0).toUpperCase() + role.slice(1)}`);
     if (pill) pill.classList.add('active');
 
-    // 2. Update Header Status & Sidebar Profile Card
+    // 2. Strict Role Isolation on Left Sidebar Menu Items
+    const allowed = this.ROLE_TABS[role] || this.ROLE_TABS.citizen;
+    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+      const tab = item.getAttribute('data-tab');
+      if (allowed.includes(tab)) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // 3. Update Header Status & Sidebar Profile Card
     const dot = document.getElementById('roleIndicatorDot');
     const roleText = document.getElementById('activeUserRoleText');
     const sidebarName = document.getElementById('sidebarOfficerName');
@@ -390,36 +408,36 @@ const App = {
 
     if (role === 'citizen') {
       if (dot) dot.style.background = '#10b981';
-      if (roleText) roleText.innerHTML = `Role: <strong>Citizen Public Portal (Vikramaditya Sharma)</strong>`;
+      if (roleText) roleText.innerHTML = `Mode: <strong>Citizen Public Portal</strong>`;
       if (sidebarName) sidebarName.innerText = 'Citizen: Vikramaditya Sharma';
       if (sidebarClear) sidebarClear.innerText = 'Aadhaar Verified • DL & RC Linked';
-      this.showToast("Switched to Citizen Public Portal Mode", "info");
+      this.showToast("Citizen Public Portal Active (Enforcement Desks Locked)", "info");
       this.switchTab('citizen-dashboard');
     } else if (role === 'officer') {
       if (dot) dot.style.background = '#f59e0b';
       const off = this.currentOfficer || {
-        name: 'Insp. Rajesh Kumar',
-        rank: 'Traffic Police Inspector (ANPR Lead)',
+        name: 'Insp. Rajeshwar Nath',
+        rank: 'Traffic Police Inspector (TI)',
         badgeNumber: 'TR-INSP-5501',
         clearance: 'Level 3 - Tactical Enforcement'
       };
       this.currentOfficer = off;
-      if (roleText) roleText.innerHTML = `Role: <strong style="color:#b45309;">Traffic Police Officer: ${off.name}</strong>`;
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">Traffic Police: ${off.name}</strong>`;
       if (sidebarName) sidebarName.innerText = `${off.rank}: ${off.name}`;
       if (sidebarClear) sidebarClear.innerText = `${off.badgeNumber} • ${off.clearance}`;
       this.showToast(`Traffic Police Enforcement Active: ${off.name}`, "info");
       this.switchTab('officer-cases');
     } else if (role === 'rto') {
       if (dot) dot.style.background = '#d97706';
-      if (roleText) roleText.innerHTML = `Role: <strong style="color:#b45309;">RTO Officer: Sunil Verma (RTO-DEL-01)</strong>`;
-      if (sidebarName) sidebarName.innerText = 'RTO Verification Officer: Sunil Verma';
-      if (sidebarClear) sidebarClear.innerText = 'RTO-DEL-01 • Statutory Document Authority';
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#b45309;">RTO Officer: Meenakshi Sundaram</strong>`;
+      if (sidebarName) sidebarName.innerText = 'RTO Officer: Meenakshi Sundaram';
+      if (sidebarClear) sidebarClear.innerText = 'RTO-DL-4402 • Statutory Document Authority';
       this.showToast("Regional Transport Office (RTO) Command Desk Active", "info");
       this.switchTab('rto-desk');
     } else if (role === 'admin') {
       if (dot) dot.style.background = '#dc2626';
-      if (roleText) roleText.innerHTML = `Role: <strong style="color:#dc2626;">Traffic Department Administrator</strong>`;
-      if (sidebarName) sidebarName.innerText = 'Director General / System Admin';
+      if (roleText) roleText.innerHTML = `Mode: <strong style="color:#dc2626;">Directorate Administrator Command</strong>`;
+      if (sidebarName) sidebarName.innerText = 'Director General A. K. Saxena, IPS';
       if (sidebarClear) sidebarClear.innerText = 'Root Security Clearance (SHA-256)';
       this.showToast("Administrator Command Console Activated", "info");
       this.switchTab('admin');
@@ -427,6 +445,13 @@ const App = {
   },
 
   switchTab(tabName) {
+    // Strict RBAC Enforcement Barrier
+    const allowed = this.ROLE_TABS[this.currentRole] || this.ROLE_TABS.citizen;
+    if (!allowed.includes(tabName)) {
+      this.showToast(`🔒 Access Denied (Strict RBAC): Role ${this.currentRole.toUpperCase()} cannot access internal department operations.`, 'error');
+      tabName = this.currentRole === 'officer' ? 'officer-cases' : (this.currentRole === 'rto' ? 'rto-desk' : (this.currentRole === 'admin' ? 'admin' : 'citizen-dashboard'));
+    }
+
     this.activeTab = tabName;
     
     // Sync sidebar buttons
@@ -576,6 +601,174 @@ const App = {
       this.onOfficerAuthenticated(officer, scope);
     } else {
       this.showToast("Authentication Failed: Invalid Password or Camera PIN.", "error");
+    }
+  },
+
+  switchLoginPortalTab(portalRole) {
+    const roles = ['citizen', 'police', 'rto', 'admin'];
+    roles.forEach(r => {
+      const btn = document.getElementById(`loginTabBtn${r.charAt(0).toUpperCase() + r.slice(1)}`);
+      const sec = document.getElementById(`portalSection${r.charAt(0).toUpperCase() + r.slice(1)}`);
+      if (btn) {
+        if (r === portalRole) {
+          btn.style.background = '#fff';
+          btn.style.borderColor = '#cbd5e1';
+          btn.style.color = '#0f172a';
+          btn.style.fontWeight = '700';
+        } else {
+          btn.style.background = 'transparent';
+          btn.style.borderColor = 'transparent';
+          btn.style.color = '#64748b';
+          btn.style.fontWeight = '600';
+        }
+      }
+      if (sec) {
+        sec.style.display = (r === portalRole) ? 'block' : 'none';
+      }
+    });
+  },
+
+  fillCitizenLoginPreset(email, pass) {
+    const idEl = document.getElementById('inCitizenLoginId');
+    const passEl = document.getElementById('inCitizenLoginPass');
+    if (idEl) idEl.value = email;
+    if (passEl) passEl.value = pass;
+    this.showToast("Citizen demo credentials populated", "info");
+  },
+
+  fillRtoLoginPreset(empId, pass, pin) {
+    const idEl = document.getElementById('inRtoEmpId');
+    const passEl = document.getElementById('inRtoPass');
+    const pinEl = document.getElementById('inRtoPin');
+    if (idEl) idEl.value = empId;
+    if (passEl) passEl.value = pass;
+    if (pinEl) pinEl.value = pin;
+    this.showToast("RTO Officer credentials populated", "info");
+  },
+
+  fillAdminLoginPreset(adminId, pass, pin) {
+    const idEl = document.getElementById('inAdminId');
+    const passEl = document.getElementById('inAdminPass');
+    const pinEl = document.getElementById('inAdminPin');
+    if (idEl) idEl.value = adminId;
+    if (passEl) passEl.value = pass;
+    if (pinEl) pinEl.value = pin;
+    this.showToast("Directorate Administrator credentials populated", "info");
+  },
+
+  async handleCitizenLogin(event) {
+    if (event) event.preventDefault();
+    const email = document.getElementById('inCitizenLoginId')?.value || 'citizen@trafix.gov.in';
+    const password = document.getElementById('inCitizenLoginPass')?.value || 'Citizen@2026';
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role: 'CITIZEN' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (window.govAuth) {
+          window.govAuth.currentUser = Object.assign({}, data.user, { token: data.token });
+        }
+        this.closeModal('officerPassModal');
+        this.switchRole('citizen');
+        this.showToast("✓ Authenticated: Citizen Public Portal", "success");
+      } else {
+        this.showToast(`Login Failed: ${data.message}`, "error");
+      }
+    } catch (err) {
+      this.closeModal('officerPassModal');
+      this.switchRole('citizen');
+    }
+  },
+
+  async handlePoliceLogin(event) {
+    if (event) event.preventDefault();
+    const badgeNumber = document.getElementById('inOfficerBadge')?.value || 'TR-INSP-5501';
+    const password = document.getElementById('inOfficerPass')?.value || 'INSP@2026';
+    const pin = document.getElementById('inOfficerPin')?.value || '5050';
+    const cameraScope = document.getElementById('inOfficerCameraScope')?.value || 'ALL_CAMS';
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ badgeNumber, password, pin, role: 'POLICE' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const off = data.user.officerDetails || {
+          name: data.user.fullName || 'Insp. Rajeshwar Nath',
+          rank: 'Traffic Police Inspector (TI)',
+          badgeNumber: badgeNumber,
+          clearance: 'Level 3 - Tactical Enforcement',
+          jurisdiction: 'Central Expressway Division'
+        };
+        if (window.govAuth) {
+          window.govAuth.currentUser = Object.assign({}, data.user, { token: data.token });
+        }
+        this.onOfficerAuthenticated(off, cameraScope);
+      } else {
+        this.showToast(`Police Auth Failed: ${data.message}`, "error");
+      }
+    } catch (err) {
+      this.onOfficerAuthenticated({ name: 'Insp. Rajeshwar Nath', rank: 'Traffic Police Inspector', badgeNumber, clearance: 'Level 3' }, cameraScope);
+    }
+  },
+
+  async handleRtoLogin(event) {
+    if (event) event.preventDefault();
+    const badgeNumber = document.getElementById('inRtoEmpId')?.value || 'RTO-DL-4402';
+    const password = document.getElementById('inRtoPass')?.value || 'Rto@2026';
+    const pin = document.getElementById('inRtoPin')?.value || '7788';
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ badgeNumber, password, pin, role: 'RTO' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (window.govAuth) {
+          window.govAuth.currentUser = Object.assign({}, data.user, { token: data.token });
+        }
+        this.closeModal('officerPassModal');
+        this.switchRole('rto');
+        this.showToast("✓ Authenticated: Regional Transport Office Statutory Portal", "success");
+      } else {
+        this.showToast(`RTO Auth Failed: ${data.message}`, "error");
+      }
+    } catch (err) {
+      this.closeModal('officerPassModal');
+      this.switchRole('rto');
+    }
+  },
+
+  async handleAdminLogin(event) {
+    if (event) event.preventDefault();
+    const email = document.getElementById('inAdminId')?.value || 'IPS-8801-CIP';
+    const password = document.getElementById('inAdminPass')?.value || 'Admin@2026';
+    const pin = document.getElementById('inAdminPin')?.value || '9090';
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, badgeNumber: email, password, pin, role: 'ADMIN' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (window.govAuth) {
+          window.govAuth.currentUser = Object.assign({}, data.user, { token: data.token });
+        }
+        this.closeModal('officerPassModal');
+        this.switchRole('admin');
+        this.showToast("✓ Authenticated: Directorate Administrator Command", "success");
+      } else {
+        this.showToast(`Admin Auth Failed: ${data.message}`, "error");
+      }
+    } catch (err) {
+      this.closeModal('officerPassModal');
+      this.switchRole('admin');
     }
   },
 

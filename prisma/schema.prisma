@@ -1,0 +1,518 @@
+// =========================================================================
+// TRAFIX - Advanced Traffic Police & RTO Management Platform
+// Prisma Schema Definition for PostgreSQL Database
+// =========================================================================
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// -------------------------------------------------------------------------
+// 1. Core Users (Role-Based Access Control)
+// -------------------------------------------------------------------------
+enum UserRole {
+  CITIZEN
+  TRAFFIC_POLICE_OFFICER
+  RTO_OFFICER
+  ADMINISTRATOR
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  REVOKED
+  PENDING_VERIFICATION
+}
+
+model User {
+  id             String         @id @default(cuid())
+  fullName       String         @map("full_name")
+  email          String         @unique
+  phone          String         @unique
+  passwordHash   String         @map("password_hash")
+  role           UserRole       @default(CITIZEN)
+  departmentId   String?        @map("department_id")
+  status         AccountStatus  @default(ACTIVE)
+  lastLogin      DateTime?      @map("last_login")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  department     Department?    @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  officerProfile Officer?
+  citizenProfile Citizen?
+  auditLogs      AuditLog[]
+  notifications  Notification[]
+  feedback       Feedback[]
+
+  @@index([role])
+  @@index([email])
+  @@index([phone])
+  @@map("users")
+}
+
+// -------------------------------------------------------------------------
+// 2. Departments (Police Commissionerates & RTO Offices)
+// -------------------------------------------------------------------------
+enum DepartmentType {
+  TRAFFIC_POLICE
+  RTO
+  TRANSPORT_MINISTRY
+  HIGHWAY_PATROL
+}
+
+model Department {
+  id            String          @id @default(cuid())
+  name          String
+  type          DepartmentType
+  district      String
+  state         String          @default("DL")
+  officeAddress String          @map("office_address")
+  contactNumber String          @map("contact_number")
+  status        String          @default("ACTIVE")
+  createdAt     DateTime        @default(now()) @map("created_at")
+
+  // Relations
+  users         User[]
+  officers      Officer[]
+
+  @@index([district])
+  @@index([state])
+  @@map("departments")
+}
+
+// -------------------------------------------------------------------------
+// 3. Officers (Traffic Police & RTO Officers)
+// -------------------------------------------------------------------------
+model Officer {
+  id             String       @id @default(cuid())
+  userId         String       @unique @map("user_id")
+  employeeId     String       @unique @map("employee_id")
+  designation    String
+  rank           String
+  badgeNumber    String       @unique @map("badge_number")
+  cameraPin      String?      @map("camera_pin")
+  departmentId   String       @map("department_id")
+  joiningDate    DateTime     @default(now()) @map("joining_date")
+  status         String       @default("ON_DUTY")
+
+  // Relations
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department     Department   @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  complaints     Complaint[]
+  accidents      Accident[]
+  violations     Violation[]
+  challans       Challan[]
+  riskZones      RiskZone[]
+  rtoReviews     RtoApplication[]
+
+  @@index([employeeId])
+  @@index([badgeNumber])
+  @@map("officers")
+}
+
+// -------------------------------------------------------------------------
+// 4. Citizens (Public Motorists)
+// -------------------------------------------------------------------------
+model Citizen {
+  id               String            @id @default(cuid())
+  userId           String            @unique @map("user_id")
+  address          String
+  city             String
+  district         String
+  state            String
+  pincode          String
+  emergencyContact String            @map("emergency_contact")
+  aadhaarMasked    String?           @map("aadhaar_masked")
+
+  // Relations
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicles         Vehicle[]
+  drivingLicences  DrivingLicence[]
+  complaints       Complaint[]
+  rtoApplications  RtoApplication[]
+
+  @@index([district])
+  @@map("citizens")
+}
+
+// -------------------------------------------------------------------------
+// 5. Vehicles (VAHAN National Vehicle Registry)
+// -------------------------------------------------------------------------
+enum VehicleStatus {
+  ACTIVE
+  SUSPENDED
+  IMPOUNDED
+  STOLEN
+}
+
+model Vehicle {
+  id                 String           @id @default(cuid())
+  registrationNumber String           @unique @map("registration_number")
+  ownerId            String           @map("owner_id")
+  vehicleType        String           @map("vehicle_type")
+  make               String
+  model              String
+  fuelType           String           @map("fuel_type")
+  color              String?
+  manufactureYear    Int              @map("manufacture_year")
+  registrationDate   DateTime         @map("registration_date")
+  registrationExpiry DateTime         @map("registration_expiry")
+  fitnessExpiry      DateTime         @map("fitness_expiry")
+  insuranceExpiry    DateTime         @map("insurance_expiry")
+  status             VehicleStatus    @default(ACTIVE)
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  // Relations
+  owner              Citizen          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  violations         Violation[]
+  challans           Challan[]
+  rtoApplications    RtoApplication[]
+
+  @@index([registrationNumber])
+  @@index([ownerId])
+  @@map("vehicles")
+}
+
+// -------------------------------------------------------------------------
+// 6. Driving Licences (Sarathi DL Registry)
+// -------------------------------------------------------------------------
+enum LicenceStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  REVOKED
+  UNDER_VERIFICATION
+}
+
+model DrivingLicence {
+  id            String        @id @default(cuid())
+  citizenId     String        @map("citizen_id")
+  licenceNumber String        @unique @map("licence_number")
+  licenceType   String        @map("licence_type")
+  issueDate     DateTime      @map("issue_date")
+  expiryDate    DateTime      @map("expiry_date")
+  status        LicenceStatus @default(ACTIVE)
+  issuingRto    String        @map("issuing_rto")
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  // Relations
+  citizen       Citizen       @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+
+  @@index([licenceNumber])
+  @@index([citizenId])
+  @@map("driving_licences")
+}
+
+// -------------------------------------------------------------------------
+// 7. Complaints (Citizen Incident Reporting & Investigation)
+// -------------------------------------------------------------------------
+enum ComplaintStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  ASSIGNED
+  INVESTIGATION
+  ACTION_TAKEN
+  RESOLVED
+  CLOSED
+  REJECTED
+}
+
+enum PriorityLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model Complaint {
+  id                String          @id @default(cuid())
+  complaintNumber   String          @unique @map("complaint_number")
+  citizenId         String          @map("citizen_id")
+  category          String
+  description       String
+  priority          PriorityLevel   @default(MEDIUM)
+  status            ComplaintStatus @default(SUBMITTED)
+  latitude          Float?
+  longitude         Float?
+  locationAddress   String          @map("location_address")
+  assignedOfficerId String?         @map("assigned_officer_id")
+  submittedAt       DateTime        @default(now()) @map("submitted_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  resolvedAt        DateTime?       @map("resolved_at")
+
+  // Relations
+  citizen           Citizen         @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  assignedOfficer   Officer?        @relation(fields: [assignedOfficerId], references: [id], onDelete: SetNull)
+  evidence          Evidence[]
+  feedback          Feedback[]
+
+  @@index([complaintNumber])
+  @@index([status])
+  @@index([priority])
+  @@map("complaints")
+}
+
+// -------------------------------------------------------------------------
+// 8. Accidents (Crash Investigations & Green Corridor SOS)
+// -------------------------------------------------------------------------
+enum AccidentSeverity {
+  Minor
+  Moderate
+  Serious
+  Critical
+}
+
+model Accident {
+  id                String           @id @default(cuid())
+  accidentNumber    String           @unique @map("accident_number")
+  reportedBy        String           @map("reported_by")
+  latitude          Float?
+  longitude         Float?
+  locationAddress   String           @map("location_address")
+  accidentType      String           @map("accident_type")
+  severity          AccidentSeverity @default(Moderate)
+  description       String
+  casualties        Int              @default(0)
+  vehiclesInvolved  Int              @default(1) @map("vehicles_involved")
+  status            String           @default("REPORTED")
+  assignedOfficerId String?          @map("assigned_officer_id")
+  greenCorridor     Boolean          @default(false) @map("green_corridor")
+  reportedAt        DateTime         @default(now()) @map("reported_at")
+  resolvedAt        DateTime?        @map("resolved_at")
+
+  // Relations
+  assignedOfficer   Officer?         @relation(fields: [assignedOfficerId], references: [id], onDelete: SetNull)
+  evidence          Evidence[]
+
+  @@index([accidentNumber])
+  @@index([severity])
+  @@index([status])
+  @@map("accidents")
+}
+
+// -------------------------------------------------------------------------
+// 9. Violations (Optical ANPR Radar Speed & MV Act Breaches)
+// -------------------------------------------------------------------------
+model Violation {
+  id              String      @id @default(cuid())
+  violationNumber String      @unique @map("violation_number")
+  vehicleId       String      @map("vehicle_id")
+  officerId       String?     @map("officer_id")
+  violationType   String      @map("violation_type")
+  description     String
+  location        String
+  latitude        Float?
+  longitude       Float?
+  violationDate   DateTime    @default(now()) @map("violation_date")
+  evidenceId      String?     @map("evidence_id")
+  status          String      @default("RECORDED")
+  createdAt       DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  vehicle         Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  officer         Officer?    @relation(fields: [officerId], references: [id], onDelete: SetNull)
+  challan         Challan?
+
+  @@index([violationNumber])
+  @@index([vehicleId])
+  @@map("violations")
+}
+
+// -------------------------------------------------------------------------
+// 10. Challans (Statutory Monetary Citations & Bharat UPI Payments)
+// -------------------------------------------------------------------------
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+model Challan {
+  id               String        @id @default(cuid())
+  challanNumber    String        @unique @map("challan_number")
+  vehicleId        String        @map("vehicle_id")
+  driverId         String?       @map("driver_id")
+  officerId        String?       @map("officer_id")
+  violationId      String?       @unique @map("violation_id")
+  amount           Decimal       @db.Decimal(10, 2)
+  issueDate        DateTime      @default(now()) @map("issue_date")
+  dueDate          DateTime      @map("due_date")
+  paymentStatus    PaymentStatus @default(PENDING) @map("payment_status")
+  paymentReference String?       @map("payment_reference")
+  paidAt           DateTime?     @map("paid_at")
+  createdAt        DateTime      @default(now()) @map("created_at")
+
+  // Relations
+  vehicle          Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  officer          Officer?      @relation(fields: [officerId], references: [id], onDelete: SetNull)
+  violation        Violation?    @relation(fields: [violationId], references: [id], onDelete: SetNull)
+
+  @@index([challanNumber])
+  @@index([paymentStatus])
+  @@map("challans")
+}
+
+// -------------------------------------------------------------------------
+// 11. Evidence (Digital Media, Dashcam & File Hash Integrity)
+// -------------------------------------------------------------------------
+model Evidence {
+  id                 String       @id @default(cuid())
+  uploadedBy         String       @map("uploaded_by")
+  caseType           String       @map("case_type")
+  caseId             String       @map("case_id")
+  fileName           String       @map("file_name")
+  fileType           String       @map("file_type")
+  fileUrl            String       @map("file_url")
+  fileHash           String?      @map("file_hash")
+  uploadedAt         DateTime     @default(now()) @map("uploaded_at")
+  verifiedBy         String?      @map("verified_by")
+  verificationStatus String       @default("PENDING") @map("verification_status")
+
+  // Relations
+  complaint          Complaint?   @relation(fields: [caseId], references: [id], onDelete: Cascade, map: "evidence_complaint_fk")
+  accident           Accident?    @relation(fields: [caseId], references: [id], onDelete: Cascade, map: "evidence_accident_fk")
+
+  @@index([caseId])
+  @@map("evidence")
+}
+
+// -------------------------------------------------------------------------
+// 12. Risk Zones (High-Hazard Incident Hotspots & Blackspots)
+// -------------------------------------------------------------------------
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model RiskZone {
+  id                String       @id @default(cuid())
+  zoneName          String       @map("zone_name")
+  latitude          Float
+  longitude         Float
+  location          String
+  riskLevel         RiskLevel    @default(MEDIUM) @map("risk_level")
+  riskType          String       @map("risk_type")
+  incidentCount     Int          @default(0) @map("incident_count")
+  description       String?
+  recommendedAction String?      @map("recommended_action")
+  assignedOfficerId String?      @map("assigned_officer_id")
+  status            String       @default("ACTIVE")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  assignedOfficer   Officer?     @relation(fields: [assignedOfficerId], references: [id], onDelete: SetNull)
+
+  @@index([riskLevel])
+  @@index([riskType])
+  @@map("risk_zones")
+}
+
+// -------------------------------------------------------------------------
+// 13. Notifications (Department Alerts & Case Lifecycle Events)
+// -------------------------------------------------------------------------
+model Notification {
+  id               String       @id @default(cuid())
+  userId           String       @map("user_id")
+  title            String
+  message          String
+  notificationType String       @default("INFO") @map("notification_type")
+  isRead           Boolean      @default(false) @map("is_read")
+  createdAt        DateTime     @default(now()) @map("created_at")
+
+  // Relations
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
+}
+
+// -------------------------------------------------------------------------
+// 14. RTO Applications (Statutory Document Processing & Verifications)
+// -------------------------------------------------------------------------
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  DOCUMENT_DEFICIENT
+}
+
+model RtoApplication {
+  id                String            @id @default(cuid())
+  applicationNumber String            @unique @map("application_number")
+  citizenId         String            @map("citizen_id")
+  applicationType   String            @map("application_type")
+  vehicleId         String?           @map("vehicle_id")
+  targetEntityId    String?           @map("target_entity_id")
+  status            ApplicationStatus @default(UNDER_REVIEW)
+  submittedAt       DateTime          @default(now()) @map("submitted_at")
+  reviewedBy        String?           @map("reviewed_by")
+  reviewedAt        DateTime?         @map("reviewed_at")
+  remarks           String?
+
+  // Relations
+  citizen           Citizen           @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  vehicle           Vehicle?          @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  reviewer          Officer?          @relation(fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@index([applicationNumber])
+  @@index([status])
+  @@map("rto_applications")
+}
+
+// -------------------------------------------------------------------------
+// 15. Audit Logs (Tamper-Proof SHA-256 Security Ledger)
+// -------------------------------------------------------------------------
+model AuditLog {
+  id         String     @id @default(cuid())
+  userId     String?    @map("user_id")
+  action     String
+  entityType String     @map("entity_type")
+  entityId   String     @map("entity_id")
+  oldValue   String?    @map("old_value")
+  newValue   String?    @map("new_value")
+  details    String?
+  ipAddress  String?    @map("ip_address")
+  userAgent  String?    @map("user_agent")
+  sha256Hash String?    @map("sha256_hash")
+  createdAt  DateTime   @default(now()) @map("created_at")
+
+  // Relations
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([entityType])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// -------------------------------------------------------------------------
+// 16. Feedback (Citizen Satisfaction Rating on Closed Cases)
+// -------------------------------------------------------------------------
+model Feedback {
+  id          String     @id @default(cuid())
+  userId      String     @map("user_id")
+  caseId      String     @map("case_id")
+  rating      Int        @default(5)
+  comment     String?
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  // Relations
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  complaint   Complaint  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+  @@map("feedback")
+}
