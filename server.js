@@ -809,8 +809,23 @@ function getBody(req, callback) {
   });
 }
 
+function parseBody(req) {
+  return new Promise((resolve) => {
+    let body = '';
+    req.on('data', chunk => body += chunk);
+    req.on('end', () => {
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch (e) {
+        resolve({});
+      }
+    });
+    req.on('error', () => resolve({}));
+  });
+}
+
 // Main HTTP Request Handler (Used by both standalone Node and Vercel serverless)
-function requestHandler(req, res) {
+async function requestHandler(req, res) {
   const host = req.headers.host || 'localhost:3000';
   const urlObj = new URL(req.url, `http://${host}`);
   const pathname = urlObj.pathname;
@@ -1552,15 +1567,15 @@ function requestHandler(req, res) {
   if (pathname === '/api/licence-applications' && req.method === 'POST') {
     return getBody(req, body => {
       const applicantName = (body.applicantName || '').trim();
-      const phone = (body.phone || '').trim();
+      const phone = (body.phone || body.mobile || '').trim();
       const appType = body.applicationType || "Permanent Driving Licence (DL)";
       const vehicleClasses = Array.isArray(body.vehicleClasses) && body.vehicleClasses.length > 0 ? body.vehicleClasses : ["LMV"];
-      const rtoOffice = body.rtoOffice || "DTO Pipar City (RJ-54)";
+      const rtoOffice = body.rtoOffice || body.rtoJurisdiction || "DTO Pipar City (RJ-54)";
 
       if (!applicantName) {
         return sendJSON(res, 400, { success: false, message: "Applicant Name is required." });
       }
-      if (!phone || phone.length < 8) {
+      if (!phone || phone.replace(/\D/g, '').length < 8) {
         return sendJSON(res, 400, { success: false, message: "Valid 10-digit mobile number is required." });
       }
 
@@ -1571,7 +1586,7 @@ function requestHandler(req, res) {
         applicationType: appType,
         vehicleClasses: vehicleClasses,
         applicantName: applicantName,
-        guardianName: (body.guardianName || 'Guardian').trim(),
+        guardianName: (body.guardianName || body.fatherName || 'Guardian').trim(),
         dob: body.dob || '2000-01-01',
         gender: body.gender || 'Male',
         bloodGroup: body.bloodGroup || 'B+VE',
@@ -1605,7 +1620,12 @@ function requestHandler(req, res) {
       });
 
       saveDB();
-      return sendJSON(res, 201, { success: true, application: newApp, message: "Driving Licence application successfully registered with SARATHI National Portal!" });
+      return sendJSON(res, 201, {
+        success: true,
+        application: newApp,
+        applicationNumber: newApp.applicationNumber,
+        message: "Driving Licence application successfully registered with SARATHI National Portal!"
+      });
     });
   }
 
@@ -1619,7 +1639,7 @@ function requestHandler(req, res) {
       const appNo = body.applicationNumber;
       const slotDate = body.slotDate || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0];
       const slotTime = body.slotTime || "09:30 AM - 11:30 AM";
-      const trackLocation = body.trackLocation || "DTO Pipar City Automated Driving Test Track (RJ-54)";
+      const trackLocation = body.trackLocation || body.trackName || "DTO Pipar City Automated Driving Test Track (RJ-54)";
       const applicantName = body.applicantName || "Vikramaditya Sharma";
 
       if (!appNo) {
@@ -1631,6 +1651,7 @@ function requestHandler(req, res) {
 
       const newSlotBooking = {
         id: "SLOT-" + Math.floor(10 + Math.random() * 90),
+        appointmentId: apptToken,
         appointmentToken: apptToken,
         applicationNumber: appNo,
         applicantName: applicantName,
@@ -1655,6 +1676,7 @@ function requestHandler(req, res) {
         matchedApp.slotTime = slotTime;
         matchedApp.testTrack = trackLocation;
         matchedApp.appointmentToken = apptToken;
+        matchedApp.appointmentId = apptToken;
       }
 
       saveDB();
