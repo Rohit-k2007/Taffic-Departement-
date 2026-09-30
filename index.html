@@ -862,6 +862,177 @@
           </div>
         </div>
 
+        <!-- =========================================================================
+             TRAFIX - VEHICLE INTELLIGENCE & GOVERNMENT SERVICES
+             Official MoRTH Flowchart & Hierarchy Implementation
+             ========================================================================= -->
+        <div class="trafix-intel-card" id="trafixVehicleIntelCard">
+          
+          <!-- Card Header -->
+          <div class="trafix-header">
+            <div>
+              <div class="trafix-brand-title">TRAFIX</div>
+              <div class="trafix-brand-sub">Vehicle Intelligence &amp; Government Services</div>
+            </div>
+            <div class="trafix-gov-badge">
+              <span class="live-dot"></span>
+              <span>GOV • TRAFFIC</span>
+            </div>
+          </div>
+
+          <hr class="trafix-section-divider">
+
+          <!-- Section 1: Vehicle Registration -->
+          <div class="trafix-section-block">
+            <div class="trafix-section-label">
+              <span>VEHICLE REGISTRATION</span>
+              <span style="font-size:10px; color:#64748b; font-weight:600;">Indian Motor Vehicles Format</span>
+            </div>
+            
+            <div class="trafix-search-input-box">
+              <input type="text" id="trafixPlateInput" class="trafix-input" value="RJ54CK4706" placeholder="e.g. RJ54CK4706" autocomplete="off" spellcheck="false" maxlength="15" onkeyup="if(event.key==='Enter') App.identifyVehicle()">
+              <span class="trafix-search-icon">🔍</span>
+            </div>
+
+            <div class="trafix-btn-row">
+              <button type="button" class="btn-identify-vehicle" id="btnIdentifyVehicle" onclick="App.identifyVehicle()">
+                <i data-lucide="scan-line" style="width:16px; height:16px;"></i>
+                <span>[ IDENTIFY VEHICLE ]</span>
+              </button>
+            </div>
+          </div>
+
+          <hr class="trafix-section-divider">
+
+          <!-- Section 2: Parsed Registration -->
+          <div class="trafix-section-block">
+            <div class="trafix-section-label">PARSED REGISTRATION</div>
+
+            <div class="trafix-parsed-grid">
+              <div class="trafix-parsed-box">
+                <div class="trafix-parsed-label">STATE</div>
+                <div class="trafix-parsed-val" id="trafixParsedState">Rajasthan</div>
+              </div>
+              <div class="trafix-parsed-box">
+                <div class="trafix-parsed-label">RTO CODE</div>
+                <div class="trafix-parsed-val" id="trafixParsedRtoCode">54</div>
+              </div>
+              <div class="trafix-parsed-box">
+                <div class="trafix-parsed-label">SERIES</div>
+                <div class="trafix-parsed-val" id="trafixParsedSeries">CK</div>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; margin-top:8px;">
+              <div>
+                <div class="trafix-parsed-label">REGISTRATION NUMBER</div>
+                <div class="trafix-plate-display" style="margin-top:2px;">
+                  <div class="trafix-plate-ind">
+                    <span>IND</span>
+                  </div>
+                  <div class="trafix-plate-num" id="trafixParsedPlateDisplay">RJ54CK4706</div>
+                </div>
+              </div>
+
+              <div id="trafixStatusBadgeContainer">
+                <div class="trafix-status-badge status-badge-verified" id="trafixStatusBadge">
+                  <span>✓ Verified: Pipar City / Jodhpur • DTO Pipar City, Jodhpur Division</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="trafix-section-divider">
+
+          <!-- Section 3: Select Registering Authority -->
+          <div class="trafix-section-block">
+            <div class="trafix-section-label">SELECT REGISTERING AUTHORITY</div>
+
+            <div class="trafix-authority-selects">
+              <div class="trafix-select-group">
+                <label for="trafixSelectState">State</label>
+                <select id="trafixSelectState" class="trafix-select" onchange="App.onTrafixStateChange(this.value)">
+                  <!-- Populated dynamically via JS -->
+                </select>
+              </div>
+
+              <div class="trafix-select-group">
+                <label for="trafixSelectRto">RTO / DTO</label>
+                <select id="trafixSelectRto" class="trafix-select" onchange="App.onTrafixRtoChange(this.value)">
+                  <!-- Populated dynamically via JS -->
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <hr class="trafix-section-divider">
+
+          <!-- Section 4: Government Services -->
+          <div class="trafix-section-block">
+            <div class="trafix-section-label">
+              <span>GOVERNMENT SERVICES</span>
+              <span style="font-size:10px; color:#059669; font-weight:700;">MoRTH / Parivahan Verified</span>
+            </div>
+
+            <div class="trafix-services-grid" id="trafixServicesContainer">
+              <!-- VAHAN Vehicle Services -->
+              <div class="trafix-service-card card-vahan" onclick="App.triggerTrafixService('vahan')">
+                <div class="trafix-card-icon" style="background:#e0f2fe; color:#0284c7;">
+                  🚗
+                </div>
+                <div>
+                  <div class="trafix-service-title">VAHAN</div>
+                  <div class="trafix-service-sub">Vehicle Services</div>
+                  <div class="trafix-service-desc">National Vehicle Register, RC Status, Technical Specs &amp; Ownership Details</div>
+                </div>
+              </div>
+
+              <!-- e-Challan Traffic Challan -->
+              <div class="trafix-service-card card-echallan" onclick="App.triggerTrafixService('echallan')">
+                <div class="trafix-card-icon" style="background:#fef3c7; color:#b45309;">
+                  📄
+                </div>
+                <div>
+                  <div class="trafix-service-title">e-Challan</div>
+                  <div class="trafix-service-sub">Traffic Challan</div>
+                  <div class="trafix-service-desc">Traffic Challan Citations, Optical ANPR Evidence, Section Violations &amp; UPI Pay</div>
+                </div>
+              </div>
+
+              <!-- State Transport Portal -->
+              <div class="trafix-service-card card-portal" onclick="App.triggerTrafixService('state_portal')">
+                <div class="trafix-card-icon" style="background:#dcfce7; color:#059669;">
+                  🏛️
+                </div>
+                <div>
+                  <div class="trafix-service-title">State Transport</div>
+                  <div class="trafix-service-sub">Portal</div>
+                  <div class="trafix-service-desc" id="trafixStatePortalDesc">Rajasthan State Transport Department Official Parivahan Gateway</div>
+                </div>
+              </div>
+
+              <!-- RC / Vehicle Services -->
+              <div class="trafix-service-card card-rc" onclick="App.triggerTrafixService('rc_services')">
+                <div class="trafix-card-icon" style="background:#f3e8ff; color:#7c3aed;">
+                  📑
+                </div>
+                <div>
+                  <div class="trafix-service-title">RC / Vehicle</div>
+                  <div class="trafix-service-sub">Services</div>
+                  <div class="trafix-service-desc">Ownership Transfer, Duplicate RC, NOC, Address Change &amp; Fitness Certificates</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Relational Hierarchy Tree Indicator -->
+            <div class="trafix-tree-indicator">states
+ └── rto_offices
+      └── registration_series
+           └── government_services</div>
+          </div>
+
+        </div>
+
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
           
           <!-- Registered Vehicle RC Profile Card -->
@@ -2392,6 +2563,7 @@
   <script src="assets/js/live-engine.js"></script>
   <script src="assets/js/charts-analytics.js"></script>
   <script src="assets/js/map-controller.js"></script>
+  <script src="src/lib/vehicle-parser.js"></script>
   <script src="assets/js/app.js"></script>
 
   <script>

@@ -14,6 +14,7 @@ const DB_PATH = path.join(__dirname, 'data', 'natdams_db.json');
 // Import Security Middleware & Input Validations
 const { parseAuthToken, authorizeRoles } = require('./src/lib/auth-middleware');
 const { validateComplaint, validateAccident, validateViolation, validateRtoApplication } = require('./src/lib/validations');
+const { parseVehicleNumber, rtoMaster } = require('./src/lib/vehicle-parser');
 
 // MIME types for static files
 const MIME_TYPES = {
@@ -1379,6 +1380,37 @@ function requestHandler(req, res) {
       );
     }
     return sendJSON(res, 200, { success: true, count: list.length, vehicles: list });
+  }
+
+  // 26B. GET /api/rto-catalog (Complete hierarchical RTO Master Directory)
+  if (pathname === '/api/rto-catalog' && req.method === 'GET') {
+    return sendJSON(res, 200, { success: true, catalog: rtoMaster });
+  }
+
+  // 26C. GET /api/vehicles/identify or POST /api/vehicles/identify (Exact Flowchart Parser Engine)
+  if (pathname === '/api/vehicles/identify') {
+    if (req.method === 'GET') {
+      const plate = urlObj.searchParams.get('plate') || '';
+      const result = parseVehicleNumber(plate);
+      const reg = (result.registrationNumber || plate).toUpperCase().replace(/[\s-]/g, '');
+      const existingVehicle = (db.vehicles || []).find(v => (v.registrationNumber || '').toUpperCase().replace(/[\s-]/g, '') === reg);
+      return sendJSON(res, 200, {
+        success: true,
+        result: Object.assign({}, result, { registeredVehicle: existingVehicle || null })
+      });
+    }
+    if (req.method === 'POST') {
+      return getBody(req, body => {
+        const plate = body.plate || body.registrationNumber || '';
+        const result = parseVehicleNumber(plate);
+        const reg = (result.registrationNumber || plate).toUpperCase().replace(/[\s-]/g, '');
+        const existingVehicle = (db.vehicles || []).find(v => (v.registrationNumber || '').toUpperCase().replace(/[\s-]/g, '') === reg);
+        return sendJSON(res, 200, {
+          success: true,
+          result: Object.assign({}, result, { registeredVehicle: existingVehicle || null })
+        });
+      });
+    }
   }
 
   // 27. GET /api/vehicles/:plate (Vehicle profile with history)

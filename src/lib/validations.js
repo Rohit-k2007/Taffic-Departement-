@@ -37,10 +37,18 @@ function validateAccident(data) {
   };
 }
 
+const { parseVehicleNumber } = require('./vehicle-parser');
+
 function validateViolation(data) {
   const errors = [];
-  if (!data.plateNumber && !data.vehicleId && !data.registrationNumber) {
+  const plate = data.plateNumber || data.vehicleId || data.registrationNumber;
+  if (!plate) {
     errors.push('Vehicle registration plate number is required.');
+  } else {
+    const parsed = parseVehicleNumber(plate);
+    if (!parsed.valid) {
+      errors.push(`Invalid vehicle registration plate '${plate}'. Must be a valid Indian registration (e.g. RJ14AB1234, DL01AB4921).`);
+    }
   }
   if (!data.violationType) {
     errors.push('Violation type is required.');

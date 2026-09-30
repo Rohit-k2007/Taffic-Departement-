@@ -2208,8 +2208,214 @@ const App = {
   // CITIZEN VEHICLES & LICENCES (SECTION 15 & 16)
   // =========================================================================
 
+  currentTrafixResult: null,
+
   renderCitizenVehicles() {
+    this.initTrafixVehicleIntel();
     this.searchCitizenVehicleProfile('DL-01-AB-4921');
+  },
+
+  initTrafixVehicleIntel() {
+    const stateSelect = document.getElementById('trafixSelectState');
+    if (!stateSelect) return;
+
+    // Populate States from rtoMaster
+    if (window.getStatesList) {
+      const states = window.getStatesList();
+      stateSelect.innerHTML = states.map(s => `
+        <option value="${s.code}" ${s.code === 'RJ' ? 'selected' : ''}>${s.name} (${s.code})</option>
+      `).join('');
+    } else if (window.rtoMaster) {
+      stateSelect.innerHTML = Object.keys(window.rtoMaster).map(k => `
+        <option value="${k}" ${k === 'RJ' ? 'selected' : ''}>${window.rtoMaster[k].state} (${k})</option>
+      `).join('');
+    }
+
+    this.populateTrafixRtos(stateSelect.value || 'RJ', '54');
+    this.identifyVehicle('RJ54CK4706');
+  },
+
+  populateTrafixRtos(stateCode, selectedRto = null) {
+    const rtoSelect = document.getElementById('trafixSelectRto');
+    if (!rtoSelect) return;
+
+    let rtos = [];
+    if (window.getRtosByState) {
+      rtos = window.getRtosByState(stateCode);
+    } else if (window.rtoMaster && window.rtoMaster[stateCode]) {
+      const offices = window.rtoMaster[stateCode].offices || {};
+      rtos = Object.keys(offices).map(k => ({
+        rtoCode: k,
+        district: offices[k].district,
+        authority: offices[k].authority
+      }));
+    }
+
+    if (rtos.length === 0) {
+      rtoSelect.innerHTML = `<option value="">No RTOs configured for this State</option>`;
+      return;
+    }
+
+    rtoSelect.innerHTML = `<option value="">Select RTO</option>` + rtos.map(r => `
+      <option value="${r.rtoCode}" ${selectedRto && String(selectedRto).padStart(2, '0') === String(r.rtoCode).padStart(2, '0') ? 'selected' : ''}>
+        RTO ${r.rtoCode} - ${r.district} (${r.authority})
+      </option>
+    `).join('');
+  },
+
+  onTrafixStateChange(stateCode) {
+    this.populateTrafixRtos(stateCode);
+    const parsedState = document.getElementById('trafixParsedState');
+    const stateObj = window.rtoMaster && window.rtoMaster[stateCode];
+    if (parsedState && stateObj) {
+      parsedState.innerText = stateObj.state;
+    }
+    const portalDesc = document.getElementById('trafixStatePortalDesc');
+    if (portalDesc && stateObj) {
+      portalDesc.innerText = `${stateObj.state} State Transport Department Official Parivahan Gateway`;
+    }
+  },
+
+  onTrafixRtoChange(rtoCode) {
+    const stateSelect = document.getElementById('trafixSelectState');
+    const stateCode = stateSelect ? stateSelect.value : 'RJ';
+    const parsedRto = document.getElementById('trafixParsedRtoCode');
+    if (parsedRto && rtoCode) parsedRto.innerText = rtoCode;
+
+    const badgeContainer = document.getElementById('trafixStatusBadgeContainer');
+    if (!badgeContainer) return;
+
+    if (window.rtoMaster && window.rtoMaster[stateCode] && window.rtoMaster[stateCode].offices[rtoCode]) {
+      const off = window.rtoMaster[stateCode].offices[rtoCode];
+      badgeContainer.innerHTML = `
+        <div class="trafix-status-badge status-badge-verified">
+          <span>✓ Verified: ${off.district} • ${off.authority}</span>
+        </div>
+      `;
+    } else if (rtoCode) {
+      badgeContainer.innerHTML = `
+        <div class="trafix-status-badge status-badge-unverified">
+          <span>⚠ RTO code not verified in Registry</span>
+        </div>
+      `;
+    }
+  },
+
+  async identifyVehicle(overridePlate = null) {
+    const input = document.getElementById('trafixPlateInput');
+    const rawVal = overridePlate || (input ? input.value : 'RJ54CK4706');
+    const cleanPlate = (rawVal || '').trim().toUpperCase().replace(/[\s-]/g, '');
+
+    if (input && cleanPlate) input.value = cleanPlate;
+
+    const badgeContainer = document.getElementById('trafixStatusBadgeContainer');
+    const parsedState = document.getElementById('trafixParsedState');
+    const parsedRto = document.getElementById('trafixParsedRtoCode');
+    const parsedSeries = document.getElementById('trafixParsedSeries');
+    const plateDisplay = document.getElementById('trafixParsedPlateDisplay');
+    const stateSelect = document.getElementById('trafixSelectState');
+    const portalDesc = document.getElementById('trafixStatePortalDesc');
+
+    // Run Parser Engine
+    let result = null;
+    if (window.parseVehicleNumber) {
+      result = window.parseVehicleNumber(cleanPlate);
+    }
+
+    // Also notify server backend
+    try {
+      fetch(`/api/vehicles/identify?plate=${encodeURIComponent(cleanPlate)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.success && data.result) {
+            // Server verified
+          }
+        })
+        .catch(() => {});
+    } catch (e) {}
+
+    if (!result || !result.valid) {
+      if (parsedState) parsedState.innerText = "—";
+      if (parsedRto) parsedRto.innerText = "—";
+      if (parsedSeries) parsedSeries.innerText = "—";
+      if (plateDisplay) plateDisplay.innerText = cleanPlate || "INVALID";
+      if (badgeContainer) {
+        badgeContainer.innerHTML = `
+          <div class="trafix-status-badge status-badge-error">
+            <span>✕ Invalid vehicle registration format</span>
+          </div>
+        `;
+      }
+      this.showToast("Invalid registration format. Expected format: RJ54CK4706 or DL01AB4921", "warning");
+      return;
+    }
+
+    this.currentTrafixResult = result;
+
+    // Flowchart Step 3: Populate Parsed Registration
+    if (parsedState) parsedState.innerText = result.state;
+    if (parsedRto) parsedRto.innerText = result.rtoCode;
+    if (parsedSeries) parsedSeries.innerText = result.series;
+    if (plateDisplay) plateDisplay.innerText = result.registrationNumber;
+
+    // Flowchart Step 4: Search Current RTO Master & Update Registering Authority
+    if (stateSelect) {
+      stateSelect.value = result.stateCode;
+      this.populateTrafixRtos(result.stateCode, result.rtoCode);
+    }
+
+    // Exact Match? YES -> Show RTO + District; NO -> "RTO code not verified"
+    if (badgeContainer) {
+      if (result.rtoMatched) {
+        badgeContainer.innerHTML = `
+          <div class="trafix-status-badge status-badge-verified">
+            <span>✓ Verified: ${result.district} • ${result.authority}</span>
+          </div>
+        `;
+      } else {
+        badgeContainer.innerHTML = `
+          <div class="trafix-status-badge status-badge-unverified">
+            <span>⚠ RTO code not verified in Registry</span>
+          </div>
+        `;
+      }
+    }
+
+    if (portalDesc) {
+      portalDesc.innerText = `${result.state} State Transport Department Official Parivahan Gateway`;
+    }
+
+    this.showToast(`Vehicle Identified: ${result.registrationNumber} [${result.state} • ${result.district}]`, result.rtoMatched ? "success" : "info");
+  },
+
+  triggerTrafixService(serviceId) {
+    const res = this.currentTrafixResult || { registrationNumber: 'RJ54CK4706', state: 'Rajasthan', stateCode: 'RJ' };
+    const plate = res.registrationNumber || 'RJ54CK4706';
+
+    if (serviceId === 'vahan') {
+      this.searchCitizenVehicleProfile(plate);
+      this.showToast(`🚗 VAHAN: Loaded Registration Certificate & Specs for ${plate}`, "info");
+      const card = document.getElementById('citVehicleProfileCard');
+      if (card) card.scrollIntoView({ behavior: 'smooth' });
+    } else if (serviceId === 'echallan') {
+      this.switchTab('citizen-track');
+      const searchInput = document.getElementById('citTrackQuery');
+      if (searchInput) searchInput.value = plate;
+      this.searchAndDisplayCase(plate);
+      this.showToast(`📄 e-Challan: Checking pending traffic citations for ${plate}`, "info");
+    } else if (serviceId === 'state_portal') {
+      let url = 'https://parivahan.gov.in';
+      if (window.rtoMaster && res.stateCode && window.rtoMaster[res.stateCode] && window.rtoMaster[res.stateCode].portalUrl) {
+        url = window.rtoMaster[res.stateCode].portalUrl;
+      }
+      this.showToast(`🏛️ Opening ${res.state || 'State'} Official Parivahan Transport Portal...`, "info");
+      window.open(url, '_blank');
+    } else if (serviceId === 'rc_services') {
+      this.switchTab('citizen-rto-apps');
+      const targetInput = document.getElementById('rtoAppTargetId');
+      if (targetInput) targetInput.value = plate;
+      this.showToast(`📑 RTO Application Desk: Vehicle ${plate} pre-selected for RC Services`, "info");
+    }
   },
 
   searchCitizenVehicleProfile(queryPlate = null) {
