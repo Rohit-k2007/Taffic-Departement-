@@ -134,44 +134,6 @@ CREATE TABLE "complaints" (
     "resolved_at" TIMESTAMP(3)
 );
 
--- CreateTable accidents
-CREATE TABLE "accidents" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "accident_number" TEXT NOT NULL UNIQUE,
-    "reported_by" TEXT NOT NULL,
-    "latitude" DOUBLE PRECISION NOT NULL,
-    "longitude" DOUBLE PRECISION NOT NULL,
-    "location_address" TEXT NOT NULL,
-    "accident_type" TEXT NOT NULL,
-    "severity" "AccidentSeverity" NOT NULL,
-    "description" TEXT NOT NULL,
-    "casualties" INTEGER NOT NULL DEFAULT 0,
-    "vehicles_involved" INTEGER NOT NULL DEFAULT 1,
-    "status" "AccidentStatus" NOT NULL DEFAULT 'REPORTED',
-    "assigned_officer_id" TEXT,
-    "investigation_findings" TEXT,
-    "reported_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "resolved_at" TIMESTAMP(3)
-);
-
--- CreateTable violations
-CREATE TABLE "violations" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "violation_number" TEXT NOT NULL UNIQUE,
-    "vehicle_id" TEXT,
-    "officer_id" TEXT NOT NULL,
-    "violation_type" TEXT NOT NULL,
-    "violation_code" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
-    "latitude" DOUBLE PRECISION,
-    "longitude" DOUBLE PRECISION,
-    "violation_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "evidence_id" TEXT,
-    "status" "ViolationStatus" NOT NULL DEFAULT 'RECORDED',
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
 -- CreateTable challans
 CREATE TABLE "challans" (
     "id" TEXT NOT NULL PRIMARY KEY,

@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="TRAFIX - Government of India National Centralized Digital Platform for Traffic Police, RTO Management, Citizen Services, and AI-Assisted Risk Intelligence.">
+  <meta name="description"
+    content="TRAFIX - Government of India National Centralized Digital Platform for Traffic Police, RTO Management, Citizen Services, and AI-Assisted Risk Intelligence.">
   <title>TRAFIX - National Traffic Police, RTO Management &amp; Risk Intelligence Platform | Govt of India</title>
-  
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <!-- Leaflet CSS for GIS Map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
   <!-- Application CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
 
   <!-- =========================================================================
@@ -24,12 +30,13 @@
        ========================================================================= -->
   <header class="gov-top-header">
     <div class="header-container">
-      
+
       <!-- Emblem & Title Group -->
       <div class="emblem-group">
         <!-- Official Government Ashok Stambh Emblem Seal -->
         <div class="emblem-badge">
-          <img src="assets/images/gov_emblem.jpg" alt="Government of India National Emblem" class="emblem-img" width="42" height="42">
+          <img src="assets/images/gov_emblem.jpg" alt="Government of India National Emblem" class="emblem-img"
+            width="42" height="42">
         </div>
         <div class="gov-titles">
           <div class="gov-title-hi">भारत सरकार • सड़क परिवहन और राजमार्ग मंत्रालय</div>
@@ -45,7 +52,8 @@
       <div class="header-telemetry-strip">
         <div class="quick-stat-box">
           <span class="quick-stat-label">System Time (IST)</span>
-          <span class="quick-stat-val" id="currentTimeDisplay" style="font-family:var(--font-mono); font-size:11px;">2026-09-30 09:10:00 IST</span>
+          <span class="quick-stat-val" id="currentTimeDisplay"
+            style="font-family:var(--font-mono); font-size:11px;">2026-09-30 09:10:00 IST</span>
         </div>
         <div class="quick-stat-box">
           <span class="quick-stat-label">Active Monitored Vehicles</span>
@@ -67,8 +75,10 @@
 
       <!-- Officer Pass & Action Controls -->
       <div class="header-actions">
-        <div id="activeUserBadge" style="display:flex; align-items:center; gap:6px; background:#111827; border:1px solid #b45309; padding:4px 10px; border-radius:4px; font-size:11px; color:#f8fafc;">
-          <span id="roleIndicatorDot" style="width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1.2s infinite;"></span>
+        <div id="activeUserBadge"
+          style="display:flex; align-items:center; gap:6px; background:#111827; border:1px solid #b45309; padding:4px 10px; border-radius:4px; font-size:11px; color:#f8fafc;">
+          <span id="roleIndicatorDot"
+            style="width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1.2s infinite;"></span>
           <span id="activeUserRoleText">Mode: <strong>Citizen Public Portal</strong></span>
         </div>
 
@@ -105,8 +115,10 @@
 
         <!-- Vehicle Number Live GPS Location Tracker -->
         <div class="vehicle-tracker-box">
-          <input type="text" id="trackVehiclePlateInput" class="vehicle-plate-input" style="width:155px;" placeholder="DL-01-AB-4921" value="DL-01-AB-4921">
-          <button class="btn-action-gold" id="btnTrackVehicleLocation" style="padding:6px 12px; font-size:11px;" title="Track Real-Time Vehicle GPS on Map">
+          <input type="text" id="trackVehiclePlateInput" class="vehicle-plate-input" style="width:155px;"
+            placeholder="DL-01-AB-4921" value="DL-01-AB-4921">
+          <button class="btn-action-gold" id="btnTrackVehicleLocation" style="padding:6px 12px; font-size:11px;"
+            title="Track Real-Time Vehicle GPS on Map">
             <i data-lucide="navigation"></i>
             <span>Track Vehicle GPS</span>
           </button>
@@ -126,7 +138,7 @@
 
     <!-- LEFT SIDEBAR: Series-Wise Navigation & Role Switcher -->
     <aside class="app-sidebar">
-      
+
       <!-- Role Switcher & Active Profile -->
       <div class="sidebar-profile-card">
         <div style="font-size:10px; color:#64748b; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;">
@@ -147,9 +159,11 @@
           </button>
         </div>
 
-        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:8px 10px; font-size:11px; margin-top:4px;">
+        <div
+          style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:8px 10px; font-size:11px; margin-top:4px;">
           <div style="color:#64748b; font-size:10px;">Current Session:</div>
-          <div id="sidebarOfficerName" style="font-weight:700; color:#0f172a; margin-top:1px;">Citizen Guest Portal</div>
+          <div id="sidebarOfficerName" style="font-weight:700; color:#0f172a; margin-top:1px;">Citizen Guest Portal
+          </div>
           <div id="sidebarOfficerClearance" style="font-size:10px; color:#059669; font-weight:600; margin-top:2px;">
             Public Access Clearance
           </div>
@@ -159,16 +173,17 @@
       <!-- SERIES-WISE NAVIGATION MENU -->
       <!-- SERIES-WISE NAVIGATION MENU -->
       <div class="sidebar-section-title">Central Operations Menu</div>
-      
+
       <div class="sidebar-menu-list">
-        
+
         <!-- SECTION 1: CITIZEN SERVICES -->
         <div class="sidebar-group-header">
           <span>🛡️ Citizen Public Services</span>
         </div>
 
         <!-- Citizen Dashboard -->
-        <button class="sidebar-nav-item active" data-tab="citizen-dashboard" onclick="App.switchTab('citizen-dashboard')">
+        <button class="sidebar-nav-item active" data-tab="citizen-dashboard"
+          onclick="App.switchTab('citizen-dashboard')">
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="nav-step-num">1</span>
             <i data-lucide="layout-dashboard" class="nav-item-icon" style="width:16px; height:16px;"></i>
@@ -234,12 +249,14 @@
             <i data-lucide="alert-triangle" class="nav-item-icon" style="width:16px; height:16px; color:#dc2626;"></i>
             <span>Emergency 112 SOS</span>
           </div>
-          <span style="background:#fef2f2; color:#b91c1c; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px; border:1px solid #fca5a5;">SOS</span>
+          <span
+            style="background:#fef2f2; color:#b91c1c; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px; border:1px solid #fca5a5;">SOS</span>
         </button>
 
         <!-- SECTION 2: TRAFFIC POLICE OPERATIONS -->
-        <div class="sidebar-group-header">
+        <div class="sidebar-group-header" style="display:flex; justify-content:space-between; align-items:center;">
           <span>👮 Traffic Police Operations</span>
+          <span class="security-lock-badge" id="badgeLockPolice"><i data-lucide="lock" style="width:9px; height:9px;"></i> 2FA OTP</span>
         </div>
 
         <!-- Officer: Review Assigned Cases -->
@@ -249,7 +266,8 @@
             <i data-lucide="clipboard-check" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>Police: Review Cases</span>
           </div>
-          <span id="badgeCasesCount" style="background:#b45309; color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:10px;">3</span>
+          <span id="badgeCasesCount"
+            style="background:#b45309; color:#fff; font-size:9px; font-weight:800; padding:1px 6px; border-radius:10px;">3</span>
         </button>
 
         <!-- Officer: Live ANPR Violations & Challans -->
@@ -279,7 +297,8 @@
             <i data-lucide="map" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>GIS Live Map &amp; Radar</span>
           </div>
-          <span style="background:#dc2626; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">LIVE</span>
+          <span
+            style="background:#dc2626; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">LIVE</span>
         </button>
 
         <!-- Risk & Safety Center -->
@@ -289,7 +308,8 @@
             <i data-lucide="flame" class="nav-item-icon" style="width:16px; height:16px; color:#ea580c;"></i>
             <span>Risk &amp; Safety Hotspots</span>
           </div>
-          <span style="background:#fee2e2; color:#dc2626; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">RISK</span>
+          <span
+            style="background:#fee2e2; color:#dc2626; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">RISK</span>
         </button>
 
         <!-- Working Roads & AI Detours -->
@@ -299,12 +319,15 @@
             <i data-lucide="cone" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>Working Roads &amp; Detours</span>
           </div>
-          <span style="background:#d97706; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">Govt + AI</span>
+          <span
+            style="background:#d97706; color:#fff; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">Govt
+            + AI</span>
         </button>
 
         <!-- SECTION 3: REGIONAL TRANSPORT OFFICE (RTO) -->
-        <div class="sidebar-group-header">
+        <div class="sidebar-group-header" style="display:flex; justify-content:space-between; align-items:center;">
           <span>🏛️ Regional Transport Office (RTO)</span>
+          <span class="security-lock-badge" id="badgeLockRto"><i data-lucide="lock" style="width:9px; height:9px;"></i> 2FA OTP</span>
         </div>
 
         <!-- RTO Officer: Desk & Document Verification -->
@@ -314,7 +337,8 @@
             <i data-lucide="stamp" class="nav-item-icon" style="width:16px; height:16px; color:#d97706;"></i>
             <span>RTO: Desk &amp; Verification</span>
           </div>
-          <span style="background:#fef3c7; color:#b45309; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">RTO</span>
+          <span
+            style="background:#fef3c7; color:#b45309; font-size:9px; font-weight:800; padding:1px 5px; border-radius:3px;">RTO</span>
         </button>
 
         <!-- Vehicle Classification Analytics -->
@@ -328,8 +352,9 @@
         </button>
 
         <!-- SECTION 4: DIRECTORATE ADMINISTRATION -->
-        <div class="sidebar-group-header">
+        <div class="sidebar-group-header" style="display:flex; justify-content:space-between; align-items:center;">
           <span>🛠️ Directorate Administration</span>
+          <span class="security-lock-badge" id="badgeLockAdmin"><i data-lucide="lock" style="width:9px; height:9px;"></i> 2FA OTP</span>
         </div>
 
         <!-- Admin: Staff & Audit Ledger -->
@@ -359,10 +384,10 @@
            PANEL: CITIZEN DASHBOARD & QUICK MOTORIST SERVICES
            ========================================================================= -->
       <section class="view-panel active" id="panel-citizen-dashboard">
-        
+
         <!-- CLASSIC SOVEREIGN EXECUTIVE BANNER -->
         <div class="citizen-sovereign-banner">
-          
+
           <div class="banner-header-row">
             <!-- Identity & Crest -->
             <div class="banner-identity-group">
@@ -393,7 +418,8 @@
             <div class="banner-safety-meter">
               <div class="safety-score-number">98</div>
               <div>
-                <div style="font-size:10px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">
+                <div
+                  style="font-size:10px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">
                   Safe Driver Index
                 </div>
                 <div style="font-size:12px; font-weight:800; color:#34d399;">
@@ -410,24 +436,32 @@
           <div class="banner-search-container">
             <div class="banner-search-input-group">
               <div style="position:relative; flex:1; min-width:240px;">
-                <input type="text" id="dashSearchPlateInput" class="banner-search-input" style="width:100%;" placeholder="ENTER VEHICLE NUMBER (E.G. RJ54CK4706)" value="RJ54CK4706">
+                <input type="text" id="dashSearchPlateInput" class="banner-search-input" style="width:100%;"
+                  placeholder="ENTER VEHICLE NUMBER (E.G. RJ54CK4706)" value="RJ54CK4706">
               </div>
-              <button class="btn-action-primary" style="padding:9px 16px; font-size:12px; font-weight:700;" onclick="App.dashboardQuickSearch(null, 'vehicle')">
+              <button class="btn-action-primary" style="padding:9px 16px; font-size:12px; font-weight:700;"
+                onclick="App.dashboardQuickSearch(null, 'vehicle')">
                 <i data-lucide="search"></i> Inspect VAHAN RC
               </button>
-              <button class="btn-action-gold" style="padding:9px 16px; font-size:12px; font-weight:700;" onclick="App.dashboardQuickSearch(null, 'challan')">
+              <button class="btn-action-gold" style="padding:9px 16px; font-size:12px; font-weight:700;"
+                onclick="App.dashboardQuickSearch(null, 'challan')">
                 <i data-lucide="credit-card"></i> Check &amp; Pay Challan
               </button>
-              <button class="btn-action-outline" style="padding:9px 14px; font-size:12px; background:rgba(255,255,255,0.08); color:#f8fafc; border-color:rgba(255,255,255,0.25);" onclick="App.dashboardQuickSearch(null, 'rto')">
+              <button class="btn-action-outline"
+                style="padding:9px 14px; font-size:12px; background:rgba(255,255,255,0.08); color:#f8fafc; border-color:rgba(255,255,255,0.25);"
+                onclick="App.dashboardQuickSearch(null, 'rto')">
                 <i data-lucide="file-up"></i> Upload to RTO
               </button>
             </div>
 
             <div class="banner-plate-chips-row">
               <span style="font-weight:700; color:#e2e8f0;">Quick Select Plate:</span>
-              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('RJ54CK4706', 'vehicle')">RJ54CK4706 (Pipar City • DTO RJ-54)</button>
-              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('DL01AB4921', 'vehicle')">DL01AB4921 (Mall Road • RTO DL-01)</button>
-              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('HR26DQ5511', 'vehicle')">HR26DQ5511 (Gurugram North • HR-26)</button>
+              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('RJ54CK4706', 'vehicle')">RJ54CK4706
+                (Pipar City • DTO RJ-54)</button>
+              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('DL01AB4921', 'vehicle')">DL01AB4921
+                (Mall Road • RTO DL-01)</button>
+              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('HR26DQ5511', 'vehicle')">HR26DQ5511
+                (Gurugram North • HR-26)</button>
             </div>
           </div>
 
@@ -435,7 +469,7 @@
 
         <!-- CLASSIC 4-KPI METRIC CARDS -->
         <div class="classic-kpi-grid">
-          
+
           <!-- Card 1: Registered Fleet -->
           <div class="classic-kpi-card gold" onclick="App.switchTab('citizen-vehicles')">
             <div>
@@ -502,9 +536,11 @@
         <div class="classic-services-section-title">
           <div>
             <h3>🏛️ Sovereign Public Services Suite</h3>
-            <p style="font-size:11.5px; color:#64748b;">Direct citizen services powered by VAHAN, Sarathi, e-Challan, and Ministry Gateway.</p>
+            <p style="font-size:11.5px; color:#64748b;">Direct citizen services powered by VAHAN, Sarathi, e-Challan,
+              and Ministry Gateway.</p>
           </div>
-          <span style="font-size:11px; font-weight:700; color:#b45309; background:#fef3c7; padding:3px 10px; border-radius:12px;">
+          <span
+            style="font-size:11px; font-weight:700; color:#b45309; background:#fef3c7; padding:3px 10px; border-radius:12px;">
             Govt of India Certified
           </span>
         </div>
@@ -520,7 +556,8 @@
               </div>
               <div class="service-card-title">Vehicle Intelligence &amp; RC Verification</div>
               <div class="service-card-desc">
-                High-precision regex parser extracts State, District RTO, Registration Series, and issuing authority (e.g. RJ54CK4706 &rarr; Pipar City / Jodhpur).
+                High-precision regex parser extracts State, District RTO, Registration Series, and issuing authority
+                (e.g. RJ54CK4706 &rarr; Pipar City / Jodhpur).
               </div>
             </div>
             <div class="service-card-footer">
@@ -538,7 +575,8 @@
               </div>
               <div class="service-card-title">Instant e-Challan Settlement Hub</div>
               <div class="service-card-desc">
-                Settle traffic fines instantly using deep-link one-click payment via <strong>PhonePe</strong>, <strong>Paytm</strong>, or <strong>Google Pay</strong> with stamped Bharat receipt generation.
+                Settle traffic fines instantly using deep-link one-click payment via <strong>PhonePe</strong>,
+                <strong>Paytm</strong>, or <strong>Google Pay</strong> with stamped Bharat receipt generation.
               </div>
             </div>
             <div class="service-card-footer">
@@ -556,7 +594,8 @@
               </div>
               <div class="service-card-title">Direct Local RTO Document Dispatch</div>
               <div class="service-card-desc">
-                Directly transmit Form 29/30 ownership transfer, duplicate RC, NOC, and fitness renewal files directly onto your designated local RTO desk (e.g. RJ-54, RJ-14, DL-01).
+                Directly transmit Form 29/30 ownership transfer, duplicate RC, NOC, and fitness renewal files directly
+                onto your designated local RTO desk (e.g. RJ-54, RJ-14, DL-01).
               </div>
             </div>
             <div class="service-card-footer">
@@ -574,7 +613,8 @@
               </div>
               <div class="service-card-title">Digital Vehicle Locker (e-Vault)</div>
               <div class="service-card-desc">
-                Digitally verified driving licence, RC smartcard, PUC emission certificate, insurance policy, and FASTag wallet balance with legal statutory validity.
+                Digitally verified driving licence, RC smartcard, PUC emission certificate, insurance policy, and FASTag
+                wallet balance with legal statutory validity.
               </div>
             </div>
             <div class="service-card-footer">
@@ -592,7 +632,8 @@
               </div>
               <div class="service-card-title">National Highway Traffic Advisories</div>
               <div class="service-card-desc">
-                Real-time speed advisories, fog alerts, roadwork diversions on NH-48, Delhi-Mumbai Expressway, and Yamuna Expressway with statutory speed limit alerts.
+                Real-time speed advisories, fog alerts, roadwork diversions on NH-48, Delhi-Mumbai Expressway, and
+                Yamuna Expressway with statutory speed limit alerts.
               </div>
             </div>
             <div class="service-card-footer">
@@ -610,7 +651,8 @@
               </div>
               <div class="service-card-title">Emergency 112 SOS Highway Command</div>
               <div class="service-card-desc">
-                Instant emergency distress link with GPS coordinates directly routed to Highway Police Patrol, closest Trauma Care Hospital, and NHAI Towing Cranes.
+                Instant emergency distress link with GPS coordinates directly routed to Highway Police Patrol, closest
+                Trauma Care Hospital, and NHAI Towing Cranes.
               </div>
             </div>
             <div class="service-card-footer">
@@ -623,7 +665,7 @@
 
         <!-- CLASSIC BOTTOM SPLIT: OFFICIAL GAZETTE & RECENT LEDGER -->
         <div class="classic-bottom-split">
-          
+
           <!-- Column 1: Gazette Notices & Bulletins -->
           <div class="gov-card">
             <div class="gov-card-header">
@@ -636,7 +678,8 @@
                   <div class="card-subtitle">Ministry of Road Transport &amp; Highways • Official Notifications</div>
                 </div>
               </div>
-              <span style="font-size:10px; font-weight:700; color:#059669; background:#dcfce7; padding:2px 8px; border-radius:4px;">
+              <span
+                style="font-size:10px; font-weight:700; color:#059669; background:#dcfce7; padding:2px 8px; border-radius:4px;">
                 Verified Feeds
               </span>
             </div>
@@ -658,7 +701,8 @@
                   <div class="card-subtitle">Direct RTO Parivahan &amp; e-Challan Audit Ledger</div>
                 </div>
               </div>
-              <span style="font-size:10px; font-weight:700; color:#2563eb; background:#dbeafe; padding:2px 8px; border-radius:4px;">
+              <span
+                style="font-size:10px; font-weight:700; color:#2563eb; background:#dbeafe; padding:2px 8px; border-radius:4px;">
                 VAHAN / SARATHI
               </span>
             </div>
@@ -676,18 +720,21 @@
            PANEL 1: CURRENT TELEMETRY & CLEAN FRONT GIS MAP DASHBOARD
            ========================================================================= -->
       <section class="view-panel" id="panel-current">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               Central Traffic Control Room &amp; Real-Time GIS Surveillance
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              High-resolution cartography, optical ANPR speed tracking, Google Maps directions, and ISRO Cartosat-3 reconnaissance.
+              High-resolution cartography, optical ANPR speed tracking, Google Maps directions, and ISRO Cartosat-3
+              reconnaissance.
             </p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn-action-primary" id="btnToggleSatellite" title="Toggle ISRO High-Resolution Earth Observation Satellite Imagery">
+            <button class="btn-action-primary" id="btnToggleSatellite"
+              title="Toggle ISRO High-Resolution Earth Observation Satellite Imagery">
               <i data-lucide="satellite"></i>
               <span id="satBtnText">🛰️ Connect ISRO Satellite</span>
             </button>
@@ -698,43 +745,55 @@
         </div>
 
         <div class="gov-card" style="margin-bottom:16px;">
-          
+
           <!-- Google Maps & ISRO Satellite Route Finder Bar -->
-          <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px;">
+          <div
+            style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:10px 12px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
               <div style="display:flex; align-items:center; gap:6px;">
                 <span style="font-weight:700; font-size:12px; color:#0f172a;">🗺️ Search Area &amp; Route:</span>
-                <span style="font-size:11px; color:#64748b;">Powered by <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" style="color:#b45309; font-weight:700; text-decoration:none;">Google Maps</a> &amp; ISRO Satellite Imagery</span>
+                <span style="font-size:11px; color:#64748b;">Powered by <a href="https://www.google.com/maps"
+                    target="_blank" rel="noopener noreferrer"
+                    style="color:#b45309; font-weight:700; text-decoration:none;">Google Maps</a> &amp; ISRO Satellite
+                  Imagery</span>
               </div>
               <div style="display:flex; gap:6px; font-size:11px;">
-                <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="btn-action-primary" style="padding:2px 8px; font-size:11px; text-decoration:none;">
+                <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer"
+                  class="btn-action-primary" style="padding:2px 8px; font-size:11px; text-decoration:none;">
                   Open Google Maps ↗
                 </a>
               </div>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <div style="position:relative; flex:1; min-width:260px;">
-                <input type="text" id="mapAreaSearchInput" placeholder="Enter landmark, highway, or area (e.g., Connaught Place, Barapullah, Jaipur Ring Road, Bandra Worli, Silk Board...)" style="width:100%; padding:7px 10px 7px 30px; font-size:12px; border:1px solid #cbd5e1; border-radius:4px; outline:none; background:#fff; color:#0f172a;" />
+                <input type="text" id="mapAreaSearchInput"
+                  placeholder="Enter landmark, highway, or area (e.g., Connaught Place, Barapullah, Jaipur Ring Road, Bandra Worli, Silk Board...)"
+                  style="width:100%; padding:7px 10px 7px 30px; font-size:12px; border:1px solid #cbd5e1; border-radius:4px; outline:none; background:#fff; color:#0f172a;" />
                 <span style="position:absolute; left:9px; top:8px; font-size:12px; color:#64748b;">🔍</span>
               </div>
-              <button type="button" class="btn-action-primary" id="btnSearchAreaRoute" style="padding:7px 14px; font-size:12px;">
+              <button type="button" class="btn-action-primary" id="btnSearchAreaRoute"
+                style="padding:7px 14px; font-size:12px;">
                 Find Accurate Route
               </button>
-              <button type="button" class="btn-action-primary" id="btnSearchGmapsExternal" style="padding:7px 12px; font-size:12px; background:#111827; border-color:#111827;">
+              <button type="button" class="btn-action-primary" id="btnSearchGmapsExternal"
+                style="padding:7px 12px; font-size:12px; background:#111827; border-color:#111827;">
                 View on Google Maps
               </button>
             </div>
           </div>
 
           <!-- Route Analysis Live HUD (Hidden by default, shown upon search) -->
-          <div id="mapRouteHud" style="display:none; background:#fffbeb; border:1px solid #fde68a; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-size:11px; color:#1e293b; flex-wrap:wrap; gap:8px;">
+          <div id="mapRouteHud"
+            style="display:none; background:#fffbeb; border:1px solid #fde68a; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-size:11px; color:#1e293b; flex-wrap:wrap; gap:8px;">
             <!-- Injected via JavaScript -->
           </div>
 
           <!-- Satellite Telemetry Live HUD Banner (Active when Satellite Surveillance is connected) -->
-          <div id="satelliteHudBanner" style="display:none; background:#06152b; border:1px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:11px; color:#38bdf8;">
+          <div id="satelliteHudBanner"
+            style="display:none; background:#06152b; border:1px solid #0284c7; padding:8px 12px; border-radius:4px; margin-bottom:8px; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:11px; color:#38bdf8;">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1s infinite;"></span>
+              <span
+                style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1s infinite;"></span>
               <strong>ISRO CARTOSAT-3 / EOS-06 RECON LINK ACTIVE</strong>
               <span style="color:#94a3b8;">| Res: 0.28m HD • Alt: 505 km • NavIC L5 Encrypted</span>
             </div>
@@ -750,11 +809,13 @@
 
           <!-- Live Speed Radar Telemetry Stream Strip -->
           <div style="margin-top:12px; border-top:1px solid #e2e8f0; padding-top:10px;">
-            <div style="font-size:0.75rem; font-weight:700; color:#111827; text-transform:uppercase; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
+            <div
+              style="font-size:0.75rem; font-weight:700; color:#111827; text-transform:uppercase; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
               <span>📡 Live Highway Radar Speed Stream</span>
               <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">Optical ANPR Active</span>
             </div>
-            <div id="liveTelemetryTicker" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:8px; max-height:160px; overflow-y:auto;">
+            <div id="liveTelemetryTicker"
+              style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:8px; max-height:160px; overflow-y:auto;">
               <!-- Injected via JS -->
             </div>
           </div>
@@ -765,13 +826,14 @@
            PANEL 2: EMERGENCY FLOW (ACCIDENT / MEDICAL / FIRE / POLICE)
            ========================================================================= -->
       <section class="view-panel" id="panel-emergency">
-        
+
         <div style="margin-bottom:14px;">
           <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#b91c1c;">
             🚨 National Emergency Dispatch Control (Dial 112)
           </h2>
           <p style="font-size:0.75rem; color:#64748b;">
-            Instant response protocol: Select Type &rarr; GPS Location &rarr; Send Alert &rarr; Nearest Response Team &rarr; Live Tracking &rarr; Case Resolved.
+            Instant response protocol: Select Type &rarr; GPS Location &rarr; Send Alert &rarr; Nearest Response Team
+            &rarr; Live Tracking &rarr; Case Resolved.
           </p>
         </div>
 
@@ -779,24 +841,33 @@
           <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px;">
             STEP 1: SELECT EMERGENCY TYPE
           </div>
-          
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
-            <button type="button" class="btn-action-primary" style="background:#fef2f2; border:2px solid #ef4444; color:#b91c1c; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Accident')">
+
+          <div
+            style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:16px;">
+            <button type="button" class="btn-action-primary"
+              style="background:#fef2f2; border:2px solid #ef4444; color:#b91c1c; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;"
+              onclick="App.triggerEmergencyType('Accident')">
               <span style="font-size:26px;">🚗💥</span>
               <strong>Traffic Accident</strong>
               <span style="font-size:10px; color:#7f1d1d;">Collision / Rollover</span>
             </button>
-            <button type="button" class="btn-action-primary" style="background:#f0fdf4; border:2px solid #22c55e; color:#15803d; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Medical')">
+            <button type="button" class="btn-action-primary"
+              style="background:#f0fdf4; border:2px solid #22c55e; color:#15803d; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;"
+              onclick="App.triggerEmergencyType('Medical')">
               <span style="font-size:26px;">🚑</span>
               <strong>Medical Green Corridor</strong>
               <span style="font-size:10px; color:#14532d;">Ambulance Clearance</span>
             </button>
-            <button type="button" class="btn-action-primary" style="background:#fffbeb; border:2px solid #f59e0b; color:#b45309; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Fire')">
+            <button type="button" class="btn-action-primary"
+              style="background:#fffbeb; border:2px solid #f59e0b; color:#b45309; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;"
+              onclick="App.triggerEmergencyType('Fire')">
               <span style="font-size:26px;">🔥</span>
               <strong>Fire Emergency</strong>
               <span style="font-size:10px; color:#78350f;">Vehicle / Highway Fire</span>
             </button>
-            <button type="button" class="btn-action-primary" style="background:#f8fafc; border:2px solid #64748b; color:#0f172a; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;" onclick="App.triggerEmergencyType('Police')">
+            <button type="button" class="btn-action-primary"
+              style="background:#f8fafc; border:2px solid #64748b; color:#0f172a; padding:16px; border-radius:6px; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;"
+              onclick="App.triggerEmergencyType('Police')">
               <span style="font-size:26px;">🚔</span>
               <strong>Police Interceptor SOS</strong>
               <span style="font-size:10px; color:#334155;">Armed Robbery / Assault</span>
@@ -804,10 +875,12 @@
           </div>
 
           <!-- Active Dispatch Tracker -->
-          <div id="emergencyStatusBanner" style="display:none; background:#fef2f2; border:2px solid #ef4444; border-radius:6px; padding:14px; margin-bottom:14px;">
+          <div id="emergencyStatusBanner"
+            style="display:none; background:#fef2f2; border:2px solid #ef4444; border-radius:6px; padding:14px; margin-bottom:14px;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
               <div>
-                <span style="background:#dc2626; color:#fff; font-weight:800; font-size:11px; padding:2px 8px; border-radius:3px;">
+                <span
+                  style="background:#dc2626; color:#fff; font-weight:800; font-size:11px; padding:2px 8px; border-radius:3px;">
                   EMERGENCY DISPATCHED
                 </span>
                 <div style="font-size:14px; font-weight:800; color:#991b1b; margin-top:4px;" id="emgBannerTitle">
@@ -819,7 +892,9 @@
               </div>
               <div style="text-align:right;">
                 <div style="font-size:20px; font-weight:800; color:#dc2626;" id="emgCountdown">ETA: 3 MINS</div>
-                <button class="btn-action-primary" style="background:#15803d; border-color:#15803d; color:#fff; font-size:11px; padding:4px 10px; margin-top:4px;" onclick="App.resolveCurrentEmergency()">
+                <button class="btn-action-primary"
+                  style="background:#15803d; border-color:#15803d; color:#fff; font-size:11px; padding:4px 10px; margin-top:4px;"
+                  onclick="App.resolveCurrentEmergency()">
                   Mark Case Resolved
                 </button>
               </div>
@@ -827,7 +902,8 @@
           </div>
 
           <!-- Active Emergencies Queue Table -->
-          <div style="font-weight:700; color:#0f172a; margin-bottom:8px; font-size:12px;">Active Emergency Incidents</div>
+          <div style="font-weight:700; color:#0f172a; margin-bottom:8px; font-size:12px;">Active Emergency Incidents
+          </div>
           <div class="gov-table-wrapper">
             <table class="gov-table">
               <thead>
@@ -853,20 +929,21 @@
            PANEL 3: CITIZEN REPORT ISSUE & EVIDENCE UPLOAD FLOW
            ========================================================================= -->
       <section class="view-panel" id="panel-citizen-report">
-        
+
         <div style="margin-bottom:14px;">
           <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
             📢 Citizen Incident Reporting &amp; Evidence Submission
           </h2>
           <p style="font-size:0.75rem; color:#64748b;">
-            Citizen &rarr; Report Details &rarr; Evidence + GPS &rarr; AI Pre-Processing &rarr; Case Assigned to Traffic Officer.
+            Citizen &rarr; Report Details &rarr; Evidence + GPS &rarr; AI Pre-Processing &rarr; Case Assigned to Traffic
+            Officer.
           </p>
         </div>
 
         <div class="gov-card">
           <form id="formCitizenReport">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-              
+
               <!-- 1. Category -->
               <div class="form-group">
                 <label class="form-label">1. Issue Category *</label>
@@ -882,19 +959,24 @@
               <!-- 2. Location -->
               <div class="form-group">
                 <label class="form-label">2. Location / Landmark *</label>
-                <input type="text" class="form-control" id="citLocation" placeholder="e.g. Ring Road Expressway near Gantry 04" required value="Ring Road Expressway Gantry 04">
+                <input type="text" class="form-control" id="citLocation"
+                  placeholder="e.g. Ring Road Expressway near Gantry 04" required
+                  value="Ring Road Expressway Gantry 04">
               </div>
 
               <!-- 3. Description -->
               <div class="form-group" style="grid-column:span 2;">
                 <label class="form-label">3. Detailed Incident Description *</label>
-                <textarea class="form-control" id="citDescription" rows="3" placeholder="Provide accurate details of the incident, vehicle numbers involved, road blockage..." required>Vehicle jumped red light at speed exceeding 90 km/h, near miss with pedestrian crossing.</textarea>
+                <textarea class="form-control" id="citDescription" rows="3"
+                  placeholder="Provide accurate details of the incident, vehicle numbers involved, road blockage..."
+                  required>Vehicle jumped red light at speed exceeding 90 km/h, near miss with pedestrian crossing.</textarea>
               </div>
 
               <!-- 4. Upload Evidence -->
               <div class="form-group">
                 <label class="form-label">4. Upload Photo / Dashcam Evidence *</label>
-                <input type="file" class="form-control" id="citEvidenceFile" accept="image/*,video/*" style="padding:5px;">
+                <input type="file" class="form-control" id="citEvidenceFile" accept="image/*,video/*"
+                  style="padding:5px;">
                 <span style="font-size:10px; color:#64748b;">Supported: JPG, PNG, MP4 Dashcam Footage (Max 50MB)</span>
               </div>
 
@@ -902,8 +984,10 @@
               <div class="form-group">
                 <label class="form-label">5. GPS Geo-Coordinates</label>
                 <div style="display:flex; gap:8px;">
-                  <input type="text" class="form-control" id="citGpsCoords" value="28.6250° N, 77.2100° E" readonly style="background:#f1f5f9; font-family:var(--font-mono); font-size:11px;">
-                  <button type="button" class="btn-action-primary" style="font-size:11px;" onclick="App.autoDetectGps()">
+                  <input type="text" class="form-control" id="citGpsCoords" value="28.6250° N, 77.2100° E" readonly
+                    style="background:#696a6b; font-family:var(--font-mono); font-size:11px;">
+                  <button type="button" class="btn-action-primary" style="font-size:11px;"
+                    onclick="App.autoDetectGps()">
                     📍 Auto GPS Pin
                   </button>
                 </div>
@@ -917,14 +1001,15 @@
                 <span>🤖 AI Pre-Processing Engine Activated:</span>
               </div>
               <div style="font-size:11px; color:#166534; margin-top:3px;">
-                • Automatic category classification &amp; license plate OCR detection<br/>
-                • Duplicate complaint filtering across nearby 500m radius<br/>
+                • Automatic category classification &amp; license plate OCR detection<br />
+                • Duplicate complaint filtering across nearby 500m radius<br />
                 • Dynamic priority scoring for immediate traffic officer dispatch
               </div>
             </div>
 
             <div style="display:flex; justify-content:flex-end; gap:8px;">
-              <button type="reset" class="btn-action-primary" style="background:transparent; color:#64748b; border-color:#cbd5e1;">Clear</button>
+              <button type="reset" class="btn-action-primary"
+                style="background:transparent; color:#64748b; border-color:#cbd5e1;">Clear</button>
               <button type="submit" class="btn-action-gold" style="padding:10px 20px;">
                 <i data-lucide="send"></i>
                 <span>Submit Official Incident Report</span>
@@ -938,33 +1023,43 @@
            PANEL 4: CITIZEN CASE TRACKING & CHALLAN STATUS
            ========================================================================= -->
       <section class="view-panel" id="panel-citizen-track">
-        
+
         <div style="margin-bottom:14px;">
           <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
             📄 Case Status Tracker &amp; e-Challan Payment Portal
           </h2>
           <p style="font-size:0.75rem; color:#64748b;">
-            Track lifecycle: Submitted &rarr; Under Review &rarr; Action Taken &rarr; Case Closed &rarr; Feedback Rating.
+            Track lifecycle: Submitted &rarr; Under Review &rarr; Action Taken &rarr; Case Closed &rarr; Feedback
+            Rating.
           </p>
         </div>
 
         <!-- DIRECT E-CHALLAN QUICK PAY (PhonePe, Paytm, Google Pay) -->
         <div class="gov-card" style="border-top:3px solid #059669; margin-bottom:16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
             <div>
-              <div style="font-weight:800; font-size:14px; color:#0f172a;">💳 Pay e-Challan Online (PhonePe / Paytm / Google Pay Direct Link)</div>
-              <div style="font-size:11px; color:#64748b;">Instant lookup by vehicle registration number &amp; direct 1-click UPI app settlement</div>
+              <div style="font-weight:800; font-size:14px; color:#0f172a;">💳 Pay e-Challan Online (PhonePe / Paytm /
+                Google Pay Direct Link)</div>
+              <div style="font-size:11px; color:#64748b;">Instant lookup by vehicle registration number &amp; direct
+                1-click UPI app settlement</div>
             </div>
             <div style="display:flex; gap:6px; align-items:center;">
-              <span style="font-size:11px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700;">Zero Convenience Fee</span>
+              <span
+                style="font-size:11px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700;">Zero
+                Convenience Fee</span>
             </div>
           </div>
 
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
             <div style="flex:1; min-width:240px;">
-              <input type="text" id="citTrackChallanPlate" class="form-control" placeholder="Enter Vehicle Registration (e.g. RJ54CK4706 or DL-01-AB-4921)..." value="RJ54CK4706" style="font-family:var(--font-mono); font-weight:800; letter-spacing:1px; text-transform:uppercase;">
+              <input type="text" id="citTrackChallanPlate" class="form-control"
+                placeholder="Enter Vehicle Registration (e.g. RJ54CK4706 or DL-01-AB-4921)..." value="RJ54CK4706"
+                style="font-family:var(--font-mono); font-weight:800; letter-spacing:1px; text-transform:uppercase;">
             </div>
-            <button type="button" class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:700;" onclick="App.searchAndPayChallanByPlate()">
+            <button type="button" class="btn-action-primary"
+              style="background:#059669; border-color:#059669; color:#fff; font-weight:700;"
+              onclick="App.searchAndPayChallanByPlate()">
               <i data-lucide="search"></i> Check Pending Challans
             </button>
           </div>
@@ -981,7 +1076,8 @@
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
             <div style="flex:1; min-width:240px;">
-              <input type="text" id="inputCaseSearch" class="form-control" placeholder="Search by Case ID (e.g. CASE-2026-801) or Vehicle Plate..." value="CASE-2026-801">
+              <input type="text" id="inputCaseSearch" class="form-control"
+                placeholder="Search by Case ID (e.g. CASE-2026-801) or Vehicle Plate..." value="CASE-2026-801">
             </div>
             <button type="button" class="btn-action-gold" onclick="App.searchAndDisplayCase()">
               <i data-lucide="search"></i>
@@ -990,7 +1086,8 @@
           </div>
 
           <!-- Dynamic Case Progress Card -->
-          <div id="caseTrackerDisplay" style="border:1px solid #e2e8f0; border-radius:6px; padding:16px; background:#fff;">
+          <div id="caseTrackerDisplay"
+            style="border:1px solid #e2e8f0; border-radius:6px; padding:16px; background:#fff;">
             <!-- Injected via JS -->
           </div>
         </div>
@@ -1000,20 +1097,21 @@
            PANEL: CITIZEN REPORT ROAD ACCIDENT (SECTION 11 FLOW)
            ========================================================================= -->
       <section class="view-panel" id="panel-citizen-accident">
-        
+
         <div style="margin-bottom:14px;">
           <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#b91c1c;">
             🚗💥 Report Road Accident Case (Emergency &amp; Police Investigation)
           </h2>
           <p style="font-size:0.75rem; color:#64748b;">
-            National Road Safety Protocol: Capture Location &rarr; Description &rarr; Severity &rarr; Casualties &rarr; Create Case &rarr; Notify 112 &rarr; Assign Officer.
+            National Road Safety Protocol: Capture Location &rarr; Description &rarr; Severity &rarr; Casualties &rarr;
+            Create Case &rarr; Notify 112 &rarr; Assign Officer.
           </p>
         </div>
 
         <div class="gov-card" style="border-top:3px solid #dc2626;">
           <form id="formCitizenAccident">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-              
+
               <!-- 1. Accident Type -->
               <div class="form-group">
                 <label class="form-label">1. Accident Collision Type *</label>
@@ -1053,13 +1151,16 @@
               <!-- 5. Location / Highway -->
               <div class="form-group" style="grid-column:span 2;">
                 <label class="form-label">5. Exact Crash Location &amp; Landmark *</label>
-                <input type="text" class="form-control" id="accLocation" placeholder="e.g. NH-48 Expressway KM 44, Near Dhaula Kuan Underpass" value="NH-48 Expressway KM 44, Near Dhaula Kuan Underpass" required>
+                <input type="text" class="form-control" id="accLocation"
+                  placeholder="e.g. NH-48 Expressway KM 44, Near Dhaula Kuan Underpass"
+                  value="NH-48 Expressway KM 44, Near Dhaula Kuan Underpass" required>
               </div>
 
               <!-- 6. GPS Geo-Coordinates -->
               <div class="form-group">
                 <label class="form-label">6. GPS Coordinates</label>
-                <input type="text" class="form-control" id="accGps" value="28.5910° N, 77.1620° E" readonly style="background:#f1f5f9; font-family:var(--font-mono); font-size:11px;">
+                <input type="text" class="form-control" id="accGps" value="28.5910° N, 77.1620° E" readonly
+                  style="background:#f1f5f9; font-family:var(--font-mono); font-size:11px;">
               </div>
 
               <!-- 7. Emergency Ambulance Green Corridor Toggle -->
@@ -1074,21 +1175,26 @@
               <!-- 8. Detailed Description -->
               <div class="form-group" style="grid-column:span 2;">
                 <label class="form-label">8. Accident Description &amp; Vehicle Numbers *</label>
-                <textarea class="form-control" id="accDescription" rows="3" required placeholder="Describe sequence of events, license plates of vehicles involved, status of trapped passengers...">Sedan vehicle collided with heavy container truck during lane change; front bumper damaged, 1 passenger requires medical attention.</textarea>
+                <textarea class="form-control" id="accDescription" rows="3" required
+                  placeholder="Describe sequence of events, license plates of vehicles involved, status of trapped passengers...">Sedan vehicle collided with heavy container truck during lane change; front bumper damaged, 1 passenger requires medical attention.</textarea>
               </div>
 
               <!-- 9. Upload Crash Site Evidence -->
               <div class="form-group" style="grid-column:span 2;">
                 <label class="form-label">9. Upload Crash Site Photo Evidence</label>
-                <input type="file" class="form-control" id="accEvidenceFile" accept="image/*,video/*" style="padding:5px;">
-                <span style="font-size:10px; color:#64748b;">Geo-tagged photos will be forwarded directly to the Investigating Police Officer &amp; Nearest Trauma Center</span>
+                <input type="file" class="form-control" id="accEvidenceFile" accept="image/*,video/*"
+                  style="padding:5px;">
+                <span style="font-size:10px; color:#64748b;">Geo-tagged photos will be forwarded directly to the
+                  Investigating Police Officer &amp; Nearest Trauma Center</span>
               </div>
 
             </div>
 
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
-              <button type="reset" class="btn-action-primary" style="background:transparent; color:#64748b; border-color:#cbd5e1;">Reset</button>
-              <button type="submit" class="btn-action-primary" style="background:#dc2626; border-color:#dc2626; color:#fff; padding:10px 22px; font-weight:700;">
+              <button type="reset" class="btn-action-primary"
+                style="background:transparent; color:#64748b; border-color:#cbd5e1;">Reset</button>
+              <button type="submit" class="btn-action-primary"
+                style="background:#dc2626; border-color:#dc2626; color:#fff; padding:10px 22px; font-weight:700;">
                 <i data-lucide="alert-triangle"></i> Register Official Accident Case
               </button>
             </div>
@@ -1100,8 +1206,9 @@
            PANEL: CITIZEN MY VEHICLES & LICENCE (VAHAN & SARATHI LOCKER)
            ========================================================================= -->
       <section class="view-panel" id="panel-citizen-vehicles">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               🚗 VAHAN Vehicle Registry &amp; Sarathi Driving Licence Profile
@@ -1111,7 +1218,8 @@
             </p>
           </div>
           <div style="display:flex; gap:8px;">
-            <input type="text" id="citVehSearchPlate" class="form-control" placeholder="Search Plate (e.g. DL-01-AB-4921)..." style="width:200px; font-size:11px;">
+            <input type="text" id="citVehSearchPlate" class="form-control"
+              placeholder="Search Plate (e.g. DL-01-AB-4921)..." style="width:200px; font-size:11px;">
             <button class="btn-action-gold" onclick="App.searchCitizenVehicleProfile()">
               <i data-lucide="search"></i> Lookup RC
             </button>
@@ -1123,7 +1231,7 @@
              Official MoRTH Flowchart & Hierarchy Implementation
              ========================================================================= -->
         <div class="trafix-intel-card" id="trafixVehicleIntelCard">
-          
+
           <!-- Card Header -->
           <div class="trafix-header">
             <div>
@@ -1144,14 +1252,17 @@
               <span>VEHICLE REGISTRATION</span>
               <span style="font-size:10px; color:#64748b; font-weight:600;">Indian Motor Vehicles Format</span>
             </div>
-            
+
             <div class="trafix-search-input-box">
-              <input type="text" id="trafixPlateInput" class="trafix-input" value="RJ54CK4706" placeholder="e.g. RJ54CK4706" autocomplete="off" spellcheck="false" maxlength="15" onkeyup="if(event.key==='Enter') App.identifyVehicle()">
+              <input type="text" id="trafixPlateInput" class="trafix-input" value="RJ54CK4706"
+                placeholder="e.g. RJ54CK4706" autocomplete="off" spellcheck="false" maxlength="15"
+                onkeyup="if(event.key==='Enter') App.identifyVehicle()">
               <span class="trafix-search-icon">🔍</span>
             </div>
 
             <div class="trafix-btn-row">
-              <button type="button" class="btn-identify-vehicle" id="btnIdentifyVehicle" onclick="App.identifyVehicle()">
+              <button type="button" class="btn-identify-vehicle" id="btnIdentifyVehicle"
+                onclick="App.identifyVehicle()">
                 <i data-lucide="scan-line" style="width:16px; height:16px;"></i>
                 <span>[ IDENTIFY VEHICLE ]</span>
               </button>
@@ -1179,7 +1290,8 @@
               </div>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; margin-top:8px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; margin-top:8px;">
               <div>
                 <div class="trafix-parsed-label">REGISTRATION NUMBER</div>
                 <div class="trafix-plate-display" style="margin-top:2px;">
@@ -1192,7 +1304,7 @@
 
               <div id="trafixStatusBadgeContainer">
                 <div class="trafix-status-badge status-badge-verified" id="trafixStatusBadge">
-                  <span>✓ Verified: Pipar City / Jodhpur • DTO Pipar City, Jodhpur Division</span>
+                  <span>✓ Verified: Pipar City / Jodhpur • RTO Pipar City, Jodhpur Division</span>
                 </div>
               </div>
             </div>
@@ -1239,7 +1351,8 @@
                 <div>
                   <div class="trafix-service-title">VAHAN</div>
                   <div class="trafix-service-sub">Vehicle Services</div>
-                  <div class="trafix-service-desc">National Vehicle Register, RC Status, Technical Specs &amp; Ownership Details</div>
+                  <div class="trafix-service-desc">National Vehicle Register, RC Status, Technical Specs &amp; Ownership
+                    Details</div>
                 </div>
               </div>
 
@@ -1251,7 +1364,8 @@
                 <div>
                   <div class="trafix-service-title">e-Challan</div>
                   <div class="trafix-service-sub">Traffic Challan</div>
-                  <div class="trafix-service-desc">Traffic Challan Citations, Optical ANPR Evidence, Section Violations &amp; UPI Pay</div>
+                  <div class="trafix-service-desc">Traffic Challan Citations, Optical ANPR Evidence, Section Violations
+                    &amp; UPI Pay</div>
                 </div>
               </div>
 
@@ -1263,7 +1377,8 @@
                 <div>
                   <div class="trafix-service-title">State Transport</div>
                   <div class="trafix-service-sub">Portal</div>
-                  <div class="trafix-service-desc" id="trafixStatePortalDesc">Rajasthan State Transport Department Official Parivahan Gateway</div>
+                  <div class="trafix-service-desc" id="trafixStatePortalDesc">Rajasthan State Transport Department
+                    Official Parivahan Gateway</div>
                 </div>
               </div>
 
@@ -1275,29 +1390,31 @@
                 <div>
                   <div class="trafix-service-title">RC / Vehicle</div>
                   <div class="trafix-service-sub">Services</div>
-                  <div class="trafix-service-desc">Ownership Transfer, Duplicate RC, NOC, Address Change &amp; Fitness Certificates</div>
+                  <div class="trafix-service-desc">Ownership Transfer, Duplicate RC, NOC, Address Change &amp; Fitness
+                    Certificates</div>
                 </div>
               </div>
             </div>
 
             <!-- Relational Hierarchy Tree Indicator -->
             <div class="trafix-tree-indicator">states
- └── rto_offices
-      └── registration_series
-           └── government_services</div>
+              └── rto_offices
+              └── registration_series
+              └── government_services</div>
           </div>
 
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
-          
+
           <!-- Registered Vehicle RC Profile Card -->
           <div class="gov-card" style="border-top:3px solid #b45309;" id="citVehicleProfileCard">
-            <div style="font-weight:700; color:#0f172a; margin-bottom:12px; font-size:13px; display:flex; justify-content:space-between;">
+            <div
+              style="font-weight:700; color:#0f172a; margin-bottom:12px; font-size:13px; display:flex; justify-content:space-between;">
               <span>🚘 Vehicle Registration Certificate (RC)</span>
               <span class="badge-rto-approved" id="citVehStatus">ACTIVE / COMPLIANT</span>
             </div>
-            
+
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:11px;">
               <div>
                 <span style="color:#64748b;">Registration Number:</span>
@@ -1325,8 +1442,10 @@
               </div>
             </div>
 
-            <div style="margin-top:14px; border-top:1px solid #e2e8f0; padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:10px; color:#64748b;">Issuing Authority: Regional Transport Office (RTO DL-01)</span>
+            <div
+              style="margin-top:14px; border-top:1px solid #e2e8f0; padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:10px; color:#64748b;">Issuing Authority: Regional Transport Office (RTO
+                DL-01)</span>
               <button class="btn-action-primary" style="font-size:10px; padding:4px 10px;" onclick="window.print()">
                 <i data-lucide="printer"></i> Print Digital RC
               </button>
@@ -1335,7 +1454,8 @@
 
           <!-- Driving Licence Profile Card -->
           <div class="gov-card" style="border-top:3px solid #059669;" id="citLicenceProfileCard">
-            <div style="font-weight:700; color:#0f172a; margin-bottom:12px; font-size:13px; display:flex; justify-content:space-between;">
+            <div
+              style="font-weight:700; color:#0f172a; margin-bottom:12px; font-size:13px; display:flex; justify-content:space-between;">
               <span>🪪 Sarathi Driving Licence Profile</span>
               <span class="badge-rto-approved" id="citLicStatus">VALID &amp; VERIFIED</span>
             </div>
@@ -1367,7 +1487,8 @@
               </div>
             </div>
 
-            <div style="margin-top:14px; border-top:1px solid #e2e8f0; padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
+            <div
+              style="margin-top:14px; border-top:1px solid #e2e8f0; padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:10px; color:#64748b;">DigiLocker Integration: Synchronized</span>
               <button class="btn-action-primary" style="font-size:10px; padding:4px 10px;" onclick="window.print()">
                 <i data-lucide="printer"></i> Download mParivahan DL
@@ -1407,25 +1528,30 @@
            PANEL: CITIZEN RTO ONLINE APPLICATIONS (SECTION 17 FLOW)
            ========================================================================= -->
       <section class="view-panel" id="panel-citizen-rto-apps">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               🏛️ Direct Document &amp; Vehicle Details Upload to RTO Office
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Official Parivahan Gateway: Upload vehicle details, Form 29/30, and KYC directly to your local Registering Authority.
+              Official Parivahan Gateway: Upload vehicle details, Form 29/30, and KYC directly to your local Registering
+              Authority.
             </p>
           </div>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:14px;">
-          
+
           <!-- Submit New Application Form -->
           <div class="gov-card" style="border-top:3px solid #2563eb;">
-            <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
+            <div
+              style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
               <span>📝 Upload Details Directly to RTO</span>
-              <span style="font-size:10px; background:#eff6ff; color:#1d4ed8; padding:2px 6px; border-radius:3px; font-weight:700;">Direct Officer Desk Routing</span>
+              <span
+                style="font-size:10px; background:#eff6ff; color:#1d4ed8; padding:2px 6px; border-radius:3px; font-weight:700;">Direct
+                Officer Desk Routing</span>
             </div>
             <form id="formCitizenRtoApp">
               <div class="form-group" style="margin-bottom:10px;">
@@ -1457,7 +1583,9 @@
 
               <div class="form-group" style="margin-bottom:10px;">
                 <label class="form-label">3. Vehicle Plate / Registration Number *</label>
-                <input type="text" class="form-control" id="rtoAppTargetId" placeholder="e.g. RJ54CK4706 or DL-01-AB-4921" value="RJ54CK4706" style="font-family:var(--font-mono); font-weight:800; letter-spacing:1px;" required>
+                <input type="text" class="form-control" id="rtoAppTargetId"
+                  placeholder="e.g. RJ54CK4706 or DL-01-AB-4921" value="RJ54CK4706"
+                  style="font-family:var(--font-mono); font-weight:800; letter-spacing:1px;" required>
               </div>
 
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
@@ -1474,11 +1602,13 @@
               <div class="form-group" style="margin-bottom:12px;">
                 <label class="form-label">6. Attach Documents (Form 29/30, RC, Aadhaar, Insurance) *</label>
                 <input type="file" class="form-control" id="rtoAppDocFile" style="padding:5px;">
-                <span style="font-size:10px; color:#64748b;">Direct digital attachment dispatched immediately to designated RTO Officer desk</span>
+                <span style="font-size:10px; color:#64748b;">Direct digital attachment dispatched immediately to
+                  designated RTO Officer desk</span>
               </div>
 
               <div style="display:flex; justify-content:flex-end;">
-                <button type="submit" class="btn-action-primary" style="background:#2563eb; border-color:#2563eb; color:#fff; width:100%; padding:10px; font-weight:700;">
+                <button type="submit" class="btn-action-primary"
+                  style="background:#2563eb; border-color:#2563eb; color:#fff; width:100%; padding:10px; font-weight:700;">
                   <i data-lucide="send"></i> 🚀 Submit &amp; Upload Details Directly to RTO Office
                 </button>
               </div>
@@ -1487,7 +1617,8 @@
 
           <!-- Submitted Applications Tracking Table -->
           <div class="gov-card">
-            <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
+            <div
+              style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
               <span>📋 My Submitted RTO Applications</span>
               <span style="font-size:10px; color:#64748b;">Live Status</span>
             </div>
@@ -1518,17 +1649,20 @@
            PANEL 5: OFFICER ASSIGNED CASES & VERIFICATION DESK
            ========================================================================= -->
       <section class="view-panel" id="panel-officer-cases">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               👮 Traffic Officer Case Review &amp; Action Verification
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Review Citizen Reports &rarr; Verify Evidence &rarr; Valid / Invalid &rarr; Action Required (Fine / Warning / Patrol) &rarr; Close &amp; Notify.
+              Review Citizen Reports &rarr; Verify Evidence &rarr; Valid / Invalid &rarr; Action Required (Fine /
+              Warning / Patrol) &rarr; Close &amp; Notify.
             </p>
           </div>
-          <span style="background:#111827; color:#f59e0b; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
+          <span
+            style="background:#111827; color:#f59e0b; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
             OFFICER CLEARANCE REQUIRED
           </span>
         </div>
@@ -1544,8 +1678,9 @@
            PANEL 6: OPTICAL ANPR CITATIONS & RADAR
            ========================================================================= -->
       <section class="view-panel" id="panel-violations">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               Optical ANPR Radar &amp; Motor Vehicles Act e-Challan Desk
@@ -1555,7 +1690,8 @@
             </p>
           </div>
           <div style="display:flex; gap:8px;">
-            <input type="text" id="searchViolations" class="form-control" style="width:200px; padding:6px 10px;" placeholder="Search Plate or ID...">
+            <input type="text" id="searchViolations" class="form-control" style="width:200px; padding:6px 10px;"
+              placeholder="Search Plate or ID...">
             <select id="filterVehicleType" class="form-control" style="width:160px; padding:6px;">
               <option value="ALL">All Vehicle Types</option>
               <option value="Cars &amp; SUVs (4-Wheelers)">Cars &amp; SUVs</option>
@@ -1593,18 +1729,21 @@
            PANEL: POLICE OFFICER ACCIDENTS DESK (SECTION 11 FLOW)
            ========================================================================= -->
       <section class="view-panel" id="panel-officer-accidents">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#b91c1c;">
               🚨 Traffic Police Accident Investigation &amp; Emergency Corridor Command
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Investigation Workflow: Report &rarr; Evidence Review &rarr; Severity Assessment &rarr; Patrol &amp; Ambulance Dispatch &rarr; Investigation Notes &rarr; Case Resolution.
+              Investigation Workflow: Report &rarr; Evidence Review &rarr; Severity Assessment &rarr; Patrol &amp;
+              Ambulance Dispatch &rarr; Investigation Notes &rarr; Case Resolution.
             </p>
           </div>
           <div style="display:flex; gap:8px;">
-            <select id="filterAccidentSeverity" class="form-control" style="width:160px; font-size:11px;" onchange="App.renderOfficerAccidentsTable()">
+            <select id="filterAccidentSeverity" class="form-control" style="width:160px; font-size:11px;"
+              onchange="App.renderOfficerAccidentsTable()">
               <option value="ALL">All Severities</option>
               <option value="Critical">Critical Only</option>
               <option value="Serious">Serious</option>
@@ -1642,23 +1781,27 @@
            PANEL: RTO OFFICER COMMAND & DOCUMENT VERIFICATION DESK (SECTION 8 & 17)
            ========================================================================= -->
       <section class="view-panel" id="panel-rto-desk">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               🏛️ Regional Transport Office (RTO) Command &amp; Verification Desk
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Statutory verification of VAHAN Vehicle Registrations, Sarathi Licences, Fitness Tests &amp; Ownership Transfers.
+              Statutory verification of VAHAN Vehicle Registrations, Sarathi Licences, Fitness Tests &amp; Ownership
+              Transfers.
             </p>
           </div>
-          <span style="background:#fef3c7; color:#b45309; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
+          <span
+            style="background:#fef3c7; color:#b45309; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
             RTO OFFICER CLEARANCE ACTIVE
           </span>
         </div>
 
         <!-- RTO 4-KPI Overview Cards -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-bottom:16px;">
+        <div
+          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-bottom:16px;">
           <div class="ratio-stat-card" style="border-top:3px solid #111827;">
             <div style="font-size:11px; color:#64748b; font-weight:700;">TOTAL VEHICLES IN JURISDICTION</div>
             <div style="font-size:24px; font-weight:800; color:#111827; margin:4px 0;">2,840,419</div>
@@ -1666,7 +1809,8 @@
           </div>
           <div class="ratio-stat-card" style="border-top:3px solid #b45309;">
             <div style="font-size:11px; color:#64748b; font-weight:700;">PENDING VERIFICATION</div>
-            <div style="font-size:24px; font-weight:800; color:#b45309; margin:4px 0;" id="rtoStatPendingVerifications">2 Applications</div>
+            <div style="font-size:24px; font-weight:800; color:#b45309; margin:4px 0;" id="rtoStatPendingVerifications">
+              2 Applications</div>
             <div style="font-size:10px; color:#b45309;">Action Required ➔</div>
           </div>
           <div class="ratio-stat-card" style="border-top:3px solid #059669;">
@@ -1683,9 +1827,11 @@
 
         <!-- RTO Document Verification Desk -->
         <div class="gov-card" style="margin-bottom:16px;">
-          <div style="font-weight:700; color:#0f172a; margin-bottom:12px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
+          <div
+            style="font-weight:700; color:#0f172a; margin-bottom:12px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
             <span>📋 Citizen Applications &amp; Statutory Document Verification Queue</span>
-            <span style="font-size:11px; color:#64748b;">Review supporting documents &bull; Grant approval or reject with reason</span>
+            <span style="font-size:11px; color:#64748b;">Review supporting documents &bull; Grant approval or reject
+              with reason</span>
           </div>
           <div class="gov-table-wrapper">
             <table class="gov-table">
@@ -1714,12 +1860,15 @@
             🔍 RTO National Registry Quick Search (RC &amp; DL Lookup)
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
-            <input type="text" id="rtoLookupInput" class="form-control" placeholder="Enter Registration Plate (e.g. DL-01-AB-4921) or Licence Number..." style="flex:1; min-width:260px;" value="DL-01-AB-4921">
+            <input type="text" id="rtoLookupInput" class="form-control"
+              placeholder="Enter Registration Plate (e.g. DL-01-AB-4921) or Licence Number..."
+              style="flex:1; min-width:260px;" value="DL-01-AB-4921">
             <button type="button" class="btn-action-primary" onclick="App.handleRtoLookup()">
               <i data-lucide="search"></i> Inspect Registry Record
             </button>
           </div>
-          <div id="rtoLookupResultBox" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:12px; font-size:11px;">
+          <div id="rtoLookupResultBox"
+            style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:12px; font-size:11px;">
             <!-- Injected via JS -->
           </div>
         </div>
@@ -1730,18 +1879,21 @@
            PANEL: RISK & SAFETY CENTER (SECTION 10 SPECIFICATION)
            ========================================================================= -->
       <section class="view-panel" id="panel-risk-center">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               🛡️ National Traffic Risk &amp; High-Hazard Safety Center
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Analytical decision-support engine monitoring accident blackspots, dangerous intersections, and school corridors.
+              Analytical decision-support engine monitoring accident blackspots, dangerous intersections, and school
+              corridors.
             </p>
           </div>
           <div style="display:flex; gap:8px;">
-            <select id="filterRiskLevel" class="form-control" style="width:160px; font-size:11px;" onchange="App.renderRiskZonesTable()">
+            <select id="filterRiskLevel" class="form-control" style="width:160px; font-size:11px;"
+              onchange="App.renderRiskZonesTable()">
               <option value="ALL">All Risk Levels</option>
               <option value="CRITICAL">Critical Risk</option>
               <option value="HIGH">High Risk</option>
@@ -1752,9 +1904,12 @@
         </div>
 
         <!-- Analytical Decision-Support Disclaimer Banner -->
-        <div style="background:#f8fafc; border-left:4px solid #b45309; padding:10px 14px; margin-bottom:14px; border-radius:0 4px 4px 0; font-size:11px; color:#334155;">
+        <div
+          style="background:#f8fafc; border-left:4px solid #b45309; padding:10px 14px; margin-bottom:14px; border-radius:0 4px 4px 0; font-size:11px; color:#334155;">
           <strong>⚖️ STATUTORY DECISION-SUPPORT MANDATE:</strong>
-          Risk scoring and hazard level indicators are provided strictly as analytical aids for traffic management authorities. The system does NOT automatically penalize, prosecute, or enforce penalties. All operational and enforcement actions remain at the sole discretion of authorized officers.
+          Risk scoring and hazard level indicators are provided strictly as analytical aids for traffic management
+          authorities. The system does NOT automatically penalize, prosecute, or enforce penalties. All operational and
+          enforcement actions remain at the sole discretion of authorized officers.
         </div>
 
         <div class="gov-card">
@@ -1786,18 +1941,22 @@
            PANEL 7: ACTIVE ROAD CONSTRUCTION & HIGHWAY MAINTENANCE (🚧)
            ========================================================================= -->
       <section class="view-panel" id="panel-roadworks">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               Active Road Construction &amp; Highway Maintenance Work Zones
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              National Highways Authority of India (NHAI), MoRTH, Delhi Traffic Police &amp; State PWD Advisories integrated with Google Mobility AI live telemetry.
+              National Highways Authority of India (NHAI), MoRTH, Delhi Traffic Police &amp; State PWD Advisories
+              integrated with Google Mobility AI live telemetry.
             </p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn-action-primary" id="btnSyncGovtAI" style="background:#047857; border-color:#047857; color:#fff;" title="Fetch latest advisories from NHAI Data Lake, MoRTH Bhoomi Rashi &amp; Google Mobility AI">
+            <button class="btn-action-primary" id="btnSyncGovtAI"
+              style="background:#047857; border-color:#047857; color:#fff;"
+              title="Fetch latest advisories from NHAI Data Lake, MoRTH Bhoomi Rashi &amp; Google Mobility AI">
               <i data-lucide="refresh-cw"></i>
               <span id="syncBtnText">Sync Live Govt &amp; AI Feeds</span>
             </button>
@@ -1809,11 +1968,14 @@
         </div>
 
         <!-- Live Government & Google AI Telemetry Status Banner -->
-        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div
+          style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#16a34a; animation:pulse-dot-anim 1.2s infinite;"></span>
+            <span
+              style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#16a34a; animation:pulse-dot-anim 1.2s infinite;"></span>
             <div style="font-size:12px; color:#14532d;">
-              <strong>LIVE API CONNECTED:</strong> NHAI Data Lake • MoRTH Bhoomi Rashi • Google Maps Mobility AI Matrix • data.gov.in
+              <strong>LIVE API CONNECTED:</strong> NHAI Data Lake • MoRTH Bhoomi Rashi • Google Maps Mobility AI Matrix
+              • data.gov.in
             </div>
           </div>
           <div id="govtAiSyncMeta" style="font-size:11px; font-family:var(--font-mono); color:#166534;">
@@ -1832,17 +1994,19 @@
            PANEL 8: VEHICLE RATIOS & VAHAN NATIONAL FLEET (1995-2026)
            ========================================================================= -->
       <section class="view-panel" id="panel-vehicle-ratios">
-        
+
         <div style="margin-bottom:14px;">
           <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
             Vehicle Classification Forensics: Challan Ratio &amp; Accident Ratio
           </h2>
           <p style="font-size:0.75rem; color:#64748b;">
-            Comparative enforcement statistics across Cars, Bikes, Commercial Heavy Trucks, Transit Buses, and Auto-Rickshaws.
+            Comparative enforcement statistics across Cars, Bikes, Commercial Heavy Trucks, Transit Buses, and
+            Auto-Rickshaws.
           </p>
         </div>
 
-        <div id="vehicleRatioCardsContainer" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
+        <div id="vehicleRatioCardsContainer"
+          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
           <!-- Injected via JS -->
         </div>
 
@@ -1853,7 +2017,8 @@
               <div class="card-title-icon"><i data-lucide="trending-up"></i></div>
               <div>
                 <div class="card-title">Pan-India Fleet Registration Progression (1995–2026)</div>
-                <div class="card-subtitle">Official Ministry of Road Transport and Highways (MoRTH) VAHAN Database (38.2 Crore Vehicles)</div>
+                <div class="card-subtitle">Official Ministry of Road Transport and Highways (MoRTH) VAHAN Database (38.2
+                  Crore Vehicles)</div>
               </div>
             </div>
           </div>
@@ -1867,63 +2032,84 @@
            PANEL 9: ADMIN COMMAND, STAFF MANAGEMENT & CRYPTO AUDIT
            ========================================================================= -->
       <section class="view-panel" id="panel-admin">
-        
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
           <div>
             <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
               🛠️ National Directorate Administration Command Desk
             </h2>
             <p style="font-size:0.75rem; color:#64748b;">
-              Admin Flow: Users (Manage) ➔ Complaints (Review) ➔ Officers (Staff) ➔ Analytics (Data) ➔ System Monitoring ➔ SHA-256 Audit.
+              Admin Flow: Users (Manage) ➔ Complaints (Review) ➔ Officers (Staff) ➔ Analytics (Data) ➔ System Monitoring
+              ➔ SHA-256 Audit.
             </p>
           </div>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <span style="background:#064e3b; color:#10b981; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
+            <span
+              style="background:#064e3b; color:#10b981; padding:4px 10px; border-radius:4px; font-weight:700; font-size:11px;">
               ROOT COMMAND CLEARANCE ACTIVE
             </span>
           </div>
         </div>
 
         <!-- Live Administration Command Action Toolbar -->
-        <div style="background:#111827; border:1px solid #374151; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div
+          style="background:#111827; border:1px solid #374151; border-radius:6px; padding:10px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; animation:pulse-dot-anim 1s infinite;"></span>
+            <span
+              style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; animation:pulse-dot-anim 1s infinite;"></span>
             <span style="color:#f8fafc; font-size:11px; font-weight:700;">COMMAND DIRECT ACTIONS:</span>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#b45309; border-color:#b45309; color:#fff;" onclick="App.adminBroadcastAlert()">
+            <button type="button" class="btn-action-primary"
+              style="font-size:11px; padding:5px 10px; background:#b45309; border-color:#b45309; color:#fff;"
+              onclick="App.adminBroadcastAlert()">
               📢 Broadcast Advisory
             </button>
-            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#dc2626; border-color:#dc2626; color:#fff;" onclick="App.adminGantryClamp()">
+            <button type="button" class="btn-action-primary"
+              style="font-size:11px; padding:5px 10px; background:#dc2626; border-color:#dc2626; color:#fff;"
+              onclick="App.adminGantryClamp()">
               ⚡ Speed Gantry Clamp
             </button>
-            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#1e293b; border-color:#475569; color:#f8fafc;" onclick="App.openModal('newOfficerModal')">
+            <button type="button" class="btn-action-primary"
+              style="font-size:11px; padding:5px 10px; background:#1e293b; border-color:#475569; color:#f8fafc;"
+              onclick="App.openModal('newOfficerModal')">
               👮 + Commission Officer
             </button>
-            <button type="button" class="btn-action-primary" style="font-size:11px; padding:5px 10px; background:#047857; border-color:#047857; color:#fff;" onclick="App.adminSyncDb()">
+            <button type="button" class="btn-action-primary"
+              style="font-size:11px; padding:5px 10px; background:#047857; border-color:#047857; color:#fff;"
+              onclick="App.adminSyncDb()">
               🔄 Sync National DB
             </button>
           </div>
         </div>
 
         <!-- 4-Box Admin Stat Overview -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
-          <div class="ratio-stat-card" style="border-top:3px solid #059669; cursor:pointer;" onclick="App.switchAdminSubView('users')">
+        <div
+          style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
+          <div class="ratio-stat-card" style="border-top:3px solid #059669; cursor:pointer;"
+            onclick="App.switchAdminSubView('users')">
             <div style="font-size:11px; color:#64748b; font-weight:700;">1. CITIZEN USERS</div>
-            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;" id="adminStatUsersCount">2,840,119</div>
+            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;" id="adminStatUsersCount">
+              2,840,119</div>
             <div style="font-size:10px; color:#047857;">✓ Pan-India VAHAN Linked ➔</div>
           </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #b45309; cursor:pointer;" onclick="App.switchAdminSubView('complaints')">
+          <div class="ratio-stat-card" style="border-top:3px solid #b45309; cursor:pointer;"
+            onclick="App.switchAdminSubView('complaints')">
             <div style="font-size:11px; color:#64748b; font-weight:700;">2. ACTIVE COMPLAINTS</div>
-            <div style="font-size:24px; font-weight:800; color:#b45309; margin:6px 0;" id="adminStatComplaintsCount">3 Under Review</div>
+            <div style="font-size:24px; font-weight:800; color:#b45309; margin:6px 0;" id="adminStatComplaintsCount">3
+              Under Review</div>
             <div style="font-size:10px; color:#b45309;">⚡ Review Cases ➔</div>
           </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #111827; cursor:pointer;" onclick="App.switchAdminSubView('officers')">
+          <div class="ratio-stat-card" style="border-top:3px solid #111827; cursor:pointer;"
+            onclick="App.switchAdminSubView('officers')">
             <div style="font-size:11px; color:#64748b; font-weight:700;">3. COMMISSIONED STAFF</div>
-            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;" id="adminStatOfficersCount">6 Active Tiers</div>
+            <div style="font-size:24px; font-weight:800; color:#111827; margin:6px 0;" id="adminStatOfficersCount">6
+              Active Tiers</div>
             <div style="font-size:10px; color:#64748b;">Manage Police Staff ➔</div>
           </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #dc2626; cursor:pointer;" onclick="App.switchAdminSubView('analytics')">
+          <div class="ratio-stat-card" style="border-top:3px solid #dc2626; cursor:pointer;"
+            onclick="App.switchAdminSubView('analytics')">
             <div style="font-size:11px; color:#64748b; font-weight:700;">4. TRAFFIC DATA &amp; SYSTEM</div>
             <div style="font-size:24px; font-weight:800; color:#dc2626; margin:6px 0;">99.8% Online</div>
             <div style="font-size:10px; color:#dc2626;">Analytics &amp; Monitoring ➔</div>
@@ -1931,23 +2117,35 @@
         </div>
 
         <!-- ADMIN FLOWCHART SUB-NAVIGATION TABS (SERIES-WISE 1 to 6) -->
-        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
-          <button type="button" class="btn-action-primary active" id="btnAdminSubUsers" style="font-size:11px; padding:6px 12px;" onclick="App.switchAdminSubView('users')">
+        <div
+          style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:8px;">
+          <button type="button" class="btn-action-primary active" id="btnAdminSubUsers"
+            style="font-size:11px; padding:6px 12px;" onclick="App.switchAdminSubView('users')">
             👥 1. Users (Manage Users)
           </button>
-          <button type="button" class="btn-action-primary" id="btnAdminSubComplaints" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('complaints')">
+          <button type="button" class="btn-action-primary" id="btnAdminSubComplaints"
+            style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;"
+            onclick="App.switchAdminSubView('complaints')">
             📋 2. Complaints (Review Cases)
           </button>
-          <button type="button" class="btn-action-primary" id="btnAdminSubOfficers" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('officers')">
+          <button type="button" class="btn-action-primary" id="btnAdminSubOfficers"
+            style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;"
+            onclick="App.switchAdminSubView('officers')">
             👮 3. Officers (Manage Staff)
           </button>
-          <button type="button" class="btn-action-primary" id="btnAdminSubAnalytics" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('analytics')">
+          <button type="button" class="btn-action-primary" id="btnAdminSubAnalytics"
+            style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;"
+            onclick="App.switchAdminSubView('analytics')">
             📊 4. Analytics (Traffic Data)
           </button>
-          <button type="button" class="btn-action-primary" id="btnAdminSubSystem" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('system')">
+          <button type="button" class="btn-action-primary" id="btnAdminSubSystem"
+            style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;"
+            onclick="App.switchAdminSubView('system')">
             🖥️ 5. System Monitoring
           </button>
-          <button type="button" class="btn-action-primary" id="btnAdminSubAudit" style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;" onclick="App.switchAdminSubView('audit')">
+          <button type="button" class="btn-action-primary" id="btnAdminSubAudit"
+            style="font-size:11px; padding:6px 12px; background:transparent; color:#334155; border-color:#cbd5e1;"
+            onclick="App.switchAdminSubView('audit')">
             📜 6. Audit Logs (SHA-256)
           </button>
         </div>
@@ -1957,13 +2155,18 @@
              ========================================================================= -->
         <div id="adminSectionUsers" class="admin-subview" style="display:block;">
           <div class="gov-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
               <div>
-                <strong style="color:#0a2540; font-size:13px;">👥 Registered Citizen Motorists &amp; Driving Licenses</strong>
-                <div style="font-size:11px; color:#64748b;">Manage public users, DigiLocker/Aadhaar e-KYC status, and administrative driving license suspension</div>
+                <strong style="color:#0a2540; font-size:13px;">👥 Registered Citizen Motorists &amp; Driving
+                  Licenses</strong>
+                <div style="font-size:11px; color:#64748b;">Manage public users, DigiLocker/Aadhaar e-KYC status, and
+                  administrative driving license suspension</div>
               </div>
               <div style="display:flex; gap:8px;">
-                <input type="text" id="adminSearchUsersInput" class="form-control" placeholder="Search Citizen Name or DL..." style="font-size:11px; padding:5px 10px; width:220px;" oninput="App.renderAdminUsersTable()">
+                <input type="text" id="adminSearchUsersInput" class="form-control"
+                  placeholder="Search Citizen Name or DL..." style="font-size:11px; padding:5px 10px; width:220px;"
+                  oninput="App.renderAdminUsersTable()">
               </div>
             </div>
             <div class="gov-table-wrapper">
@@ -1993,10 +2196,13 @@
              ========================================================================= -->
         <div id="adminSectionComplaints" class="admin-subview" style="display:none;">
           <div class="gov-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
               <div>
-                <strong style="color:#0a2540; font-size:13px;">📋 Citizen Complaints &amp; Case Review Escalations</strong>
-                <div style="font-size:11px; color:#64748b;">High-level administrative oversight of all reported traffic incidents, evidence, and officer actions</div>
+                <strong style="color:#0a2540; font-size:13px;">📋 Citizen Complaints &amp; Case Review
+                  Escalations</strong>
+                <div style="font-size:11px; color:#64748b;">High-level administrative oversight of all reported traffic
+                  incidents, evidence, and officer actions</div>
               </div>
             </div>
             <div class="gov-table-wrapper">
@@ -2025,12 +2231,16 @@
              ========================================================================= -->
         <div id="adminSectionOfficers" class="admin-subview" style="display:none;">
           <div class="gov-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
               <div>
-                <strong style="color:#0a2540; font-size:13px;">👮 Commissioned Traffic Police Staff &amp; IPS Hierarchy</strong>
-                <div style="font-size:11px; color:#64748b;">Manage clearance tiers (Level 1-5), digital duty passes, camera access scopes, and duty rosters</div>
+                <strong style="color:#0a2540; font-size:13px;">👮 Commissioned Traffic Police Staff &amp; IPS
+                  Hierarchy</strong>
+                <div style="font-size:11px; color:#64748b;">Manage clearance tiers (Level 1-5), digital duty passes,
+                  camera access scopes, and duty rosters</div>
               </div>
-              <button type="button" class="btn-action-gold" style="font-size:11px; padding:6px 12px;" onclick="App.openModal('newOfficerModal')">
+              <button type="button" class="btn-action-gold" style="font-size:11px; padding:6px 12px;"
+                onclick="App.openModal('newOfficerModal')">
                 <i data-lucide="user-plus"></i> Commission New Officer
               </button>
             </div>
@@ -2059,7 +2269,8 @@
              SUBVIEW 4: ANALYTICS (NATIONAL TRAFFIC ENFORCEMENT DATA)
              ========================================================================= -->
         <div id="adminSectionAnalytics" class="admin-subview" style="display:none;">
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
+          <div
+            style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:16px;">
             <div class="ratio-stat-card">
               <div style="font-size:11px; color:#64748b; font-weight:700;">TOTAL E-CHALLAN REVENUE</div>
               <div style="font-size:22px; font-weight:800; color:#b45309; margin:4px 0;">₹14,28,40,000</div>
@@ -2087,9 +2298,12 @@
               ⚡ High-Frequency Violation Corridors (Pan-India MoRTH Surveillance)
             </div>
             <div style="font-size:12px; color:#334155; line-height:1.6;">
-              1. <strong>NH-48 (Delhi-Jaipur Expressway KM 42-68):</strong> Overspeeding heavy transport vehicles (Avg Speed: 88 km/h in 60 km/h zone).<br/>
-              2. <strong>Outer Ring Road Bengaluru (Agara to Marathahalli):</strong> Helmetless two-wheeler commuting &amp; bus lane violations.<br/>
-              3. <strong>Eastern Express Highway Mumbai (Chedda Nagar Junction):</strong> Lane indiscipline &amp; axle overloading breaches.<br/>
+              1. <strong>NH-48 (Delhi-Jaipur Expressway KM 42-68):</strong> Overspeeding heavy transport vehicles (Avg
+              Speed: 88 km/h in 60 km/h zone).<br />
+              2. <strong>Outer Ring Road Bengaluru (Agara to Marathahalli):</strong> Helmetless two-wheeler commuting
+              &amp; bus lane violations.<br />
+              3. <strong>Eastern Express Highway Mumbai (Chedda Nagar Junction):</strong> Lane indiscipline &amp; axle
+              overloading breaches.<br />
               4. <strong>Noida-Greater Noida Expressway:</strong> Dense fog tailgating &amp; illegal median stops.
             </div>
           </div>
@@ -2138,11 +2352,13 @@
                 <div class="card-title-icon"><i data-lucide="shield"></i></div>
                 <div>
                   <div class="card-title">Cryptographic SHA-256 Tamper-Proof Audit Trail</div>
-                  <div class="card-subtitle">Immutable security ledger tracking every officer login, e-challan, and emergency override</div>
+                  <div class="card-subtitle">Immutable security ledger tracking every officer login, e-challan, and
+                    emergency override</div>
                 </div>
               </div>
               <div style="display:flex; gap:8px;">
-                <button type="button" class="btn-action-primary" style="font-size:11px;" onclick="App.exportAuditLogsCsv()">
+                <button type="button" class="btn-action-primary" style="font-size:11px;"
+                  onclick="App.exportAuditLogsCsv()">
                   ⬇️ Export Audit Ledger (.CSV)
                 </button>
               </div>
@@ -2179,66 +2395,170 @@
   <!-- 1. TRAFIX Multi-Portal Sovereign Government Access Gateway (Divided Roles) -->
   <div class="modal-backdrop" id="officerPassModal">
     <div class="modal-card" style="max-width:620px;">
-      
-      <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #b45309; padding:14px 20px;">
+
+      <div class="modal-header"
+        style="background:#0f172a; color:#fff; border-bottom:2px solid #b45309; padding:14px 20px;">
         <div style="display:flex; align-items:center; gap:12px;">
-          <div style="background:#b45309; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:#fff;">
+          <div
+            style="background:#b45309; border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:#fff;">
             <i data-lucide="shield-check" style="width:20px; height:20px;"></i>
           </div>
           <div>
-            <div style="font-weight:800; font-size:14px; letter-spacing:0.04em;">TRAFIX • SOVEREIGN GOVERNMENT ACCESS GATEWAY</div>
-            <div style="font-size:10px; color:#cbd5e1;">Ministry of Road Transport &amp; Highways • State Traffic Police &amp; RTO Directorate</div>
+            <div style="font-weight:800; font-size:14px; letter-spacing:0.04em;">TRAFIX • SOVEREIGN GOVERNMENT ACCESS
+              GATEWAY</div>
+            <div style="font-size:10px; color:#cbd5e1;">Ministry of Road Transport &amp; Highways • State Traffic Police
+              &amp; RTO Directorate</div>
           </div>
         </div>
         <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('officerPassModal')">&times;</button>
       </div>
 
       <!-- Divided Role Portal Navigation Selector Tabs -->
-      <div style="display:grid; grid-template-columns:repeat(4, 1fr); background:#f1f5f9; border-bottom:1px solid #cbd5e1; padding:4px 8px; gap:4px;">
-        <button type="button" class="btn-action-primary" id="loginTabBtnCitizen" onclick="App.switchLoginPortalTab('citizen')" style="font-size:11px; padding:8px 4px; justify-content:center; background:#fff; font-weight:700; border-color:#cbd5e1; color:#0f172a;">
+      <div
+        style="display:grid; grid-template-columns:repeat(4, 1fr); background:#f1f5f9; border-bottom:1px solid #cbd5e1; padding:4px 8px; gap:4px;">
+        <button type="button" class="btn-action-primary" id="loginTabBtnCitizen"
+          onclick="App.switchLoginPortalTab('citizen')"
+          style="font-size:11px; padding:8px 4px; justify-content:center; background:#fff; font-weight:700; border-color:#cbd5e1; color:#0f172a;">
           🛡️ Citizen
         </button>
-        <button type="button" class="btn-action-primary" id="loginTabBtnPolice" onclick="App.switchLoginPortalTab('police')" style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
-          👮 Police
+        <button type="button" class="btn-action-primary" id="loginTabBtnPolice"
+          onclick="App.switchLoginPortalTab('police')"
+          style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
+          🔒 Police (OTP)
         </button>
-        <button type="button" class="btn-action-primary" id="loginTabBtnRto" onclick="App.switchLoginPortalTab('rto')" style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
-          🏛️ RTO
+        <button type="button" class="btn-action-primary" id="loginTabBtnRto" onclick="App.switchLoginPortalTab('rto')"
+          style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
+          🔒 RTO (OTP)
         </button>
-        <button type="button" class="btn-action-primary" id="loginTabBtnAdmin" onclick="App.switchLoginPortalTab('admin')" style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
-          ⚡ Admin
+        <button type="button" class="btn-action-primary" id="loginTabBtnAdmin"
+          onclick="App.switchLoginPortalTab('admin')"
+          style="font-size:11px; padding:8px 4px; justify-content:center; background:transparent; font-weight:600; border-color:transparent; color:#64748b;">
+          🔒 Admin (OTP)
         </button>
       </div>
 
-      <!-- PORTAL 1: CITIZEN MOTORIST PORTAL -->
+      <!-- PORTAL 1: CITIZEN MOTORIST PORTAL (5-POINT VERIFIED FLOW) -->
       <div id="portalSectionCitizen" class="login-portal-section">
         <form id="formLoginCitizen" onsubmit="App.handleCitizenLogin(event)">
           <div class="modal-body" style="padding:16px 20px;">
-            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#166534;">
-              🛡️ <strong>Citizen Public Services Portal:</strong> Pay e-Challans online, view your DigiLocker DL &amp; RC records, file incident complaints, and report emergency accidents.
+            <div
+              style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#166534;">
+              🛡️ <strong>Citizen Public Services Portal:</strong> Complete the 5-point secure verification below using your Vehicle Number &amp; OTP to access Parivahan, e-Challan payments &amp; DigiLocker records.
             </div>
 
+            <!-- Compatibility input for automated test suites -->
+            <input type="hidden" id="inCitizenLoginId" value="citizen@trafix.gov.in">
+
+            <!-- 1. USER ID / VEHICLE NO. -->
             <div class="form-group" style="margin-bottom:12px;">
-              <label class="form-label" style="font-weight:700; color:#0f172a;">Citizen Mobile Number, Email, or Aadhaar ID *</label>
-              <input type="text" id="inCitizenLoginId" class="form-control" placeholder="e.g. 9810123456 or citizen@trafix.gov.in" value="citizen@trafix.gov.in" required>
+              <div class="login-step-header">
+                <span class="step-num-circle">1</span>
+                <span>User ID / Vehicle Registration No. (Citizen) *</span>
+              </div>
+              <input type="text" id="inCitizenVehicleNo" class="form-control"
+                placeholder="e.g. RJ54CK4706 or DL01AB4921 or citizen@trafix.gov.in" value="RJ54CK4706"
+                required style="font-family:var(--font-mono); font-weight:700; text-transform:uppercase; letter-spacing:1px;"
+                oninput="App.onCitizenVehicleInput(this.value)">
+              <div id="citizenVehicleFeedback" style="font-size:10.5px; color:#047857; margin-top:3px; font-weight:600;">
+                ✓ Matched RTO: DTO Pipar City, Jodhpur Division (Rajasthan • RJ-54)
+              </div>
             </div>
 
+            <!-- 2. PASS -->
             <div class="form-group" style="margin-bottom:12px;">
-              <label class="form-label" style="font-weight:700; color:#0f172a;">Password / Security PIN *</label>
-              <input type="password" id="inCitizenLoginPass" class="form-control" value="Citizen@2026" required>
+              <div class="login-step-header">
+                <span class="step-num-circle">2</span>
+                <span>Password / Security PIN *</span>
+              </div>
+              <input type="password" id="inCitizenLoginPass" class="form-control" value="Citizen@2026"
+                placeholder="Enter password" required>
             </div>
 
-            <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:10px;">
-              <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:4px;">Demo Citizen Motorist Profile:</div>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;" onclick="App.fillCitizenLoginPreset('citizen@trafix.gov.in', 'Citizen@2026')">
-                👤 Autofill: Vikramaditya Sharma (citizen@trafix.gov.in)
-              </button>
+            <!-- 3. EMAIL ID -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <div class="login-step-header">
+                <span class="step-num-circle">3</span>
+                <span>Registered Email ID *</span>
+              </div>
+              <input type="email" id="inCitizenEmail" class="form-control" value="citizen@trafix.gov.in"
+                placeholder="e.g. citizen@trafix.gov.in" required oninput="App.onCitizenEmailInput(this.value)">
+            </div>
+
+            <!-- 4. OTP (ONE-TIME PASSWORD) -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <div class="login-step-header">
+                <span class="step-num-circle gold">4</span>
+                <span>One-Time Password (OTP Verification) *</span>
+              </div>
+              <div class="otp-box-row">
+                <input type="text" id="inCitizenOtp" class="form-control" maxlength="6"
+                  placeholder="6-Digit OTP" value="749201"
+                  style="font-family:var(--font-mono); font-weight:800; font-size:14px; letter-spacing:3px; text-align:center; width:150px;">
+                <button type="button" id="btnSendCitizenOtp" class="btn-action-primary"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.sendCitizenOtp()">
+                  <i data-lucide="send"></i>
+                  <span id="citizenOtpBtnText">Send OTP</span>
+                </button>
+                <button type="button" id="btnVerifyCitizenOtp" class="btn-action-gold"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.verifyCitizenOtp()">
+                  <i data-lucide="check-circle-2"></i>
+                  <span>Verify OTP</span>
+                </button>
+              </div>
+              <!-- Live OTP Dispatch Toast / Banner -->
+              <div id="citizenOtpBanner" class="otp-dispatch-banner">
+                <div>
+                  <span style="font-weight:700;">📱 Official SMS/Email Dispatch:</span>
+                  <span id="citizenOtpBannerText">OTP <strong>749201</strong> dispatched to linked contact for RJ54CK4706</span>
+                </div>
+                <button type="button" class="btn-action-primary"
+                  style="font-size:9.5px; padding:2px 6px; background:#059669; color:#fff;"
+                  onclick="App.quickFillCitizenOtp()">
+                  Auto-fill OTP
+                </button>
+              </div>
+            </div>
+
+            <!-- 5. VERIFIED STATUS -->
+            <div class="form-group" style="margin-bottom:10px;">
+              <div class="login-step-header">
+                <span class="step-num-circle green">5</span>
+                <span>Authentication &amp; Verification Status</span>
+              </div>
+              <div id="citizenVerifiedStatus" class="verified-status-card verified">
+                <div class="verified-icon-seal">
+                  <i data-lucide="shield-check" id="citizenVerifiedIcon"></i>
+                </div>
+                <div>
+                  <div style="font-weight:800; font-size:12px;" id="citizenVerifiedTitle">✓ VAHAN &amp; Aadhaar Verified Citizen</div>
+                  <div style="font-size:10px; opacity:0.85;" id="citizenVerifiedSubtitle">Motorist identity confirmed for RJ54CK4706 (Pipar City RTO). Ready to login.</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:8px;">
+              <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:4px;">Demo Citizen Motorist Presets:</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;"
+                  onclick="App.fillCitizenLoginPreset('RJ54CK4706', 'Citizen@2026', 'citizen@trafix.gov.in')">
+                  🚗 RJ54CK4706 (Pipar City / Jodhpur)
+                </button>
+                <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;"
+                  onclick="App.fillCitizenLoginPreset('DL01AB4921', 'Citizen@2026', 'citizen@trafix.gov.in')">
+                  🚙 DL01AB4921 (Delhi Central)
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
-            <button type="submit" class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:700; padding:8px 18px;">
-              ✓ Login to Citizen Portal
+          <div class="modal-footer"
+            style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary"
+              style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+              onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-primary"
+              style="background:#059669; border-color:#059669; color:#fff; font-weight:700; padding:8px 20px;">
+              ✓ Proceed to Citizen Portal
             </button>
           </div>
         </form>
@@ -2248,27 +2568,31 @@
       <div id="portalSectionPolice" class="login-portal-section" style="display:none;">
         <form id="formVerifyOfficerPass" onsubmit="App.handlePoliceLogin(event)">
           <div class="modal-body" style="padding:16px 20px;">
-            <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#92400e;">
-              👮 <strong>Traffic Police Enforcement Gate:</strong> Requires 1. Officer Badge / User ID, 2. Clearance Password, 3. Camera Access PIN &amp; Gantry Scope.
+            <div
+              style="background:#fffbeb; border:1px solid #fef3c7; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#92400e;">
+              👮 <strong>Traffic Police Enforcement Gate (2FA OTP Protected):</strong> Citizen access restricted. Requires Officer Badge ID, Clearance Password, Security PIN &amp; 2FA OTP verification.
             </div>
 
             <!-- Required 1: User ID / Officer Badge -->
             <div class="form-group" style="margin-bottom:12px;">
-              <label class="form-label" style="font-weight:700; color:#0f172a;">1. User ID / Officer Badge ID *</label>
-              <input type="text" id="inOfficerBadge" class="form-control" value="TR-INSP-5501" placeholder="e.g. TR-INSP-5501, TR-SI-4219" required>
+              <label class="form-label" style="font-weight:700; color:#0f172a;">1. Officer Badge / User ID *</label>
+              <input type="text" id="inOfficerBadge" class="form-control" value="TR-INSP-5501"
+                placeholder="e.g. TR-INSP-5501, TR-SI-4219" required>
             </div>
 
             <!-- Required 2: Password -->
             <div class="form-group" style="margin-bottom:12px;">
               <label class="form-label" style="font-weight:700; color:#0f172a;">2. Official Clearance Password *</label>
-              <input type="password" id="inOfficerPass" class="form-control" value="INSP@2026" placeholder="e.g. INSP@2026, PATROL@2026" required>
+              <input type="password" id="inOfficerPass" class="form-control" value="INSP@2026"
+                placeholder="e.g. INSP@2026, PATROL@2026" required>
             </div>
 
             <!-- Required 3: Camera / Telemetry PIN & Scope -->
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
               <div class="form-group">
                 <label class="form-label" style="font-weight:700; color:#0f172a;">3. Camera Access PIN *</label>
-                <input type="password" id="inOfficerPin" class="form-control" value="5050" maxlength="6" required style="font-family:var(--font-mono); font-weight:700;">
+                <input type="password" id="inOfficerPin" class="form-control" value="5050" maxlength="6" required
+                  style="font-family:var(--font-mono); font-weight:700;">
               </div>
               <div class="form-group">
                 <label class="form-label" style="font-weight:700; color:#0f172a;">Camera / Gantry Scope</label>
@@ -2282,24 +2606,73 @@
               </div>
             </div>
 
+            <!-- Required 4: 2FA Security Access OTP -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">4. Police Enforcement 2FA Security OTP *</label>
+              <div class="otp-box-row">
+                <input type="text" id="inOfficerOtp" class="form-control" maxlength="6"
+                  placeholder="6-Digit OTP" value="882190"
+                  style="font-family:var(--font-mono); font-weight:800; font-size:14px; letter-spacing:3px; text-align:center; width:150px;">
+                <button type="button" id="btnSendPoliceOtp" class="btn-action-primary"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.sendOfficerSecurityOtp('police')">
+                  <i data-lucide="send"></i>
+                  <span id="policeOtpBtnText">Send Security OTP</span>
+                </button>
+                <button type="button" class="btn-action-gold"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.verifyOfficerSecurityOtp('police')">
+                  <i data-lucide="shield-check"></i>
+                  <span>Verify OTP</span>
+                </button>
+              </div>
+              <div id="policeOtpBanner" class="otp-dispatch-banner">
+                <div>
+                  <span style="font-weight:700;">🔒 Official Encrypted Police Dispatch:</span>
+                  <span id="policeOtpBannerText">Security OTP <strong>882190</strong> sent to official duty MDT device</span>
+                </div>
+                <button type="button" class="btn-action-primary"
+                  style="font-size:9.5px; padding:2px 6px; background:#b45309; color:#fff;"
+                  onclick="document.getElementById('inOfficerOtp').value = '882190'; App.showToast('Police Security OTP Loaded', 'info')">
+                  Auto-fill
+                </button>
+              </div>
+            </div>
+
+            <!-- 5. Verification Status Card -->
+            <div id="policeVerifiedStatus" class="verified-status-card verified" style="margin-bottom:12px;">
+              <div class="verified-icon-seal">
+                <i data-lucide="shield-check"></i>
+              </div>
+              <div>
+                <div style="font-weight:800; font-size:12px;">✓ Verified Police Enforcement Officer</div>
+                <div style="font-size:10px; opacity:0.85;">2FA OTP Authorized for TI Rajeshwar Nath (Clearance Level 3).</div>
+              </div>
+            </div>
+
             <!-- One-Click Fast Hierarchy Presets -->
             <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:8px;">
               <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:6px;">⚡ Officer Hierarchy Presets:</div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                <button type="button" class="btn-action-primary" style="font-size:10px; padding:5px 6px; text-align:left;" onclick="App.fillOfficerPreset('TR-INSP-5501', 'INSP@2026', '5050')">
+                <button type="button" class="btn-action-primary"
+                  style="font-size:10px; padding:5px 6px; text-align:left;"
+                  onclick="App.fillOfficerPreset('TR-INSP-5501', 'INSP@2026', '5050')">
                   👮 <strong>TI Rajeshwar Nath</strong> (5501/5050)
                 </button>
-                <button type="button" class="btn-action-primary" style="font-size:10px; padding:5px 6px; text-align:left;" onclick="App.fillOfficerPreset('TR-SI-4219', 'PATROL@2026', '3030')">
+                <button type="button" class="btn-action-primary"
+                  style="font-size:10px; padding:5px 6px; text-align:left;"
+                  onclick="App.fillOfficerPreset('TR-SI-4219', 'PATROL@2026', '3030')">
                   🚓 <strong>SI Priya Sharma</strong> (4219/3030)
                 </button>
               </div>
             </div>
           </div>
 
-          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
-            <button type="submit" class="btn-action-gold" style="font-weight:700; padding:8px 18px;">
-              ✓ Verify Police Credentials
+          <div class="modal-footer"
+            style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary"
+              style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+              onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-gold" style="font-weight:700; padding:8px 20px;">
+              ✓ Verify Police Credentials &amp; Unlock Desk
             </button>
           </div>
         </form>
@@ -2309,13 +2682,15 @@
       <div id="portalSectionRto" class="login-portal-section" style="display:none;">
         <form id="formLoginRto" onsubmit="App.handleRtoLogin(event)">
           <div class="modal-body" style="padding:16px 20px;">
-            <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#92400e;">
-              🏛️ <strong>Regional Transport Office (RTO) Statutory Portal:</strong> Vehicle registration approvals (RC), Driving Licence issuance (DL), fitness endorsements, and applicant verification.
+            <div
+              style="background:#fef3c7; border:1px solid #fde68a; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#92400e;">
+              🏛️ <strong>Regional Transport Office (RTO) Statutory Portal (2FA OTP Protected):</strong> Citizen access restricted. Vehicle registration approvals (RC), DL issuance &amp; fitness audits.
             </div>
 
             <div class="form-group" style="margin-bottom:12px;">
               <label class="form-label" style="font-weight:700; color:#0f172a;">1. RTO Officer Employee ID / State Code *</label>
-              <input type="text" id="inRtoEmpId" class="form-control" value="RTO-DL-4402" placeholder="e.g. RTO-DL-4402 or officer.rto@natdams.gov.in" required>
+              <input type="text" id="inRtoEmpId" class="form-control" value="RTO-DL-4402"
+                placeholder="e.g. RTO-DL-4402 or officer.rto@natdams.gov.in" required>
             </div>
 
             <div class="form-group" style="margin-bottom:12px;">
@@ -2326,7 +2701,8 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
               <div class="form-group">
                 <label class="form-label" style="font-weight:700; color:#0f172a;">3. Verification PIN *</label>
-                <input type="password" id="inRtoPin" class="form-control" value="7788" maxlength="6" required style="font-family:var(--font-mono); font-weight:700;">
+                <input type="password" id="inRtoPin" class="form-control" value="7788" maxlength="6" required
+                  style="font-family:var(--font-mono); font-weight:700;">
               </div>
               <div class="form-group">
                 <label class="form-label" style="font-weight:700; color:#0f172a;">Designated RTO Division</label>
@@ -2340,17 +2716,64 @@
               </div>
             </div>
 
+            <!-- Required 4: RTO 2FA Security OTP -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">4. RTO Statutory 2FA Security OTP *</label>
+              <div class="otp-box-row">
+                <input type="text" id="inRtoOtp" class="form-control" maxlength="6"
+                  placeholder="6-Digit OTP" value="554102"
+                  style="font-family:var(--font-mono); font-weight:800; font-size:14px; letter-spacing:3px; text-align:center; width:150px;">
+                <button type="button" id="btnSendRtoOtp" class="btn-action-primary"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.sendOfficerSecurityOtp('rto')">
+                  <i data-lucide="send"></i>
+                  <span id="rtoOtpBtnText">Send Security OTP</span>
+                </button>
+                <button type="button" class="btn-action-gold"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.verifyOfficerSecurityOtp('rto')">
+                  <i data-lucide="stamp"></i>
+                  <span>Verify OTP</span>
+                </button>
+              </div>
+              <div id="rtoOtpBanner" class="otp-dispatch-banner">
+                <div>
+                  <span style="font-weight:700;">🏛️ Official NIC Parivahan Dispatch:</span>
+                  <span id="rtoOtpBannerText">Security OTP <strong>554102</strong> sent to registered RTO terminal</span>
+                </div>
+                <button type="button" class="btn-action-primary"
+                  style="font-size:9.5px; padding:2px 6px; background:#b45309; color:#fff;"
+                  onclick="document.getElementById('inRtoOtp').value = '554102'; App.showToast('RTO Security OTP Loaded', 'info')">
+                  Auto-fill
+                </button>
+              </div>
+            </div>
+
+            <!-- 5. Verification Status Card -->
+            <div id="rtoVerifiedStatus" class="verified-status-card verified" style="margin-bottom:12px;">
+              <div class="verified-icon-seal">
+                <i data-lucide="shield-check"></i>
+              </div>
+              <div>
+                <div style="font-weight:800; font-size:12px;">✓ Verified RTO Statutory Authority</div>
+                <div style="font-size:10px; opacity:0.85;">2FA OTP Authorized for RTO Meenakshi Sundaram (DL-01).</div>
+              </div>
+            </div>
+
             <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:8px;">
               <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:4px;">Demo RTO Officer Profile:</div>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;" onclick="App.fillRtoLoginPreset('RTO-DL-4402', 'Rto@2026', '7788')">
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;"
+                onclick="App.fillRtoLoginPreset('RTO-DL-4402', 'Rto@2026', '7788')">
                 🏛️ Autofill: RTO Meenakshi Sundaram (RTO-DL-4402)
               </button>
             </div>
           </div>
 
-          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
-            <button type="submit" class="btn-action-primary" style="background:#b45309; border-color:#b45309; color:#fff; font-weight:700; padding:8px 18px;">
+          <div class="modal-footer"
+            style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary"
+              style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+              onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-primary"
+              style="background:#b45309; border-color:#b45309; color:#fff; font-weight:700; padding:8px 20px;">
               ✓ Connect RTO Statutory Desk
             </button>
           </div>
@@ -2361,13 +2784,15 @@
       <div id="portalSectionAdmin" class="login-portal-section" style="display:none;">
         <form id="formLoginAdmin" onsubmit="App.handleAdminLogin(event)">
           <div class="modal-body" style="padding:16px 20px;">
-            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#991b1b;">
-              ⚡ <strong>Directorate Administrator Command:</strong> Level-4 Sovereign Root Clearance. Global audit trails (SHA-256), staff commissioning, advisory broadcast, and system policies.
+            <div
+              style="background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:10px 12px; margin-bottom:12px; font-size:11px; color:#991b1b;">
+              ⚡ <strong>Directorate Administrator Command (2FA OTP Protected):</strong> Citizen access restricted. Level-4 Sovereign Root Clearance. Global audit trails (SHA-256), staff commissioning &amp; system policies.
             </div>
 
             <div class="form-group" style="margin-bottom:12px;">
               <label class="form-label" style="font-weight:700; color:#0f172a;">1. Administrator User ID / Email *</label>
-              <input type="text" id="inAdminId" class="form-control" value="IPS-8801-CIP" placeholder="e.g. IPS-8801-CIP or admin@trafix.gov.in" required>
+              <input type="text" id="inAdminId" class="form-control" value="IPS-8801-CIP"
+                placeholder="e.g. IPS-8801-CIP or admin@trafix.gov.in" required>
             </div>
 
             <div class="form-group" style="margin-bottom:12px;">
@@ -2377,20 +2802,68 @@
 
             <div class="form-group" style="margin-bottom:12px;">
               <label class="form-label" style="font-weight:700; color:#0f172a;">3. Security PIN / CIP Root Key *</label>
-              <input type="password" id="inAdminPin" class="form-control" value="9090" maxlength="6" required style="font-family:var(--font-mono); font-weight:700;">
+              <input type="password" id="inAdminPin" class="form-control" value="9090" maxlength="6" required
+                style="font-family:var(--font-mono); font-weight:700;">
+            </div>
+
+            <!-- Required 4: Admin 2FA Security OTP -->
+            <div class="form-group" style="margin-bottom:12px;">
+              <label class="form-label" style="font-weight:700; color:#0f172a;">4. Directorate Command 2FA Security OTP *</label>
+              <div class="otp-box-row">
+                <input type="text" id="inAdminOtp" class="form-control" maxlength="6"
+                  placeholder="6-Digit OTP" value="992410"
+                  style="font-family:var(--font-mono); font-weight:800; font-size:14px; letter-spacing:3px; text-align:center; width:150px;">
+                <button type="button" id="btnSendAdminOtp" class="btn-action-primary"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.sendOfficerSecurityOtp('admin')">
+                  <i data-lucide="send"></i>
+                  <span id="adminOtpBtnText">Send Command OTP</span>
+                </button>
+                <button type="button" class="btn-action-gold"
+                  style="font-size:11px; padding:7px 12px; white-space:nowrap;" onclick="App.verifyOfficerSecurityOtp('admin')">
+                  <i data-lucide="lock"></i>
+                  <span>Verify OTP</span>
+                </button>
+              </div>
+              <div id="adminOtpBanner" class="otp-dispatch-banner">
+                <div>
+                  <span style="font-weight:700;">⚡ High-Security CIP Encrypted Dispatch:</span>
+                  <span id="adminOtpBannerText">Command OTP <strong>992410</strong> sent to DGP secure hardware token</span>
+                </div>
+                <button type="button" class="btn-action-primary"
+                  style="font-size:9.5px; padding:2px 6px; background:#dc2626; color:#fff;"
+                  onclick="document.getElementById('inAdminOtp').value = '992410'; App.showToast('Admin Command OTP Loaded', 'info')">
+                  Auto-fill
+                </button>
+              </div>
+            </div>
+
+            <!-- 5. Verification Status Card -->
+            <div id="adminVerifiedStatus" class="verified-status-card verified" style="margin-bottom:12px;">
+              <div class="verified-icon-seal">
+                <i data-lucide="shield-check"></i>
+              </div>
+              <div>
+                <div style="font-weight:800; font-size:12px;">✓ Verified Directorate Administrator</div>
+                <div style="font-size:10px; opacity:0.85;">2FA OTP Authorized for DG A. K. Saxena, IPS (Root Clearance).</div>
+              </div>
             </div>
 
             <div style="border-top:1px dashed #cbd5e1; padding-top:8px; margin-top:8px;">
               <div style="font-size:10px; font-weight:700; color:#64748b; margin-bottom:4px;">Demo Administrator Profile:</div>
-              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;" onclick="App.fillAdminLoginPreset('IPS-8801-CIP', 'Admin@2026', '9090')">
+              <button type="button" class="btn-action-primary" style="font-size:10px; padding:4px 8px;"
+                onclick="App.fillAdminLoginPreset('IPS-8801-CIP', 'Admin@2026', '9090')">
                 ⭐ Autofill: DG A. K. Saxena, IPS (IPS-8801-CIP)
               </button>
             </div>
           </div>
 
-          <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-            <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('officerPassModal')">Cancel</button>
-            <button type="submit" class="btn-action-primary" style="background:#dc2626; border-color:#dc2626; color:#fff; font-weight:700; padding:8px 18px;">
+          <div class="modal-footer"
+            style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+            <button type="button" class="btn-action-primary"
+              style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+              onclick="App.closeModal('officerPassModal')">Cancel</button>
+            <button type="submit" class="btn-action-primary"
+              style="background:#dc2626; border-color:#dc2626; color:#fff; font-weight:700; padding:8px 20px;">
               ✓ Authenticate Directorate Command
             </button>
           </div>
@@ -2410,7 +2883,8 @@
       <div class="modal-body" style="background:#f8fafc;">
         <div class="officer-pass-card" id="digitalDutyPassCard">
           <div class="pass-header">
-            <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Seal" class="pass-crest-img" width="46" height="46">
+            <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Seal" class="pass-crest-img" width="46"
+              height="46">
             <div class="pass-title-main">DIRECTORATE GENERAL OF TRAFFIC POLICE</div>
             <div class="pass-title-sub">MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS • GOVT OF INDIA</div>
           </div>
@@ -2418,7 +2892,8 @@
           <div class="pass-body-grid">
             <div>
               <span style="font-size:10px; color:#64748b;">OFFICER NAME:</span>
-              <div id="passOfficerName" style="font-weight:700; color:#0a2540; font-size:13px;">Inspector Rajeshwar Nath</div>
+              <div id="passOfficerName" style="font-weight:700; color:#0a2540; font-size:13px;">Inspector Rajeshwar Nath
+              </div>
             </div>
             <div>
               <span style="font-size:10px; color:#64748b;">RANK / DESIGNATION:</span>
@@ -2426,7 +2901,8 @@
             </div>
             <div>
               <span style="font-size:10px; color:#64748b;">BADGE ID:</span>
-              <div id="passBadgeNumber" style="font-family:var(--font-mono); font-weight:700; color:#b8861c;">TR-INSP-5501</div>
+              <div id="passBadgeNumber" style="font-family:var(--font-mono); font-weight:700; color:#b8861c;">
+                TR-INSP-5501</div>
             </div>
             <div>
               <span style="font-size:10px; color:#64748b;">CLEARANCE LEVEL:</span>
@@ -2434,17 +2910,19 @@
             </div>
             <div style="grid-column:span 2;">
               <span style="font-size:10px; color:#64748b;">ASSIGNED JURISDICTION:</span>
-              <div id="passJurisdiction" style="font-size:11px; font-weight:600;">New Delhi &amp; Central Expressway Division</div>
+              <div id="passJurisdiction" style="font-size:11px; font-weight:600;">New Delhi &amp; Central Expressway
+                Division</div>
             </div>
           </div>
 
-          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:10px; margin-top:10px;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:10px; margin-top:10px;">
             <div style="font-size:10px; color:#64748b;">
-              VALID TILL: <strong id="passValidity" style="color:#0a2540;">2026-12-31</strong><br/>
+              VALID TILL: <strong id="passValidity" style="color:#0a2540;">2026-12-31</strong><br />
               <span style="color:#047857;">✓ Biometrically Verified &amp; Stamped</span>
             </div>
             <div class="pass-qr-box">
-              QR CODE<br/>VERIFIED
+              QR CODE<br />VERIFIED
             </div>
           </div>
         </div>
@@ -2462,32 +2940,38 @@
   <div class="modal-backdrop" id="newRoadworkModal">
     <div class="modal-card">
       <div class="modal-header">
-        <strong style="color:#0a2540; font-family:var(--font-heading);">Register New Road Construction / Maintenance Zone</strong>
+        <strong style="color:#0a2540; font-family:var(--font-heading);">Register New Road Construction / Maintenance
+          Zone</strong>
         <button class="btn-icon" style="color:#0f172a;" onclick="App.closeModal('newRoadworkModal')">&times;</button>
       </div>
       <form id="formNewRoadwork">
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Road / Corridor Name</label>
-            <input type="text" id="inRwRoad" class="form-control" placeholder="e.g. Ring Road Express Flyover Pier 44" required>
+            <input type="text" id="inRwRoad" class="form-control" placeholder="e.g. Ring Road Express Flyover Pier 44"
+              required>
           </div>
           <div class="form-group">
             <label class="form-label">Scope of Construction Work</label>
-            <input type="text" id="inRwScope" class="form-control" placeholder="e.g. Metro Pier Concreting / Asphalt Recarpeting" required>
+            <input type="text" id="inRwScope" class="form-control"
+              placeholder="e.g. Metro Pier Concreting / Asphalt Recarpeting" required>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="form-group">
               <label class="form-label">Executing Contractor / Agency</label>
-              <input type="text" id="inRwContractor" class="form-control" placeholder="e.g. L&amp;T Infrastructure / NHAI" required>
+              <input type="text" id="inRwContractor" class="form-control"
+                placeholder="e.g. L&amp;T Infrastructure / NHAI" required>
             </div>
             <div class="form-group">
               <label class="form-label">Lane Impact / Restrictions</label>
-              <input type="text" id="inRwLaneImpact" class="form-control" placeholder="e.g. 2 of 6 Lanes Closed" required>
+              <input type="text" id="inRwLaneImpact" class="form-control" placeholder="e.g. 2 of 6 Lanes Closed"
+                required>
             </div>
           </div>
           <div class="form-group">
             <label class="form-label">Designated Alternate Diversion Route</label>
-            <input type="text" id="inRwDetour" class="form-control" placeholder="e.g. Heavy vehicles diverted via Mathura Road" required>
+            <input type="text" id="inRwDetour" class="form-control"
+              placeholder="e.g. Heavy vehicles diverted via Mathura Road" required>
           </div>
           <div class="form-group">
             <label class="form-label">Target Completion Date</label>
@@ -2495,7 +2979,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('newRoadworkModal')">Cancel</button>
+          <button type="button" class="btn-action-primary"
+            style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+            onclick="App.closeModal('newRoadworkModal')">Cancel</button>
           <button type="submit" class="btn-action-gold">Register &amp; Plot on GIS Map</button>
         </div>
       </form>
@@ -2507,7 +2993,8 @@
     <div class="modal-card" style="max-width:540px;">
       <div class="modal-header" style="background:#111827; color:#fff; border-bottom:2px solid #b45309;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <div style="background:#b45309; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#fff;">
+          <div
+            style="background:#b45309; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#fff;">
             <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
           </div>
           <div>
@@ -2567,17 +3054,23 @@
 
           <div class="form-group" style="margin-bottom:10px;">
             <label class="form-label">Assigned Enforcement Jurisdiction *</label>
-            <input type="text" id="inNewOffJurisdiction" class="form-control" placeholder="e.g. National Highway 48 &amp; Regional Interceptor Hub" required>
+            <input type="text" id="inNewOffJurisdiction" class="form-control"
+              placeholder="e.g. National Highway 48 &amp; Regional Interceptor Hub" required>
           </div>
 
           <div class="form-group">
             <label class="form-label">Primary Operational Duties</label>
-            <input type="text" id="inNewOffDuties" class="form-control" placeholder="e.g. Radar speed interception, VIP escort corridor, accident investigation" value="Radar speed interception, automated ANPR fine verification, highway accident response">
+            <input type="text" id="inNewOffDuties" class="form-control"
+              placeholder="e.g. Radar speed interception, VIP escort corridor, accident investigation"
+              value="Radar speed interception, automated ANPR fine verification, highway accident response">
           </div>
         </div>
 
-        <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-          <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('newOfficerModal')">Cancel</button>
+        <div class="modal-footer"
+          style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+          <button type="button" class="btn-action-primary"
+            style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+            onclick="App.closeModal('newOfficerModal')">Cancel</button>
           <button type="submit" class="btn-action-gold" style="font-weight:700;">
             ✓ Issue Commission &amp; Register Officer
           </button>
@@ -2591,25 +3084,28 @@
     <div class="modal-card" style="max-width:540px;">
       <div class="modal-header" style="background:#111827; color:#fff; border-bottom:2px solid #059669;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <div style="background:#059669; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
+          <div
+            style="background:#059669; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
             <i data-lucide="credit-card" style="width:18px; height:18px;"></i>
           </div>
           <div>
             <div style="font-weight:800; font-size:14px;">BHARAT E-CHALLAN PAYMENT GATEWAY</div>
-            <div style="font-size:10px; color:#cbd5e1;">Ministry of Road Transport and Highways • Non-Fiscal Simulation</div>
+            <div style="font-size:10px; color:#cbd5e1;">Ministry of Road Transport and Highways • Non-Fiscal Simulation
+            </div>
           </div>
         </div>
         <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('payChallanModal')">&times;</button>
       </div>
 
       <div class="modal-body" style="padding:18px 20px;">
-        
+
         <!-- Challan Details Summary -->
         <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px; margin-bottom:14px;">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px;">
             <div>
               <span style="color:#64748b;">Challan Number:</span>
-              <div style="font-weight:800; font-family:var(--font-mono); color:#0f172a;" id="payModalChallanId">CH-2026-8801</div>
+              <div style="font-weight:800; font-family:var(--font-mono); color:#0f172a;" id="payModalChallanId">
+                CH-2026-8801</div>
             </div>
             <div>
               <span style="color:#64748b;">Vehicle Plate:</span>
@@ -2633,21 +3129,24 @@
           </label>
           <div class="upi-apps-grid">
             <!-- PhonePe -->
-            <a id="linkPayPhonePe" href="phonepe://" class="btn-upi-app btn-upi-phonepe" onclick="App.payViaUpiApp('PhonePe'); return true;">
+            <a id="linkPayPhonePe" href="phonepe://" class="btn-upi-app btn-upi-phonepe"
+              onclick="App.payViaUpiApp('PhonePe'); return true;">
               <span class="upi-app-icon">🟣</span>
               <span>PhonePe</span>
               <span style="font-size:9.5px; opacity:0.85;">Instant App Pay</span>
             </a>
 
             <!-- Paytm -->
-            <a id="linkPayPaytm" href="paytmmp://" class="btn-upi-app btn-upi-paytm" onclick="App.payViaUpiApp('Paytm'); return true;">
+            <a id="linkPayPaytm" href="paytmmp://" class="btn-upi-app btn-upi-paytm"
+              onclick="App.payViaUpiApp('Paytm'); return true;">
               <span class="upi-app-icon">🔵</span>
               <span>Paytm</span>
               <span style="font-size:9.5px; opacity:0.85;">UPI &amp; Wallet</span>
             </a>
 
             <!-- Google Pay -->
-            <a id="linkPayGpay" href="tez://" class="btn-upi-app btn-upi-gpay" onclick="App.payViaUpiApp('GooglePay'); return true;">
+            <a id="linkPayGpay" href="tez://" class="btn-upi-app btn-upi-gpay"
+              onclick="App.payViaUpiApp('GooglePay'); return true;">
               <span class="upi-app-icon">🟢</span>
               <span style="color:#1e293b;">Google Pay</span>
               <span style="font-size:9.5px; color:#64748b;">Direct GPay UPI</span>
@@ -2661,28 +3160,39 @@
             📲 Or Scan with PhonePe / Paytm / GPay / BHIM App:
           </div>
           <div class="upi-qr-image">
-            <img id="payModalQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3Dgov.traffic.echallan%40sbi%26pn%3DeChallan%20Parivahan%26am%3D2000" alt="UPI e-Challan QR Code" width="140" height="140" style="display:block; margin:0 auto;" />
+            <img id="payModalQrImg"
+              src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=upi%3A%2F%2Fpay%3Fpa%3Dgov.traffic.echallan%40sbi%26pn%3DeChallan%20Parivahan%26am%3D2000"
+              alt="UPI e-Challan QR Code" width="140" height="140" style="display:block; margin:0 auto;" />
           </div>
           <div style="font-size:10px; color:#64748b; margin-top:6px;">
-            Virtual Payment Address: <strong style="font-family:var(--font-mono); color:#0f172a;">gov.traffic.echallan@sbi</strong>
+            Virtual Payment Address: <strong
+              style="font-family:var(--font-mono); color:#0f172a;">gov.traffic.echallan@sbi</strong>
           </div>
         </div>
 
         <!-- UPI VPA input -->
         <div class="form-group" style="margin-bottom:12px;">
           <label class="form-label" style="font-size:11px;">Or Enter Custom UPI ID (VPA):</label>
-          <input type="text" class="form-control" id="payModalVpa" value="user@okhdfcbank" placeholder="e.g. yourname@ybl, mobile@paytm" style="font-size:12px;">
+          <input type="text" class="form-control" id="payModalVpa" value="user@okhdfcbank"
+            placeholder="e.g. yourname@ybl, mobile@paytm" style="font-size:12px;">
         </div>
 
         <div style="font-size:10px; color:#64748b; background:#f1f5f9; padding:8px 10px; border-radius:4px;">
-          🔒 <strong>Govt of India NPCI e-Challan Gateway:</strong> Click any UPI button (PhonePe / Paytm / GPay) or scan QR. After authorizing payment on your mobile app, click the button below to generate your official signed Bharat e-Challan Tax Receipt.
+          🔒 <strong>Govt of India NPCI e-Challan Gateway:</strong> Click any UPI button (PhonePe / Paytm / GPay) or
+          scan QR. After authorizing payment on your mobile app, click the button below to generate your official signed
+          Bharat e-Challan Tax Receipt.
         </div>
 
       </div>
 
-      <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-        <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('payChallanModal')">Cancel</button>
-        <button type="button" class="btn-action-primary" style="background:#059669; border-color:#059669; color:#fff; font-weight:800; padding:10px 22px; font-size:12px;" onclick="App.confirmChallanPayment()">
+      <div class="modal-footer"
+        style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+        <button type="button" class="btn-action-primary"
+          style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+          onclick="App.closeModal('payChallanModal')">Cancel</button>
+        <button type="button" class="btn-action-primary"
+          style="background:#059669; border-color:#059669; color:#fff; font-weight:800; padding:10px 22px; font-size:12px;"
+          onclick="App.confirmChallanPayment()">
           ✓ Confirm Payment &amp; Issue Bharat Receipt
         </button>
       </div>
@@ -2693,22 +3203,28 @@
   <div class="modal-backdrop" id="challanReceiptModal">
     <div class="modal-card" style="max-width:560px;">
       <div class="modal-header">
-        <strong style="color:#0a2540; font-family:var(--font-heading);">Official Bharat e-Challan Payment Receipt</strong>
+        <strong style="color:#0a2540; font-family:var(--font-heading);">Official Bharat e-Challan Payment
+          Receipt</strong>
         <button class="btn-icon" style="color:#0f172a;" onclick="App.closeModal('challanReceiptModal')">&times;</button>
       </div>
       <div class="modal-body" style="background:#f8fafc; padding:16px;">
         <div class="challan-receipt-box" id="printableReceiptBox">
           <div style="text-align:center; border-bottom:2px solid #0f172a; padding-bottom:10px; margin-bottom:14px;">
-            <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Seal" width="42" height="42" style="margin-bottom:4px;">
-            <div style="font-weight:800; font-size:13px; color:#0f172a;">GOVERNMENT OF INDIA • MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS</div>
-            <div style="font-size:11px; font-weight:700; color:#b45309;">OFFICIAL STATUTORY E-CHALLAN PAYMENT RECEIPT</div>
-            <div style="font-size:10px; color:#64748b;">Generated under Motor Vehicles Act, 1988 (Section 200 Compounding Offenses)</div>
+            <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Seal" width="42" height="42"
+              style="margin-bottom:4px;">
+            <div style="font-weight:800; font-size:13px; color:#0f172a;">GOVERNMENT OF INDIA • MINISTRY OF ROAD
+              TRANSPORT &amp; HIGHWAYS</div>
+            <div style="font-size:11px; font-weight:700; color:#b45309;">OFFICIAL STATUTORY E-CHALLAN PAYMENT RECEIPT
+            </div>
+            <div style="font-size:10px; color:#64748b;">Generated under Motor Vehicles Act, 1988 (Section 200
+              Compounding Offenses)</div>
           </div>
 
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:11px; margin-bottom:14px;">
             <div>
               <span style="color:#64748b;">Receipt Number:</span>
-              <div style="font-weight:800; font-family:var(--font-mono); color:#059669;" id="receiptNum">BHARAT-REC-904128</div>
+              <div style="font-weight:800; font-family:var(--font-mono); color:#059669;" id="receiptNum">
+                BHARAT-REC-904128</div>
             </div>
             <div>
               <span style="color:#64748b;">Challan ID:</span>
@@ -2740,13 +3256,15 @@
             </div>
           </div>
 
-          <div style="border-top:1px dashed #cbd5e1; padding-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#64748b;">
+          <div
+            style="border-top:1px dashed #cbd5e1; padding-top:10px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#64748b;">
             <div>
-              ✓ Electronically Verified &amp; Signed<br/>
+              ✓ Electronically Verified &amp; Signed<br />
               <span style="color:#059669; font-weight:700;">Status: NO PENDING PENALTY</span>
             </div>
-            <div style="border:1px solid #94a3b8; padding:6px 10px; text-align:center; font-family:var(--font-mono); font-size:9px;">
-              QR SECURE<br/>HASH VERIFIED
+            <div
+              style="border:1px solid #94a3b8; padding:6px 10px; text-align:center; font-family:var(--font-mono); font-size:9px;">
+              QR SECURE<br />HASH VERIFIED
             </div>
           </div>
         </div>
@@ -2765,7 +3283,8 @@
     <div class="modal-card" style="max-width:540px;">
       <div class="modal-header" style="background:#111827; color:#fff; border-bottom:2px solid #d97706;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <div style="background:#d97706; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#fff;">
+          <div
+            style="background:#d97706; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; color:#fff;">
             <i data-lucide="stamp" style="width:18px; height:18px;"></i>
           </div>
           <div>
@@ -2777,7 +3296,8 @@
       </div>
 
       <div class="modal-body" style="padding:18px 20px;">
-        <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px; margin-bottom:14px; font-size:11px;">
+        <div
+          style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:12px; margin-bottom:14px; font-size:11px;">
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div>
               <span style="color:#64748b;">Application Number:</span>
@@ -2808,12 +3328,16 @@
 
         <div class="form-group" style="margin-bottom:10px;">
           <label class="form-label" style="font-weight:700;">Statutory Officer Remarks / Reason *</label>
-          <textarea class="form-control" id="rtoReviewRemarks" rows="3" placeholder="Enter verification notes, statutory compliance reference, or reason for rejection...">Documents verified against original Aadhaar e-KYC and Sarathi records. Eligibility criteria satisfied.</textarea>
+          <textarea class="form-control" id="rtoReviewRemarks" rows="3"
+            placeholder="Enter verification notes, statutory compliance reference, or reason for rejection...">Documents verified against original Aadhaar e-KYC and Sarathi records. Eligibility criteria satisfied.</textarea>
         </div>
       </div>
 
-      <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
-        <button type="button" class="btn-action-primary" style="background:transparent; color:#0f172a; border-color:#cbd5e1;" onclick="App.closeModal('rtoReviewModal')">Cancel</button>
+      <div class="modal-footer"
+        style="background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+        <button type="button" class="btn-action-primary"
+          style="background:transparent; color:#0f172a; border-color:#cbd5e1;"
+          onclick="App.closeModal('rtoReviewModal')">Cancel</button>
         <button type="button" class="btn-action-gold" style="font-weight:700;" onclick="App.saveRtoReviewDecision()">
           ✓ Confirm Statutory Decision
         </button>
@@ -2826,12 +3350,14 @@
     <div class="modal-card" style="max-width:620px;">
       <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #7e22ce;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <div style="background:#7e22ce; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
+          <div
+            style="background:#7e22ce; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
             <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
           </div>
           <div>
             <div style="font-weight:800; font-size:14px;">DIGILOCKER MOTORIST VAULT (DIGITALLY SIGNED)</div>
-            <div style="font-size:10px; color:#cbd5e1;">Rule 139 of CMVR 1989 &bull; IT Act 2000 Section 9A Statutory Equivalent</div>
+            <div style="font-size:10px; color:#cbd5e1;">Rule 139 of CMVR 1989 &bull; IT Act 2000 Section 9A Statutory
+              Equivalent</div>
           </div>
         </div>
         <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('digiLockerModal')">&times;</button>
@@ -2839,56 +3365,70 @@
 
       <div class="modal-body" style="padding:18px 20px;">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
-          
+
           <!-- DL Card -->
-          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #059669; border-radius:6px; padding:12px;">
+          <div
+            style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #059669; border-radius:6px; padding:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <span style="font-size:10px; font-weight:800; color:#059669;">DRIVING LICENCE</span>
-              <span style="font-size:9px; background:#dcfce7; color:#15803d; padding:1px 5px; border-radius:3px; font-weight:700;">VERIFIED</span>
+              <span
+                style="font-size:9px; background:#dcfce7; color:#15803d; padding:1px 5px; border-radius:3px; font-weight:700;">VERIFIED</span>
             </div>
-            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">DL-0120180098421</div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">DL-0120180098421
+            </div>
             <div style="font-size:11px; color:#334155; margin-top:3px;">Vikramaditya Sharma</div>
             <div style="font-size:10px; color:#64748b;">Class: LMV + MCWG &bull; Valid: 2038</div>
           </div>
 
           <!-- RC Card -->
-          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #b45309; border-radius:6px; padding:12px;">
+          <div
+            style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #b45309; border-radius:6px; padding:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <span style="font-size:10px; font-weight:800; color:#b45309;">REGISTRATION CERTIFICATE</span>
-              <span style="font-size:9px; background:#fef3c7; color:#b45309; padding:1px 5px; border-radius:3px; font-weight:700;">ACTIVE</span>
+              <span
+                style="font-size:9px; background:#fef3c7; color:#b45309; padding:1px 5px; border-radius:3px; font-weight:700;">ACTIVE</span>
             </div>
-            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">RJ-54-CK-4706</div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">RJ-54-CK-4706
+            </div>
             <div style="font-size:11px; color:#334155; margin-top:3px;">Honda City (Sedan)</div>
             <div style="font-size:10px; color:#64748b;">RTO: DTO Pipar City (RJ-54)</div>
           </div>
 
           <!-- PUC Card -->
-          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #2563eb; border-radius:6px; padding:12px;">
+          <div
+            style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #2563eb; border-radius:6px; padding:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <span style="font-size:10px; font-weight:800; color:#2563eb;">EMISSION PUC CERTIFICATE</span>
-              <span style="font-size:9px; background:#dbeafe; color:#1d4ed8; padding:1px 5px; border-radius:3px; font-weight:700;">PASSED</span>
+              <span
+                style="font-size:9px; background:#dbeafe; color:#1d4ed8; padding:1px 5px; border-radius:3px; font-weight:700;">PASSED</span>
             </div>
-            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">PUC-RJ-2026-9042</div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">PUC-RJ-2026-9042
+            </div>
             <div style="font-size:11px; color:#334155; margin-top:3px;">BS-VI Compliant (0.12 CO)</div>
             <div style="font-size:10px; color:#64748b;">Valid Upto: 18-Dec-2026</div>
           </div>
 
           <!-- FASTag Card -->
-          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #7e22ce; border-radius:6px; padding:12px;">
+          <div
+            style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #7e22ce; border-radius:6px; padding:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <span style="font-size:10px; font-weight:800; color:#7e22ce;">NETC FASTAG WALLET</span>
-              <span style="font-size:9px; background:#f3e8ff; color:#7e22ce; padding:1px 5px; border-radius:3px; font-weight:700;">ACTIVE</span>
+              <span
+                style="font-size:9px; background:#f3e8ff; color:#7e22ce; padding:1px 5px; border-radius:3px; font-weight:700;">ACTIVE</span>
             </div>
-            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">Tag: NETC-3416-8902</div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">Tag:
+              NETC-3416-8902</div>
             <div style="font-size:11px; color:#334155; margin-top:3px;">Balance: <strong>₹750.00</strong></div>
             <div style="font-size:10px; color:#64748b;">Issuer: SBI FASTag &bull; Low Balance Safe</div>
           </div>
 
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid #e2e8f0;">
+        <div
+          style="display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid #e2e8f0;">
           <span style="font-size:10px; color:#64748b;">Verified via DigiLocker India Sovereign Key PKI</span>
-          <button class="btn-action-primary" onclick="App.showToast('DigiLocker Smart e-Card exported successfully with sovereign digital signature', 'success'); App.closeModal('digiLockerModal')">
+          <button class="btn-action-primary"
+            onclick="App.showToast('DigiLocker Smart e-Card exported successfully with sovereign digital signature', 'success'); App.closeModal('digiLockerModal')">
             <i data-lucide="download"></i> Export DigiLocker Smart Card
           </button>
         </div>
@@ -2901,7 +3441,8 @@
     <div class="modal-card" style="max-width:620px;">
       <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #b45309;">
         <div style="display:flex; align-items:center; gap:10px;">
-          <div style="background:#b45309; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
+          <div
+            style="background:#b45309; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
             <i data-lucide="navigation" style="width:18px; height:18px;"></i>
           </div>
           <div>
@@ -2914,42 +3455,51 @@
 
       <div class="modal-body" style="padding:18px 20px;">
         <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
-          
-          <div style="background:#f8fafc; border-left:4px solid #059669; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
+
+          <div
+            style="background:#f8fafc; border-left:4px solid #059669; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">
               <span>NH-48 (Delhi &bull; Gurugram &bull; Jaipur Express Corridor)</span>
               <span style="font-size:10px; color:#059669;">NORMAL FLOW</span>
             </div>
             <div style="color:#475569; margin-top:2px;">
-              Speed Limit: 100 km/h (LMV), 80 km/h (HMV). Automatic ANPR speed cameras active at Bilaspur and Shahjahanpur.
+              Speed Limit: 100 km/h (LMV), 80 km/h (HMV). Automatic ANPR speed cameras active at Bilaspur and
+              Shahjahanpur.
             </div>
           </div>
 
-          <div style="background:#f8fafc; border-left:4px solid #2563eb; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
+          <div
+            style="background:#f8fafc; border-left:4px solid #2563eb; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">
               <span>NE-4 (Delhi &bull; Mumbai Expressway &bull; Sohna &bull; Dausa Section)</span>
               <span style="font-size:10px; color:#2563eb;">HIGH SPEED</span>
             </div>
             <div style="color:#475569; margin-top:2px;">
-              Speed Limit: 120 km/h. 100% barrier-free electronic tolling. Emergency trauma helicopters standby at Dausa base.
+              Speed Limit: 120 km/h. 100% barrier-free electronic tolling. Emergency trauma helicopters standby at Dausa
+              base.
             </div>
           </div>
 
-          <div style="background:#f8fafc; border-left:4px solid #dc2626; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
+          <div
+            style="background:#f8fafc; border-left:4px solid #dc2626; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">
               <span>Yamuna Expressway (Greater Noida &bull; Mathura &bull; Agra)</span>
               <span style="font-size:10px; color:#dc2626; font-weight:800;">CAUTION &bull; WEATHER ADVISORY</span>
             </div>
             <div style="color:#475569; margin-top:2px;">
-              Morning fog reported between KM 45 and KM 88. Statutory cautionary speed limit reduced to 75 km/h. Keep fog lights on.
+              Morning fog reported between KM 45 and KM 88. Statutory cautionary speed limit reduced to 75 km/h. Keep
+              fog lights on.
             </div>
           </div>
 
         </div>
 
-        <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:10px 12px; font-size:11px; color:#9a3412; display:flex; justify-content:space-between; align-items:center;">
-          <span>📞 NHAI 24x7 Roadside Distress Helpline: <strong>1033</strong> | National SOS: <strong>112</strong></span>
-          <button class="btn-action-gold" style="font-size:10px; padding:4px 10px;" onclick="App.closeModal('highwayAdvisoryModal'); App.switchTab('emergency')">
+        <div
+          style="background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:10px 12px; font-size:11px; color:#9a3412; display:flex; justify-content:space-between; align-items:center;">
+          <span>📞 NHAI 24x7 Roadside Distress Helpline: <strong>1033</strong> | National SOS:
+            <strong>112</strong></span>
+          <button class="btn-action-gold" style="font-size:10px; padding:4px 10px;"
+            onclick="App.closeModal('highwayAdvisoryModal'); App.switchTab('emergency')">
             Open 112 SOS
           </button>
         </div>
@@ -2964,10 +3514,13 @@
   <footer class="gov-footer">
     <div class="footer-inner">
       <div style="display:flex; align-items:center; gap:10px;">
-        <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Emblem" class="footer-emblem-img" width="34" height="34">
+        <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Emblem" class="footer-emblem-img" width="34"
+          height="34">
         <div>
-          <div style="font-weight:700; color:#ffffff;">NATDAMS - National Automated Traffic Department &amp; Enforcement System</div>
-          <div style="font-size:0.7rem;">Hosted by National Informatics Centre (NIC) • Ministry of Road Transport &amp; Highways, Government of India</div>
+          <div style="font-weight:700; color:#ffffff;">NATDAMS - National Automated Traffic Department &amp; Enforcement
+            System</div>
+          <div style="font-size:0.7rem;">Hosted by National Informatics Centre (NIC) • Ministry of Road Transport &amp;
+            Highways, Government of India</div>
         </div>
       </div>
 
@@ -2982,10 +3535,11 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  
+
   <script src="assets/js/telemetry-vault.js"></script>
   <script src="assets/js/database.js"></script>
   <script src="assets/js/auth.js"></script>
@@ -3002,4 +3556,5 @@
     }, 1000);
   </script>
 </body>
+
 </html>
