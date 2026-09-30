@@ -2030,23 +2030,47 @@ const App = {
     const vehEl = document.getElementById('citStatRegisteredVehicles');
     if (vehEl) vehEl.innerText = `${vehicles.length || 2} Vehicles`;
 
-    // Render Department Notifications
+    // Render Department Official Gazette & Traffic Bulletins
     const notifsContainer = document.getElementById('citNotificationsList');
     if (notifsContainer) {
       const notifs = window.trafficDB.getNotifications();
-      if (!notifs || notifs.length === 0) {
-        notifsContainer.innerHTML = `<div style="font-size:11px; color:#64748b;">No active department alerts.</div>`;
-      } else {
-        notifsContainer.innerHTML = notifs.slice(0, 4).map(n => `
-          <div style="background:#f8fafc; border-left:3px solid ${n.notificationType === 'ALERT' ? '#dc2626' : '#059669'}; padding:8px 10px; border-radius:0 4px 4px 0; font-size:11px;">
-            <div style="font-weight:700; color:#0f172a; display:flex; justify-content:space-between;">
-              <span>${n.title}</span>
-              <span style="font-size:9px; color:#64748b;">${n.createdAt || 'Live'}</span>
-            </div>
-            <div style="color:#334155; margin-top:2px;">${n.message}</div>
+      const gazetteBulletins = [
+        {
+          ref: 'G.S.R. 574(E)',
+          title: 'Mandatory Electronic Enforcement on National Corridors',
+          dept: 'MoRTH • Section 136A MV Act',
+          message: 'Speed detection cameras and ANPR are active on all lanes of NH-48 and NE-4. Citations are digitally generated in real time.',
+          time: 'Today 08:30 IST',
+          type: 'ALERT'
+        },
+        {
+          ref: 'CMVR-R139',
+          title: 'Legal Acceptance of Electronic Driving Licence & RC',
+          dept: 'Traffic Police Advisory',
+          message: 'Documents presented via DigiLocker or mParivahan carry full statutory validity. Physical inspection not mandatory.',
+          time: 'Yesterday',
+          type: 'INFO'
+        },
+        {
+          ref: 'DTO-RJ-54',
+          title: 'Fast-Track Ownership Transfer (Form 29/30) at DTO Pipar City',
+          dept: 'Transport Dept Rajasthan',
+          message: 'Online digital upload of transfer deed processed within 48 hours with e-Aadhaar verification.',
+          time: '28-Sep-2026',
+          type: 'INFO'
+        }
+      ];
+
+      notifsContainer.innerHTML = gazetteBulletins.map(g => `
+        <div class="gazette-bulletin-item" style="border-left-color:${g.type === 'ALERT' ? '#dc2626' : '#b45309'};">
+          <div class="gazette-bulletin-header">
+            <span style="font-weight:700; color:var(--text-primary); font-size:12px;">${g.title}</span>
+            <span class="gazette-bulletin-ref">${g.ref}</span>
           </div>
-        `).join('');
-      }
+          <div style="font-size:10px; color:#64748b; margin-bottom:3px;">${g.dept} &bull; <span style="color:#059669;">${g.time}</span></div>
+          <div style="color:var(--text-secondary); line-height:1.4;">${g.message}</div>
+        </div>
+      `).join('');
     }
 
     // Render Recent Activity Timeline
@@ -2057,31 +2081,97 @@ const App = {
       const recentApps = rtoApps.slice(0, 2);
 
       let html = '';
-      recentCases.forEach(c => {
-        html += `
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:8px 10px; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <strong>${c.id}</strong> • <span style="color:#64748b;">${c.category}</span>
-              <div style="font-size:10px; color:#64748b;">Status: <span style="font-weight:700; color:#b45309;">${c.status}</span></div>
+      
+      // Add standard verified vehicle entry
+      html += `
+        <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:6px; padding:10px 12px; font-size:11.5px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <strong style="color:var(--text-primary); font-family:var(--font-mono);">RJ54CK4706</strong>
+              <span style="font-size:9.5px; background:#fef3c7; color:#b45309; padding:1px 6px; border-radius:3px; font-weight:700;">VAHAN RC</span>
             </div>
-            <button class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.switchTab('citizen-track')">Track</button>
+            <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">
+              Honda City &bull; DTO Pipar City (RJ-54) &bull; Status: <span style="font-weight:700; color:#059669;">ACTIVE</span>
+            </div>
           </div>
-        `;
-      });
+          <button class="btn-action-primary" style="font-size:10px; padding:4px 10px;" onclick="App.switchTab('citizen-vehicles')">Inspect RC</button>
+        </div>
+      `;
+
       recentApps.forEach(a => {
         html += `
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:4px; padding:8px 10px; font-size:11px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:6px; padding:10px 12px; font-size:11.5px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <div>
-              <strong>${a.applicationNumber || a.id}</strong> • <span style="color:#2563eb;">${a.applicationType}</span>
-              <div style="font-size:10px; color:#64748b;">Status: <span style="font-weight:700; color:#059669;">${a.status}</span></div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <strong style="color:var(--text-primary); font-family:var(--font-mono);">${a.applicationNumber || a.id}</strong>
+                <span style="font-size:9.5px; background:#dbeafe; color:#1e40af; padding:1px 6px; border-radius:3px; font-weight:700;">RTO PARIVAHAN</span>
+              </div>
+              <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">
+                ${a.applicationType} &bull; Target: <strong>${a.targetRto || 'DTO Pipar City (RJ-54)'}</strong> &bull; Status: <span style="font-weight:700; color:#059669;">${a.status}</span>
+              </div>
             </div>
-            <button class="btn-action-primary" style="font-size:10px; padding:3px 8px;" onclick="App.switchTab('citizen-rto-apps')">View</button>
+            <button class="btn-action-outline" style="font-size:10px; padding:4px 10px;" onclick="App.switchTab('citizen-rto-apps')">View File</button>
           </div>
         `;
       });
-      actContainer.innerHTML = html || `<div style="font-size:11px; color:#64748b;">No recent activity records.</div>`;
+
+      // Recent challan entry
+      html += `
+        <div style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:6px; padding:10px 12px; font-size:11.5px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <strong style="color:var(--text-primary); font-family:var(--font-mono);">CH-2026-8801</strong>
+              <span style="font-size:9.5px; background:#fee2e2; color:#dc2626; padding:1px 6px; border-radius:3px; font-weight:700;">e-CHALLAN</span>
+            </div>
+            <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">
+              Speed Violation (88 km/h on NH-48) &bull; Fine: <strong>₹1,000</strong> &bull; <span style="font-weight:700; color:#dc2626;">UNPAID</span>
+            </div>
+          </div>
+          <button class="btn-action-gold" style="font-size:10px; padding:4px 10px;" onclick="App.searchAndPayChallanByPlate('DL01AB4921')">Pay via UPI</button>
+        </div>
+      `;
+
+      actContainer.innerHTML = html;
     }
   },
+
+  dashboardQuickSearch(plate, target) {
+    const inputVal = document.getElementById('dashSearchPlateInput')?.value;
+    const finalPlate = (plate || inputVal || 'RJ54CK4706').trim().toUpperCase().replace(/[\s-]/g, "");
+
+    const dashInput = document.getElementById('dashSearchPlateInput');
+    if (dashInput) dashInput.value = finalPlate;
+
+    if (target === 'challan') {
+      this.switchTab('citizen-track');
+      const chInput = document.getElementById('searchChallanPlateInput');
+      if (chInput) chInput.value = finalPlate;
+      this.searchAndPayChallanByPlate();
+    } else if (target === 'rto') {
+      this.switchTab('citizen-rto-apps');
+      const rtoPlate = document.getElementById('rtoRegNumber');
+      if (rtoPlate) rtoPlate.value = finalPlate;
+    } else {
+      // Default: inspect vehicle
+      this.switchTab('citizen-vehicles');
+      const trafixInput = document.getElementById('trafixPlateInput');
+      if (trafixInput) trafixInput.value = finalPlate;
+      const citInput = document.getElementById('citizenSearchPlateInput');
+      if (citInput) citInput.value = finalPlate;
+      this.identifyVehicle();
+      this.searchCitizenVehicleProfile();
+    }
+  },
+
+  showDigiLockerModal() {
+    this.openModal('digiLockerModal');
+  },
+
+  showHighwayAdvisoryModal() {
+    this.openModal('highwayAdvisoryModal');
+  },
+
+
 
   // =========================================================================
   // ACCIDENT REPORTING & EMERGENCY MANAGEMENT (SECTION 11)

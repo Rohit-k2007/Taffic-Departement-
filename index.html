@@ -339,126 +339,314 @@
            ========================================================================= -->
       <section class="view-panel active" id="panel-citizen-dashboard">
         
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-          <div>
-            <h2 style="font-family:var(--font-heading); font-size:1.25rem; color:#0a2540;">
-              🇮🇳 Citizen Traffic Services &amp; Digital Motorist Portal
-            </h2>
-            <p style="font-size:0.75rem; color:#64748b;">
-              Welcome, <strong id="citWelcomeName">Vikramaditya Sharma</strong> (Aadhaar Verified Motorist • Delhi NCT).
-            </p>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn-action-primary" onclick="App.switchTab('citizen-vehicles')">
-              <i data-lucide="car"></i> Find Car Details
-            </button>
-            <button class="btn-action-gold" onclick="App.switchTab('citizen-track')">
-              <i data-lucide="credit-card"></i> Pay Challan (PhonePe/Paytm/GPay)
-            </button>
-          </div>
-        </div>
-
-        <!-- Citizen 4-KPI Stat Cards -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:12px; margin-bottom:16px;">
-          <div class="ratio-stat-card" style="border-top:3px solid #b45309; cursor:pointer;" onclick="App.switchTab('citizen-vehicles')">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">VEHICLE INTELLIGENCE</div>
-            <div style="font-size:24px; font-weight:800; color:#b45309; margin:4px 0;" id="citStatRegisteredVehicles">RJ54CK4706</div>
-            <div style="font-size:10px; color:#b45309;">Search Any Car / VAHAN RC ➔</div>
-          </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #dc2626; cursor:pointer;" onclick="App.switchTab('citizen-track')">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">PENDING CHALLANS</div>
-            <div style="font-size:24px; font-weight:800; color:#dc2626; margin:4px 0;" id="citStatPendingChallans">1 Unpaid</div>
-            <div style="font-size:10px; color:#dc2626;">Pay via PhonePe / Paytm / GPay ➔</div>
-          </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #2563eb; cursor:pointer;" onclick="App.switchTab('citizen-rto-apps')">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">DIRECT RTO UPLOAD</div>
-            <div style="font-size:24px; font-weight:800; color:#2563eb; margin:4px 0;">RTO Pipar City</div>
-            <div style="font-size:10px; color:#2563eb;">Upload Form 29/30 &amp; RC ➔</div>
-          </div>
-          <div class="ratio-stat-card" style="border-top:3px solid #059669; cursor:pointer;" onclick="App.switchTab('citizen-report')">
-            <div style="font-size:11px; color:#64748b; font-weight:700;">CITIZEN COMPLAINTS</div>
-            <div style="font-size:24px; font-weight:800; color:#059669; margin:4px 0;" id="citStatActiveComplaints">2 Active</div>
-            <div style="font-size:10px; color:#059669;">Report Traffic Issue ➔</div>
-          </div>
-        </div>
-
-        <!-- 3 CORE CITIZEN FUNCTIONALITY HERO CARDS -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; margin-bottom:16px;">
+        <!-- CLASSIC SOVEREIGN EXECUTIVE BANNER -->
+        <div class="citizen-sovereign-banner">
           
-          <!-- Pillar 1: Find Car Details -->
-          <div class="citizen-hero-card" style="border-top:4px solid #b45309;" onclick="App.switchTab('citizen-vehicles')">
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="font-size:26px;">🚗</span>
-                <span style="font-size:10px; background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:4px; font-weight:700;">VAHAN &amp; RTO</span>
+          <div class="banner-header-row">
+            <!-- Identity & Crest -->
+            <div class="banner-identity-group">
+              <div class="banner-emblem-seal">
+                <img src="assets/images/gov_emblem.jpg" alt="Government of India Emblem">
               </div>
-              <h3 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:4px;">Find Car &amp; Vehicle Details</h3>
-              <p style="font-size:11.5px; color:#64748b; line-height:1.4;">
-                Lookup any vehicle number plate across India (e.g. RJ54CK4706, DL01AB4921). Check RC status, fitness, insurance, and issuing RTO authority.
-              </p>
+              <div>
+                <div class="banner-title-hi">सत्यमेव जयते • भारत सरकार • सड़क परिवहन और राजमार्ग मंत्रालय</div>
+                <h1 class="banner-title-en">NATIONAL MOTORIST DIGITAL PORTAL &amp; ENFORCEMENT DESK</h1>
+                <div class="banner-user-chips">
+                  <span class="banner-chip">
+                    <i data-lucide="user" style="width:13px; height:13px;"></i>
+                    <strong id="citWelcomeName">Vikramaditya Sharma</strong>
+                  </span>
+                  <span class="banner-chip verified">
+                    <i data-lucide="shield-check" style="width:13px; height:13px;"></i>
+                    Aadhaar Verified
+                  </span>
+                  <span class="banner-chip gold">
+                    <i data-lucide="landmark" style="width:13px; height:13px;"></i>
+                    Jurisdiction: DL-01 / RJ-54
+                  </span>
+                </div>
+              </div>
             </div>
-            <div style="margin-top:12px; font-size:11px; font-weight:700; color:#b45309;">
-              Search Vehicle Intelligence ➔
+
+            <!-- Driver Safety Compliance Gauge -->
+            <div class="banner-safety-meter">
+              <div class="safety-score-number">98</div>
+              <div>
+                <div style="font-size:10px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">
+                  Safe Driver Index
+                </div>
+                <div style="font-size:12px; font-weight:800; color:#34d399;">
+                  Tier-1 Gold Compliant
+                </div>
+                <div style="font-size:9.5px; color:#cbd5e1;">
+                  Zero Speed / Red Light Violations (180d)
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Pillar 2: Pay Challan Direct via UPI Apps -->
-          <div class="citizen-hero-card" style="border-top:4px solid #059669;" onclick="App.switchTab('citizen-track')">
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="font-size:26px;">💳</span>
-                <span style="font-size:10px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:4px; font-weight:700;">Direct UPI Apps</span>
+          <!-- Universal Vehicle Quick Search Bar -->
+          <div class="banner-search-container">
+            <div class="banner-search-input-group">
+              <div style="position:relative; flex:1; min-width:240px;">
+                <input type="text" id="dashSearchPlateInput" class="banner-search-input" style="width:100%;" placeholder="ENTER VEHICLE NUMBER (E.G. RJ54CK4706)" value="RJ54CK4706">
               </div>
-              <h3 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:4px;">Pay e-Challan Online</h3>
-              <p style="font-size:11.5px; color:#64748b; line-height:1.4;">
-                Check pending traffic citations on your vehicle and pay instantly via <strong>PhonePe</strong>, <strong>Paytm</strong>, or <strong>Google Pay</strong> with official Bharat Receipt.
-              </p>
+              <button class="btn-action-primary" style="padding:9px 16px; font-size:12px; font-weight:700;" onclick="App.dashboardQuickSearch(null, 'vehicle')">
+                <i data-lucide="search"></i> Inspect VAHAN RC
+              </button>
+              <button class="btn-action-gold" style="padding:9px 16px; font-size:12px; font-weight:700;" onclick="App.dashboardQuickSearch(null, 'challan')">
+                <i data-lucide="credit-card"></i> Check &amp; Pay Challan
+              </button>
+              <button class="btn-action-outline" style="padding:9px 14px; font-size:12px; background:rgba(255,255,255,0.08); color:#f8fafc; border-color:rgba(255,255,255,0.25);" onclick="App.dashboardQuickSearch(null, 'rto')">
+                <i data-lucide="file-up"></i> Upload to RTO
+              </button>
             </div>
-            <div style="margin-top:12px; font-size:11px; font-weight:700; color:#059669;">
-              Pay Fine via UPI (PhonePe / Paytm / GPay) ➔
-            </div>
-          </div>
 
-          <!-- Pillar 3: Upload Directly to RTO Office -->
-          <div class="citizen-hero-card" style="border-top:4px solid #2563eb;" onclick="App.switchTab('citizen-rto-apps')">
-            <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="font-size:26px;">🏛️</span>
-                <span style="font-size:10px; background:#dbeafe; color:#1d4ed8; padding:2px 8px; border-radius:4px; font-weight:700;">Direct RTO Upload</span>
-              </div>
-              <h3 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:4px;">Upload Details to RTO Office</h3>
-              <p style="font-size:11.5px; color:#64748b; line-height:1.4;">
-                Upload Form 29/30 transfer documents, RC updates, duplicate RC, NOC, and fitness renewal requests directly to your local RTO Office desk.
-              </p>
-            </div>
-            <div style="margin-top:12px; font-size:11px; font-weight:700; color:#2563eb;">
-              Upload to Local RTO Desk ➔
+            <div class="banner-plate-chips-row">
+              <span style="font-weight:700; color:#e2e8f0;">Quick Select Plate:</span>
+              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('RJ54CK4706', 'vehicle')">RJ54CK4706 (Pipar City • DTO RJ-54)</button>
+              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('DL01AB4921', 'vehicle')">DL01AB4921 (Mall Road • RTO DL-01)</button>
+              <button class="dash-plate-chip" onclick="App.dashboardQuickSearch('HR26DQ5511', 'vehicle')">HR26DQ5511 (Gurugram North • HR-26)</button>
             </div>
           </div>
 
         </div>
 
-        <!-- Recent Activity & Notifications -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-          <div class="gov-card">
-            <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
-              <span>🔔 Official Department Alerts</span>
-              <span style="font-size:10px; color:#059669;">Live Feeds</span>
+        <!-- CLASSIC 4-KPI METRIC CARDS -->
+        <div class="classic-kpi-grid">
+          
+          <!-- Card 1: Registered Fleet -->
+          <div class="classic-kpi-card gold" onclick="App.switchTab('citizen-vehicles')">
+            <div>
+              <div class="kpi-top-row">
+                <span class="kpi-title-label">VAHAN Registered Fleet</span>
+                <span class="kpi-icon-pill gold">🚗</span>
+              </div>
+              <div class="kpi-big-value" id="citStatRegisteredVehicles">RJ54CK4706</div>
+              <div class="kpi-sub-text">DTO Pipar City (RJ-54) • FC Valid 2029</div>
             </div>
-            <div id="citNotificationsList" style="display:flex; flex-direction:column; gap:8px;">
-              <!-- Injected via JS -->
+            <div class="kpi-action-link" style="color:#b45309;">
+              Inspect Full Specs &amp; RC ➔
             </div>
           </div>
 
-          <div class="gov-card">
-            <div style="font-weight:700; color:#0f172a; margin-bottom:10px; font-size:13px; display:flex; justify-content:space-between; align-items:center;">
-              <span>📑 Recent Applications &amp; Complaints</span>
-              <span style="font-size:10px; color:#64748b;">VAHAN / Sarathi</span>
+          <!-- Card 2: Pending Challans -->
+          <div class="classic-kpi-card crimson" onclick="App.switchTab('citizen-track')">
+            <div>
+              <div class="kpi-top-row">
+                <span class="kpi-title-label">Pending Citations</span>
+                <span class="kpi-icon-pill crimson">⚖️</span>
+              </div>
+              <div class="kpi-big-value" style="color:#dc2626;" id="citStatPendingChallans">1 Unpaid (₹1,000)</div>
+              <div class="kpi-sub-text">Speed Citation (NH-48) • Direct UPI Active</div>
             </div>
-            <div id="citRecentActivityList" style="display:flex; flex-direction:column; gap:8px;">
-              <!-- Injected via JS -->
+            <div class="kpi-action-link" style="color:#dc2626;">
+              Pay Fine (PhonePe / Paytm / GPay) ➔
             </div>
           </div>
+
+          <!-- Card 3: Direct RTO Desk -->
+          <div class="classic-kpi-card blue" onclick="App.switchTab('citizen-rto-apps')">
+            <div>
+              <div class="kpi-top-row">
+                <span class="kpi-title-label">Direct RTO Desk</span>
+                <span class="kpi-icon-pill blue">🏛️</span>
+              </div>
+              <div class="kpi-big-value" style="color:#2563eb;">DTO Pipar City</div>
+              <div class="kpi-sub-text">Form 29/30 Transfer, NOC &amp; Fitness Desk</div>
+            </div>
+            <div class="kpi-action-link" style="color:#2563eb;">
+              Upload Documents Directly ➔
+            </div>
+          </div>
+
+          <!-- Card 4: Grievance Redressal -->
+          <div class="classic-kpi-card emerald" onclick="App.switchTab('citizen-report')">
+            <div>
+              <div class="kpi-top-row">
+                <span class="kpi-title-label">Public Grievances</span>
+                <span class="kpi-icon-pill emerald">🛡️</span>
+              </div>
+              <div class="kpi-big-value" style="color:#059669;" id="citStatActiveComplaints">100% Resolved</div>
+              <div class="kpi-sub-text">2 Recorded Grievances • Fast-Track 24h SLA</div>
+            </div>
+            <div class="kpi-action-link" style="color:#059669;">
+              Report New Traffic Incident ➔
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 6-SERVICE OPERATIONAL SUITE -->
+        <div class="classic-services-section-title">
+          <div>
+            <h3>🏛️ Sovereign Public Services Suite</h3>
+            <p style="font-size:11.5px; color:#64748b;">Direct citizen services powered by VAHAN, Sarathi, e-Challan, and Ministry Gateway.</p>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:#b45309; background:#fef3c7; padding:3px 10px; border-radius:12px;">
+            Govt of India Certified
+          </span>
+        </div>
+
+        <div class="classic-services-grid">
+
+          <!-- Service 1: Vehicle Intelligence -->
+          <div class="classic-service-card" onclick="App.switchTab('citizen-vehicles')">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:26px;">🚗</span>
+                <span class="service-card-tag gold">VAHAN 4.0</span>
+              </div>
+              <div class="service-card-title">Vehicle Intelligence &amp; RC Verification</div>
+              <div class="service-card-desc">
+                High-precision regex parser extracts State, District RTO, Registration Series, and issuing authority (e.g. RJ54CK4706 &rarr; Pipar City / Jodhpur).
+              </div>
+            </div>
+            <div class="service-card-footer">
+              <span style="color:#b45309;">Verify Any Vehicle ➔</span>
+              <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">FLOWCHART VERIFIED</span>
+            </div>
+          </div>
+
+          <!-- Service 2: e-Challan UPI Settlement -->
+          <div class="classic-service-card" onclick="App.switchTab('citizen-track')">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:26px;">💳</span>
+                <span class="service-card-tag emerald">UPI FAST-PAY</span>
+              </div>
+              <div class="service-card-title">Instant e-Challan Settlement Hub</div>
+              <div class="service-card-desc">
+                Settle traffic fines instantly using deep-link one-click payment via <strong>PhonePe</strong>, <strong>Paytm</strong>, or <strong>Google Pay</strong> with stamped Bharat receipt generation.
+              </div>
+            </div>
+            <div class="service-card-footer">
+              <span style="color:#15803d;">Pay Citation via UPI ➔</span>
+              <span style="font-size:10px; color:#15803d; font-weight:800;">BHARAT RECEIPT</span>
+            </div>
+          </div>
+
+          <!-- Service 3: Direct RTO Upload -->
+          <div class="classic-service-card" onclick="App.switchTab('citizen-rto-apps')">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:26px;">🏛️</span>
+                <span class="service-card-tag blue">PARIVAHAN SEVA</span>
+              </div>
+              <div class="service-card-title">Direct Local RTO Document Dispatch</div>
+              <div class="service-card-desc">
+                Directly transmit Form 29/30 ownership transfer, duplicate RC, NOC, and fitness renewal files directly onto your designated local RTO desk (e.g. RJ-54, RJ-14, DL-01).
+              </div>
+            </div>
+            <div class="service-card-footer">
+              <span style="color:#1e40af;">Dispatch Documents ➔</span>
+              <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">100+ RTO DESKS</span>
+            </div>
+          </div>
+
+          <!-- Service 4: DigiLocker Motorist Vault -->
+          <div class="classic-service-card" onclick="App.showDigiLockerModal()">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:26px;">🗄️</span>
+                <span class="service-card-tag purple">DIGILOCKER VAULT</span>
+              </div>
+              <div class="service-card-title">Digital Vehicle Locker (e-Vault)</div>
+              <div class="service-card-desc">
+                Digitally verified driving licence, RC smartcard, PUC emission certificate, insurance policy, and FASTag wallet balance with legal statutory validity.
+              </div>
+            </div>
+            <div class="service-card-footer">
+              <span style="color:#7e22ce;">Open Digital Vault ➔</span>
+              <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">IT ACT SEC 9A</span>
+            </div>
+          </div>
+
+          <!-- Service 5: Highway Advisory & Radars -->
+          <div class="classic-service-card" onclick="App.showHighwayAdvisoryModal()">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:26px;">🛣️</span>
+                <span class="service-card-tag amber">NHAI ADVISORY</span>
+              </div>
+              <div class="service-card-title">National Highway Traffic Advisories</div>
+              <div class="service-card-desc">
+                Real-time speed advisories, fog alerts, roadwork diversions on NH-48, Delhi-Mumbai Expressway, and Yamuna Expressway with statutory speed limit alerts.
+              </div>
+            </div>
+            <div class="service-card-footer">
+              <span style="color:#c2410c;">View Live Corridors ➔</span>
+              <span style="font-size:10px; color:#64748b; font-family:var(--font-mono);">LIVE ALERTS</span>
+            </div>
+          </div>
+
+          <!-- Service 6: Emergency 112 Dispatch -->
+          <div class="classic-service-card" onclick="App.switchTab('emergency')">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:26px;">🚨</span>
+                <span class="service-card-tag red">DISPATCH 112</span>
+              </div>
+              <div class="service-card-title">Emergency 112 SOS Highway Command</div>
+              <div class="service-card-desc">
+                Instant emergency distress link with GPS coordinates directly routed to Highway Police Patrol, closest Trauma Care Hospital, and NHAI Towing Cranes.
+              </div>
+            </div>
+            <div class="service-card-footer">
+              <span style="color:#b91c1c;">Trigger 112 Command ➔</span>
+              <span style="font-size:10px; color:#b91c1c; font-weight:800;">&lt; 7 MIN RESPONSE</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CLASSIC BOTTOM SPLIT: OFFICIAL GAZETTE & RECENT LEDGER -->
+        <div class="classic-bottom-split">
+          
+          <!-- Column 1: Gazette Notices & Bulletins -->
+          <div class="gov-card">
+            <div class="gov-card-header">
+              <div class="card-title-group">
+                <div class="card-title-icon" style="background:#fef3c7; color:#b45309;">
+                  <i data-lucide="scroll"></i>
+                </div>
+                <div>
+                  <div class="card-title" style="font-size:13.5px;">Official Gazette &amp; Traffic Bulletins</div>
+                  <div class="card-subtitle">Ministry of Road Transport &amp; Highways • Official Notifications</div>
+                </div>
+              </div>
+              <span style="font-size:10px; font-weight:700; color:#059669; background:#dcfce7; padding:2px 8px; border-radius:4px;">
+                Verified Feeds
+              </span>
+            </div>
+
+            <div id="citNotificationsList" style="display:flex; flex-direction:column; gap:8px;">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Column 2: Recent Applications & E-Receipts -->
+          <div class="gov-card">
+            <div class="gov-card-header">
+              <div class="card-title-group">
+                <div class="card-title-icon" style="background:#dbeafe; color:#2563eb;">
+                  <i data-lucide="file-check"></i>
+                </div>
+                <div>
+                  <div class="card-title" style="font-size:13.5px;">Recent Applications &amp; Challan Receipts</div>
+                  <div class="card-subtitle">Direct RTO Parivahan &amp; e-Challan Audit Ledger</div>
+                </div>
+              </div>
+              <span style="font-size:10px; font-weight:700; color:#2563eb; background:#dbeafe; padding:2px 8px; border-radius:4px;">
+                VAHAN / SARATHI
+              </span>
+            </div>
+
+            <div id="citRecentActivityList" style="display:flex; flex-direction:column; gap:8px;">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
         </div>
 
       </section>
@@ -2608,6 +2796,142 @@
         <button type="button" class="btn-action-gold" style="font-weight:700;" onclick="App.saveRtoReviewDecision()">
           ✓ Confirm Statutory Decision
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. DigiLocker Motorist Vault Modal -->
+  <div class="modal-backdrop" id="digiLockerModal">
+    <div class="modal-card" style="max-width:620px;">
+      <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #7e22ce;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="background:#7e22ce; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
+            <i data-lucide="shield-check" style="width:18px; height:18px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:800; font-size:14px;">DIGILOCKER MOTORIST VAULT (DIGITALLY SIGNED)</div>
+            <div style="font-size:10px; color:#cbd5e1;">Rule 139 of CMVR 1989 &bull; IT Act 2000 Section 9A Statutory Equivalent</div>
+          </div>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('digiLockerModal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding:18px 20px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          
+          <!-- DL Card -->
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #059669; border-radius:6px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:10px; font-weight:800; color:#059669;">DRIVING LICENCE</span>
+              <span style="font-size:9px; background:#dcfce7; color:#15803d; padding:1px 5px; border-radius:3px; font-weight:700;">VERIFIED</span>
+            </div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">DL-0120180098421</div>
+            <div style="font-size:11px; color:#334155; margin-top:3px;">Vikramaditya Sharma</div>
+            <div style="font-size:10px; color:#64748b;">Class: LMV + MCWG &bull; Valid: 2038</div>
+          </div>
+
+          <!-- RC Card -->
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #b45309; border-radius:6px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:10px; font-weight:800; color:#b45309;">REGISTRATION CERTIFICATE</span>
+              <span style="font-size:9px; background:#fef3c7; color:#b45309; padding:1px 5px; border-radius:3px; font-weight:700;">ACTIVE</span>
+            </div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">RJ-54-CK-4706</div>
+            <div style="font-size:11px; color:#334155; margin-top:3px;">Honda City (Sedan)</div>
+            <div style="font-size:10px; color:#64748b;">RTO: DTO Pipar City (RJ-54)</div>
+          </div>
+
+          <!-- PUC Card -->
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #2563eb; border-radius:6px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:10px; font-weight:800; color:#2563eb;">EMISSION PUC CERTIFICATE</span>
+              <span style="font-size:9px; background:#dbeafe; color:#1d4ed8; padding:1px 5px; border-radius:3px; font-weight:700;">PASSED</span>
+            </div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">PUC-RJ-2026-9042</div>
+            <div style="font-size:11px; color:#334155; margin-top:3px;">BS-VI Compliant (0.12 CO)</div>
+            <div style="font-size:10px; color:#64748b;">Valid Upto: 18-Dec-2026</div>
+          </div>
+
+          <!-- FASTag Card -->
+          <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #7e22ce; border-radius:6px; padding:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:10px; font-weight:800; color:#7e22ce;">NETC FASTAG WALLET</span>
+              <span style="font-size:9px; background:#f3e8ff; color:#7e22ce; padding:1px 5px; border-radius:3px; font-weight:700;">ACTIVE</span>
+            </div>
+            <div style="font-family:var(--font-mono); font-weight:800; font-size:13px; color:#0f172a;">Tag: NETC-3416-8902</div>
+            <div style="font-size:11px; color:#334155; margin-top:3px;">Balance: <strong>₹750.00</strong></div>
+            <div style="font-size:10px; color:#64748b;">Issuer: SBI FASTag &bull; Low Balance Safe</div>
+          </div>
+
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:1px solid #e2e8f0;">
+          <span style="font-size:10px; color:#64748b;">Verified via DigiLocker India Sovereign Key PKI</span>
+          <button class="btn-action-primary" onclick="App.showToast('DigiLocker Smart e-Card exported successfully with sovereign digital signature', 'success'); App.closeModal('digiLockerModal')">
+            <i data-lucide="download"></i> Export DigiLocker Smart Card
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Highway Advisory Modal -->
+  <div class="modal-backdrop" id="highwayAdvisoryModal">
+    <div class="modal-card" style="max-width:620px;">
+      <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #b45309;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="background:#b45309; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
+            <i data-lucide="navigation" style="width:18px; height:18px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:800; font-size:14px;">NATIONAL HIGHWAYS AUTHORITY OF INDIA (NHAI) ADVISORY</div>
+            <div style="font-size:10px; color:#cbd5e1;">Live Corridor Telemetry, Roadworks &amp; Weather Warnings</div>
+          </div>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('highwayAdvisoryModal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding:18px 20px;">
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+          
+          <div style="background:#f8fafc; border-left:4px solid #059669; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">
+              <span>NH-48 (Delhi &bull; Gurugram &bull; Jaipur Express Corridor)</span>
+              <span style="font-size:10px; color:#059669;">NORMAL FLOW</span>
+            </div>
+            <div style="color:#475569; margin-top:2px;">
+              Speed Limit: 100 km/h (LMV), 80 km/h (HMV). Automatic ANPR speed cameras active at Bilaspur and Shahjahanpur.
+            </div>
+          </div>
+
+          <div style="background:#f8fafc; border-left:4px solid #2563eb; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">
+              <span>NE-4 (Delhi &bull; Mumbai Expressway &bull; Sohna &bull; Dausa Section)</span>
+              <span style="font-size:10px; color:#2563eb;">HIGH SPEED</span>
+            </div>
+            <div style="color:#475569; margin-top:2px;">
+              Speed Limit: 120 km/h. 100% barrier-free electronic tolling. Emergency trauma helicopters standby at Dausa base.
+            </div>
+          </div>
+
+          <div style="background:#f8fafc; border-left:4px solid #dc2626; padding:10px 12px; border-radius:0 6px 6px 0; font-size:11.5px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">
+              <span>Yamuna Expressway (Greater Noida &bull; Mathura &bull; Agra)</span>
+              <span style="font-size:10px; color:#dc2626; font-weight:800;">CAUTION &bull; WEATHER ADVISORY</span>
+            </div>
+            <div style="color:#475569; margin-top:2px;">
+              Morning fog reported between KM 45 and KM 88. Statutory cautionary speed limit reduced to 75 km/h. Keep fog lights on.
+            </div>
+          </div>
+
+        </div>
+
+        <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:6px; padding:10px 12px; font-size:11px; color:#9a3412; display:flex; justify-content:space-between; align-items:center;">
+          <span>📞 NHAI 24x7 Roadside Distress Helpline: <strong>1033</strong> | National SOS: <strong>112</strong></span>
+          <button class="btn-action-gold" style="font-size:10px; padding:4px 10px;" onclick="App.closeModal('highwayAdvisoryModal'); App.switchTab('emergency')">
+            Open 112 SOS
+          </button>
+        </div>
       </div>
     </div>
   </div>
