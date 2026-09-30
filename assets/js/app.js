@@ -1116,7 +1116,7 @@ const App = {
       status: "Pending",
       severity: "Critical",
       officerBadge: "TR-INSP-5501",
-      evidenceImage: "assets/images/cctv_sample.jpg",
+      evidenceImage: "",
       ipAddress: v.ipAddress
     };
 

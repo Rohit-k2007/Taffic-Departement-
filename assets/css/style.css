@@ -167,10 +167,12 @@ body {
 }
 
 /* Main Government Header (Charcoal & White) */
+/* Main Government Header (Charcoal & White) */
+.gov-top-header,
 .main-gov-header {
   background: #111827;
-  border-bottom: 3px solid #b45309;
-  padding: 10px 24px;
+  border-bottom: 2px solid #b45309;
+  padding: 8px 20px;
   box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
@@ -183,7 +185,206 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
+}
+
+/* Emblem & Title Group (Professional Government Standard) */
+.emblem-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.emblem-badge {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  border-radius: 50%;
+  background: #111827;
+  border: 1.5px solid #d97706;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(217, 119, 6, 0.3);
+  flex-shrink: 0;
+}
+
+.emblem-img {
+  width: 42px;
+  height: 42px;
+  max-width: 42px;
+  max-height: 42px;
+  object-fit: contain;
+  display: block;
+  border-radius: 50%;
+  filter: brightness(2.1) contrast(1.15) drop-shadow(0 0 2px #fff);
+}
+
+.gov-titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.25;
+}
+
+.gov-title-hi {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.gov-title-en {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+
+.portal-brand-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+.portal-acronym {
+  background: #b45309;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+/* Header Telemetry Strip */
+.header-telemetry-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.quick-stat-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.quick-stat-box .quick-stat-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.quick-stat-box .quick-stat-val {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: #ffffff;
+}
+
+/* Digital Duty Pass ID Card (Professional BPR&D / MoRTH Standard) */
+.officer-pass-card {
+  background: #ffffff;
+  border: 2px solid #b45309;
+  border-radius: 8px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.pass-header {
+  text-align: center;
+  border-bottom: 2px solid #b45309;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.pass-crest-img {
+  width: 46px;
+  height: 46px;
+  max-width: 46px;
+  max-height: 46px;
+  object-fit: contain;
+  margin: 0 auto 6px auto;
+  display: block;
+  border-radius: 50%;
+  padding: 2px;
+  background: #111827;
+  border: 1.5px solid #d97706;
+  filter: brightness(2.1) contrast(1.15) drop-shadow(0 0 2px #fff);
+}
+
+.pass-title-main {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0a2540;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.pass-title-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.pass-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+  margin-top: 10px;
+}
+
+.pass-qr-box {
+  width: 58px;
+  height: 58px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 4px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: #475569;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Footer Emblem */
+.footer-emblem-img {
+  width: 34px;
+  height: 34px;
+  max-width: 34px;
+  max-height: 34px;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: brightness(2.1) contrast(1.15);
+  display: block;
+  flex-shrink: 0;
 }
 
 .brand-section {
@@ -195,8 +396,8 @@ body {
 }
 
 .gov-crest-container {
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   padding: 2px;
   background: #ffffff;
@@ -211,7 +412,7 @@ body {
 .gov-crest-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 50%;
 }
 

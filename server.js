@@ -659,7 +659,7 @@ const SEED_VIOLATIONS = [
     status: "Pending",
     severity: "Critical",
     officerBadge: "TR-INSP-5501",
-    evidenceImage: "assets/images/cctv_sample.jpg"
+    evidenceImage: ""
   },
   {
     id: "CH-2026-88190",
@@ -676,7 +676,7 @@ const SEED_VIOLATIONS = [
     status: "Paid",
     severity: "Critical",
     officerBadge: "TR-WRD-1102",
-    evidenceImage: "assets/images/cctv_sample.jpg"
+    evidenceImage: ""
   },
   {
     id: "CH-2026-77401",
@@ -693,7 +693,7 @@ const SEED_VIOLATIONS = [
     status: "Pending",
     severity: "High",
     officerBadge: "TR-SI-4219",
-    evidenceImage: "assets/images/cctv_sample.jpg"
+    evidenceImage: ""
   },
   {
     id: "CH-2026-64210",
@@ -710,7 +710,7 @@ const SEED_VIOLATIONS = [
     status: "Court",
     severity: "Critical",
     officerBadge: "TR-INSP-5501",
-    evidenceImage: "assets/images/cctv_sample.jpg"
+    evidenceImage: ""
   },
   {
     id: "CH-2026-55420",
@@ -727,7 +727,7 @@ const SEED_VIOLATIONS = [
     status: "Paid",
     severity: "Medium",
     officerBadge: "TR-SI-4219",
-    evidenceImage: "assets/images/cctv_sample.jpg"
+    evidenceImage: ""
   }
 ];
 
