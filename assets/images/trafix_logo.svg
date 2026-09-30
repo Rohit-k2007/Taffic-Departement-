@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <!-- Outer Shield Shell -->
+  <path d="M32 4L8 14V30C8 44.8 18.2 58.4 32 62C45.8 58.4 56 44.8 56 30V14L32 4Z" fill="#0B192C" stroke="#1E3E62" stroke-width="2.5" stroke-linejoin="round"/>
+  
+  <!-- Subtle Gradient Accent on Shield -->
+  <path d="M32 6.5L10.5 15.5V30C10.5 43.6 19.8 56.2 32 59.5C44.2 56.2 53.5 43.6 53.5 30V15.5L32 6.5Z" stroke="#334155" stroke-width="1" stroke-dasharray="2 2"/>
+
+  <!-- Traffic Signal Indicator Dots at Shield Crown -->
+  <circle cx="26" cy="12" r="2" fill="#EF4444"/>
+  <circle cx="32" cy="12" r="2" fill="#F59E0B"/>
+  <circle cx="38" cy="12" r="2" fill="#10B981"/>
+
+  <!-- Converging Highway / Road Perspective -->
+  <path d="M21 52L27 22H37L43 52H21Z" fill="#1E293B" stroke="#0F172A" stroke-width="1.5"/>
+  
+  <!-- Highway Centerline (Saffron subtle accent) -->
+  <line x1="32" y1="22" x2="32" y2="29" stroke="#F97316" stroke-width="2" stroke-linecap="round"/>
+  <line x1="32" y1="34" x2="32" y2="42" stroke="#F97316" stroke-width="2.2" stroke-linecap="round"/>
+  <line x1="32" y1="47" x2="32" y2="52" stroke="#F97316" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Geometric Horizon 'T' Monogram Bar -->
+  <path d="M17 22H47" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+  
+  <!-- Road Horizon Junction -->
+  <circle cx="32" cy="22" r="3" fill="#F97316"/>
+</svg>

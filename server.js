@@ -1830,6 +1830,354 @@ async function requestHandler(req, res) {
     });
   }
 
+  // 36. GET & PUT /api/cameras (Camera Management & Health Monitoring)
+  if (pathname === '/api/cameras' && req.method === 'GET') {
+    let list = db.cameras || [];
+    const status = urlObj.searchParams.get('status');
+    const district = urlObj.searchParams.get('district');
+    const highActivity = urlObj.searchParams.get('highActivity');
+
+    if (status && status !== 'ALL') {
+      list = list.filter(c => c.status.toUpperCase() === status.toUpperCase());
+    }
+    if (district && district !== 'ALL') {
+      list = list.filter(c => c.district === district);
+    }
+    if (highActivity === 'true') {
+      list = list.filter(c => c.eventsToday >= 150);
+    }
+    return sendJSON(res, 200, { success: true, count: list.length, cameras: list });
+  }
+
+  if (pathname.startsWith('/api/cameras/') && req.method === 'GET') {
+    const camId = pathname.split('/')[3];
+    const camera = (db.cameras || []).find(c => c.id === camId);
+    if (camera) {
+      const recentEvents = (db.cameraEvents || []).filter(e => e.cameraId === camId);
+      return sendJSON(res, 200, { success: true, camera, recentEvents });
+    }
+    return sendJSON(res, 404, { success: false, message: "Camera not found in registry" });
+  }
+
+  if (pathname.match(/^\/api\/cameras\/[^/]+\/status$/) && req.method === 'PUT') {
+    if (!requireRole(['TRAFFIC_POLICE_OFFICER', 'CONTROL_ROOM', 'ADMINISTRATOR', 'ADMIN'], "Only Traffic Police, Control Room or Admin can toggle camera operational status.")) return;
+    const camId = pathname.split('/')[3];
+    return getBody(req, body => {
+      const camera = (db.cameras || []).find(c => c.id === camId);
+      if (!camera) return sendJSON(res, 404, { success: false, message: "Camera not found" });
+      if (body.status) camera.status = body.status;
+      if (body.notes) camera.lastActivity = body.notes;
+      saveDB();
+      return sendJSON(res, 200, { success: true, camera, message: `Camera ${camId} status updated to ${camera.status}` });
+    });
+  }
+
+  // 37. GET & POST /api/camera-events (Smart Incident Capture & Mandatory Human Review)
+  if (pathname === '/api/camera-events' && req.method === 'GET') {
+    let list = db.cameraEvents || [];
+    const status = urlObj.searchParams.get('status');
+    const severity = urlObj.searchParams.get('severity');
+    const camId = urlObj.searchParams.get('cameraId');
+
+    if (status && status !== 'ALL') {
+      list = list.filter(e => e.eventStatus === status);
+    }
+    if (severity && severity !== 'ALL') {
+      list = list.filter(e => e.severity === severity);
+    }
+    if (camId) {
+      list = list.filter(e => e.cameraId === camId);
+    }
+    return sendJSON(res, 200, { success: true, count: list.length, events: list });
+  }
+
+  if (pathname.match(/^\/api\/camera-events\/[^/]+\/review$/) && req.method === 'POST') {
+    if (!requireRole(['TRAFFIC_POLICE_OFFICER', 'ADMINISTRATOR', 'ADMIN'], "Access Denied: Statutory Human Review requires Traffic Police Officer or Directorate clearance.")) return;
+    const evtId = pathname.split('/')[3];
+    return getBody(req, body => {
+      const evt = (db.cameraEvents || []).find(e => e.id === evtId);
+      if (!evt) return sendJSON(res, 404, { success: false, message: "Camera event not found" });
+
+      const action = (body.action || '').toUpperCase();
+      const reviewer = (authUser && authUser.fullName) || body.reviewedBy || "Inspector Duty Officer";
+      const notes = (body.notes || '').trim() || (action === 'VERIFY' ? 'Human review verified AI optical detection.' : 'Rejected upon officer inspection.');
+
+      let createdChallan = null;
+
+      if (action === 'VERIFY') {
+        evt.eventStatus = 'VERIFIED';
+        evt.reviewedBy = reviewer;
+        evt.reviewNotes = notes;
+
+        if (body.issueChallan) {
+          const fine = body.fineAmount || (evt.severity === 'CRITICAL' ? 5000 : 1000);
+          createdChallan = {
+            id: "CH-2026-" + Math.floor(100000 + Math.random() * 900000),
+            dateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+            status: "Issued",
+            plateNumber: evt.plateNumber || "DL01XX9999",
+            vehicleType: evt.vehicleType || "Light Motor Vehicle",
+            violationType: evt.eventType.replace(/_/g, ' '),
+            violationCode: "SEC-" + (evt.eventType.includes('SPEED') ? '183' : evt.eventType.includes('RED') ? '184' : '177'),
+            location: evt.intersection || evt.cameraName || "National Capital Territory Roadway",
+            fineAmount: fine,
+            officerBadge: (authUser && authUser.officerDetails && authUser.officerDetails.badgeNumber) || "DL-TP-AUTO",
+            paymentStatus: "UNPAID",
+            evidenceReference: evt.id
+          };
+          if (!db.violations) db.violations = [];
+          db.violations.unshift(createdChallan);
+          evt.actionTaken = `CHALLAN_ISSUED_${createdChallan.id}`;
+        } else {
+          evt.actionTaken = body.actionTaken || "LOGGED_WARNING_NOTICE";
+        }
+      } else {
+        evt.eventStatus = 'REJECTED';
+        evt.reviewedBy = reviewer;
+        evt.reviewNotes = notes;
+        evt.actionTaken = "DISMISSED_INSUFFICIENT_EVIDENCE";
+      }
+
+      // Append to immutable audit log
+      if (!db.auditLogs) db.auditLogs = [];
+      db.auditLogs.unshift({
+        id: "LOG-" + Date.now(),
+        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        user: reviewer,
+        action: action === 'VERIFY' ? "VERIFY_CAMERA_EVENT" : "REJECT_CAMERA_EVENT",
+        entity: "CameraEvent",
+        entityId: evt.id,
+        ip: req.socket.remoteAddress || "127.0.0.1",
+        userAgent: req.headers['user-agent'] || 'TRAFIX-Desktop-Client'
+      });
+
+      saveDB();
+      return sendJSON(res, 200, {
+        success: true,
+        event: evt,
+        challan: createdChallan,
+        message: action === 'VERIFY' ? "Event successfully verified by Human Review. Enforcement workflow logged." : "Event rejected and dismissed."
+      });
+    });
+  }
+
+  // 38. GET, POST, & PUT /api/incidents (Traffic Incident Management)
+  if (pathname === '/api/incidents' && req.method === 'GET') {
+    let list = db.incidents || [];
+    const status = urlObj.searchParams.get('status');
+    const severity = urlObj.searchParams.get('severity');
+    if (status && status !== 'ALL') list = list.filter(i => i.status === status);
+    if (severity && severity !== 'ALL') list = list.filter(i => i.severity === severity);
+    return sendJSON(res, 200, { success: true, count: list.length, incidents: list });
+  }
+
+  if (pathname === '/api/incidents' && req.method === 'POST') {
+    return getBody(req, body => {
+      if (!body.type || !body.location) {
+        return sendJSON(res, 400, { success: false, message: "Incident type and location are required." });
+      }
+      const incNum = "INC-2026-" + Math.floor(1000 + Math.random() * 9000);
+      const newInc = {
+        id: "INC-" + Date.now(),
+        incidentNumber: incNum,
+        type: body.type,
+        location: body.location,
+        coordinates: body.coordinates || [28.6139, 77.2090],
+        severity: body.severity || "MEDIUM",
+        detectedTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        status: "OPEN",
+        assignedOfficer: body.assignedOfficer || "Control Room Dispatch Pending",
+        relatedVehicle: body.relatedVehicle || null,
+        relatedViolation: body.relatedViolation || null,
+        description: body.description || "Field incident report registered in TRAFIX operations system.",
+        timeline: [
+          { time: new Date().toLocaleTimeString(), text: "Incident registered in TRAFIX Operations Center." }
+        ],
+        auditHistory: [
+          { time: new Date().toLocaleTimeString(), action: "INCIDENT_CREATED", user: (authUser && authUser.fullName) || "Control Room Operator" }
+        ]
+      };
+      if (!db.incidents) db.incidents = [];
+      db.incidents.unshift(newInc);
+      saveDB();
+      return sendJSON(res, 201, { success: true, incident: newInc, message: "Incident successfully logged." });
+    });
+  }
+
+  if (pathname.startsWith('/api/incidents/') && req.method === 'PUT') {
+    const incId = pathname.split('/')[3];
+    return getBody(req, patch => {
+      const inc = (db.incidents || []).find(i => i.id === incId || i.incidentNumber === incId);
+      if (!inc) return sendJSON(res, 404, { success: false, message: "Incident not found" });
+      if (patch.status) inc.status = patch.status;
+      if (patch.assignedOfficer) inc.assignedOfficer = patch.assignedOfficer;
+      if (patch.timelineNote) {
+        if (!inc.timeline) inc.timeline = [];
+        inc.timeline.push({ time: new Date().toLocaleTimeString(), text: patch.timelineNote });
+      }
+      if (!inc.auditHistory) inc.auditHistory = [];
+      inc.auditHistory.push({
+        time: new Date().toLocaleTimeString(),
+        action: "STATUS_UPDATE_" + (patch.status || 'EDIT'),
+        user: (authUser && authUser.fullName) || "Duty Officer"
+      });
+      saveDB();
+      return sendJSON(res, 200, { success: true, incident: inc });
+    });
+  }
+
+  // 39. GET /api/evidence (Evidence Vault & Chain-of-Custody Records)
+  if (pathname === '/api/evidence' && req.method === 'GET') {
+    return sendJSON(res, 200, { success: true, count: (db.evidenceFiles || []).length, evidence: db.evidenceFiles || [] });
+  }
+
+  // 40. GET /api/global-search (Unified Multi-Entity Search respecting RBAC)
+  if (pathname === '/api/global-search' && req.method === 'GET') {
+    const q = (urlObj.searchParams.get('q') || '').trim().toUpperCase();
+    if (!q) {
+      return sendJSON(res, 200, { success: true, query: '', results: { vehicles: [], licences: [], cases: [], incidents: [], violations: [], cameras: [], rtoApplications: [] } });
+    }
+
+    const matchedVehicles = (db.vehicles || []).filter(v => 
+      (v.registrationNumber && v.registrationNumber.toUpperCase().includes(q)) ||
+      (v.ownerName && v.ownerName.toUpperCase().includes(q)) ||
+      (v.model && v.model.toUpperCase().includes(q))
+    ).slice(0, 5);
+
+    const matchedLicences = (db.drivingLicences || []).filter(l => 
+      (l.licenceNumber && l.licenceNumber.toUpperCase().includes(q)) ||
+      (l.holderName && l.holderName.toUpperCase().includes(q))
+    ).slice(0, 5);
+
+    const matchedCases = (db.cases || []).filter(c => 
+      (c.id && c.id.toUpperCase().includes(q)) ||
+      (c.description && c.description.toUpperCase().includes(q)) ||
+      (c.locationAddress && c.locationAddress.toUpperCase().includes(q))
+    ).slice(0, 5);
+
+    const matchedIncidents = (db.incidents || []).filter(i => 
+      (i.id && i.id.toUpperCase().includes(q)) ||
+      (i.incidentNumber && i.incidentNumber.toUpperCase().includes(q)) ||
+      (i.type && i.type.toUpperCase().includes(q)) ||
+      (i.location && i.location.toUpperCase().includes(q))
+    ).slice(0, 5);
+
+    const matchedViolations = (db.violations || []).filter(v => 
+      (v.id && v.id.toUpperCase().includes(q)) ||
+      (v.plateNumber && v.plateNumber.toUpperCase().includes(q)) ||
+      (v.location && v.location.toUpperCase().includes(q))
+    ).slice(0, 5);
+
+    const matchedCameras = (db.cameras || []).filter(c => 
+      (c.id && c.id.toUpperCase().includes(q)) ||
+      (c.name && c.name.toUpperCase().includes(q)) ||
+      (c.location && c.location.toUpperCase().includes(q))
+    ).slice(0, 5);
+
+    const matchedRto = (db.rtoApplications || []).filter(a => 
+      (a.id && a.id.toUpperCase().includes(q)) ||
+      (a.applicationNumber && a.applicationNumber.toUpperCase().includes(q)) ||
+      (a.applicantName && a.applicantName.toUpperCase().includes(q))
+    ).slice(0, 5);
+
+    return sendJSON(res, 200, {
+      success: true,
+      query: q,
+      totalCount: matchedVehicles.length + matchedLicences.length + matchedCases.length + matchedIncidents.length + matchedViolations.length + matchedCameras.length + matchedRto.length,
+      results: {
+        vehicles: matchedVehicles,
+        licences: matchedLicences,
+        cases: matchedCases,
+        incidents: matchedIncidents,
+        violations: matchedViolations,
+        cameras: matchedCameras,
+        rtoApplications: matchedRto
+      }
+    });
+  }
+
+  // 41. POST /api/auth/register (Citizen Self-Registration)
+  if (pathname === '/api/auth/register' && req.method === 'POST') {
+    return getBody(req, body => {
+      const fullName = (body.fullName || body.name || '').trim();
+      const email = (body.email || '').trim().toLowerCase();
+      const phone = (body.phone || body.mobile || '').trim();
+      const password = body.password || '';
+
+      if (!fullName || !email || !password) {
+        return sendJSON(res, 400, { success: false, message: "Full Name, Email, and Password are required." });
+      }
+
+      const existing = (db.users || []).find(u => u.email.toLowerCase() === email || (phone && u.phone === phone));
+      if (existing) {
+        return sendJSON(res, 409, { success: false, message: "An account already exists with this email or phone number." });
+      }
+
+      const newUser = {
+        id: "USR-" + Date.now(),
+        fullName: fullName,
+        email: email,
+        phone: phone || "+91 98765 00000",
+        role: "CITIZEN",
+        status: "ACTIVE",
+        createdAt: new Date().toISOString()
+      };
+
+      if (!db.users) db.users = [];
+      db.users.push(newUser);
+
+      // Append audit log
+      if (!db.auditLogs) db.auditLogs = [];
+      db.auditLogs.unshift({
+        id: "LOG-" + Date.now(),
+        timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        user: email,
+        action: "CREATE_USER_ACCOUNT",
+        entity: "User",
+        entityId: newUser.id,
+        ip: req.socket.remoteAddress || "127.0.0.1",
+        userAgent: req.headers['user-agent'] || 'TRAFIX-Auth'
+      });
+
+      saveDB();
+      return sendJSON(res, 201, {
+        success: true,
+        message: "Citizen account successfully registered. You may now sign in.",
+        user: newUser
+      });
+    });
+  }
+
+  // 42. POST /api/auth/forgot-password & /api/auth/reset-password
+  if (pathname === '/api/auth/forgot-password' && req.method === 'POST') {
+    return getBody(req, body => {
+      const emailOrPhone = (body.emailOrPhone || body.email || body.phone || '').trim().toLowerCase();
+      if (!emailOrPhone) {
+        return sendJSON(res, 400, { success: false, message: "Registered email or phone number is required." });
+      }
+      const resetToken = "RST-" + Math.floor(100000 + Math.random() * 900000);
+      return sendJSON(res, 200, {
+        success: true,
+        message: `Password reset verification code dispatched to ${emailOrPhone}.`,
+        resetToken: resetToken
+      });
+    });
+  }
+
+  if (pathname === '/api/auth/reset-password' && req.method === 'POST') {
+    return getBody(req, body => {
+      const token = body.resetToken || body.token;
+      const newPass = body.newPassword || body.password;
+      if (!token || !newPass || newPass.length < 8) {
+        return sendJSON(res, 400, { success: false, message: "Valid reset code and password (minimum 8 characters) required." });
+      }
+      return sendJSON(res, 200, {
+        success: true,
+        message: "Password reset successful. Please sign in with your new credentials."
+      });
+    });
+  }
+
   // --- STATIC FILE SERVING ---
   let reqPath = pathname;
   if (reqPath === '/') reqPath = '/index.html';

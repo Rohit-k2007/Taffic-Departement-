@@ -360,6 +360,14 @@ const App = {
     // Real-time Event listeners
     window.addEventListener('traffic-tick', (e) => this.handleTrafficTick(e.detail));
     window.addEventListener('anpr-detection', (e) => this.handleAnprDetection(e.detail));
+
+    // Global Search Shortcut: Ctrl + K or Cmd + K
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        this.openGlobalSearchModal();
+      }
+    });
   },
 
   renderAllViews() {
@@ -381,6 +389,11 @@ const App = {
     this.renderOfficerAccidentsTable();
     this.renderRtoDesk();
     this.renderRiskZonesTable();
+    this.renderCamerasView();
+    this.renderCameraEventsQueue();
+    this.renderIncidentsView();
+    this.renderEvidenceVault();
+    this.renderNotifications();
   },
 
   // =========================================================================
@@ -388,10 +401,10 @@ const App = {
   // =========================================================================
 
   ROLE_TABS: {
-    citizen: ['citizen-dashboard', 'citizen-vehicles', 'citizen-track', 'citizen-dl-services', 'citizen-rto-apps', 'citizen-report', 'emergency'],
-    officer: ['citizen-dashboard', 'current', 'emergency', 'officer-cases', 'violations', 'officer-accidents', 'risk-center', 'roadworks'],
-    rto: ['citizen-dashboard', 'current', 'rto-desk', 'citizen-vehicles', 'vehicle-ratios', 'roadworks'],
-    admin: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-dl-services', 'citizen-rto-apps', 'officer-cases', 'violations', 'officer-accidents', 'rto-desk', 'risk-center', 'roadworks', 'vehicle-ratios', 'admin']
+    citizen: ['citizen-dashboard', 'citizen-vehicles', 'citizen-track', 'citizen-dl-services', 'citizen-rto-apps', 'citizen-report', 'emergency', 'cameras', 'incidents'],
+    officer: ['citizen-dashboard', 'current', 'emergency', 'officer-cases', 'violations', 'officer-accidents', 'risk-center', 'roadworks', 'cameras', 'camera-events', 'incidents', 'evidence'],
+    rto: ['citizen-dashboard', 'current', 'rto-desk', 'citizen-vehicles', 'vehicle-ratios', 'roadworks', 'cameras', 'evidence'],
+    admin: ['citizen-dashboard', 'current', 'emergency', 'citizen-report', 'citizen-accident', 'citizen-track', 'citizen-vehicles', 'citizen-dl-services', 'citizen-rto-apps', 'officer-cases', 'violations', 'officer-accidents', 'rto-desk', 'risk-center', 'roadworks', 'vehicle-ratios', 'admin', 'cameras', 'camera-events', 'incidents', 'evidence']
   },
 
   switchRole(role) {
@@ -4375,6 +4388,477 @@ const App = {
     } else {
       this.showToast('Direct download URL: ' + link, 'info');
     }
+  },
+
+  // =========================================================================
+  // SMART CAMERAS, AI EVENTS REVIEW, INCIDENTS & EVIDENCE VAULT
+  // =========================================================================
+
+  activeCamFilter: 'ALL',
+  activeActiveStreamCamId: 'CAM-DL-01',
+  activeReviewEventId: null,
+
+  renderCamerasView() {
+    const container = document.getElementById('camerasGridContainer');
+    if (!container) return;
+
+    const cameras = window.trafficDB.getCameras(this.activeCamFilter);
+    if (!cameras || cameras.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state-card" style="grid-column:1/-1;">
+          <div class="empty-state-icon"><i data-lucide="video-off"></i></div>
+          <h4 class="empty-state-title">No Cameras Found</h4>
+          <p class="empty-state-text">No surveillance units match the selected filter criteria.</p>
+        </div>
+      `;
+      if (window.lucide) lucide.createIcons();
+      return;
+    }
+
+    container.innerHTML = cameras.map(cam => {
+      const isOnline = cam.status === 'ONLINE';
+      const isMaint = cam.status === 'MAINTENANCE';
+      const statusClass = isOnline ? 'online' : (isMaint ? 'maintenance' : 'offline');
+
+      return `
+        <div class="camera-card">
+          <div class="camera-card-preview">
+            <div class="camera-preview-overlay">
+              <span class="camera-live-pulse">
+                <span class="pulse-dot ${statusClass}"></span>
+                ${cam.status}
+              </span>
+              <span style="font-size:10px; background:rgba(0,0,0,0.6); padding:2px 6px; border-radius:4px; color:#93c5fd; font-family:var(--font-mono);">
+                ${cam.id}
+              </span>
+            </div>
+            <i data-lucide="cctv" style="width:42px; height:42px; opacity:0.4;"></i>
+          </div>
+          <div class="camera-card-body">
+            <h4 class="camera-card-title">${cam.name}</h4>
+            <div class="camera-card-loc">
+              <i data-lucide="map-pin" style="width:12px; height:12px; color:#1e40af;"></i>
+              <span>${cam.location}</span>
+            </div>
+            <div class="camera-meta-grid">
+              <div>Type: <strong>${cam.type}</strong></div>
+              <div>Events Today: <strong>${cam.eventsToday || 0}</strong></div>
+              <div>Resolution: <strong>${cam.resolution || '4K'}</strong></div>
+              <div>IP: <code>${cam.ip || '10.42.10.x'}</code></div>
+            </div>
+          </div>
+          <div class="camera-card-footer">
+            <span style="font-size:10.5px; color:#64748b;">
+              <i data-lucide="activity" style="width:11px; height:11px; vertical-align:middle;"></i>
+              ${cam.lastActivity}
+            </span>
+            <button class="btn-action-primary" style="font-size:11px; padding:4px 10px;" onclick="App.openCameraStreamModal('${cam.id}')">
+              <i data-lucide="play" style="width:11px; height:11px;"></i>
+              <span>View Stream</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    if (window.lucide) lucide.createIcons();
+  },
+
+  filterCameras(status) {
+    this.activeCamFilter = status;
+    document.querySelectorAll('.filter-tab-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(`btnCamFilter${status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}`);
+    if (btn) btn.classList.add('active');
+    this.renderCamerasView();
+  },
+
+  openCameraStreamModal(camId) {
+    this.activeActiveStreamCamId = camId;
+    const cam = window.trafficDB.getCameraById(camId);
+    if (!cam) return;
+
+    const title = document.getElementById('streamModalTitle');
+    const loc = document.getElementById('streamModalLocation');
+    const coords = document.getElementById('streamTelemetryCoords');
+
+    if (title) title.innerText = `Live Feed: ${cam.name} (${cam.id})`;
+    if (loc) loc.innerText = `${cam.location} (${cam.intersection})`;
+    if (coords && cam.coordinates) coords.innerText = `LAT: ${cam.coordinates[0]} N | LON: ${cam.coordinates[1]} E`;
+
+    this.openModal('cameraStreamModal');
+  },
+
+  async toggleCameraMaintenance() {
+    const cam = window.trafficDB.getCameraById(this.activeActiveStreamCamId);
+    if (!cam) return;
+    const newStatus = cam.status === 'MAINTENANCE' ? 'ONLINE' : 'MAINTENANCE';
+    const notes = newStatus === 'MAINTENANCE' ? 'Scheduled optical calibration' : 'Operational feed restored';
+    await window.trafficDB.updateCameraStatus(cam.id, newStatus, notes);
+    this.renderCamerasView();
+    this.showToast(`Camera ${cam.id} marked as ${newStatus}`, 'info');
+  },
+
+  renderCameraEventsQueue() {
+    const tbody = document.getElementById('cameraEventsTableBody');
+    if (!tbody) return;
+
+    const events = window.trafficDB.getCameraEvents();
+    if (!events || events.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">No camera events currently in verification queue.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = events.map(evt => {
+      const isPending = evt.eventStatus === 'PENDING_HUMAN_REVIEW';
+      const sevClass = (evt.severity || 'medium').toLowerCase();
+      const statusColor = isPending ? '#ea580c' : (evt.eventStatus === 'VERIFIED' ? '#059669' : '#64748b');
+
+      return `
+        <tr>
+          <td><strong style="font-family:var(--font-mono); font-size:11px;">${evt.id}</strong></td>
+          <td>
+            <div style="font-weight:700; color:#0f172a; font-size:12px;">${evt.cameraName}</div>
+            <div style="font-size:11px; color:#64748b;">${evt.intersection}</div>
+          </td>
+          <td>
+            <span style="font-weight:700; color:#1e40af; font-size:11.5px;">${evt.eventType.replace(/_/g, ' ')}</span>
+            <div style="font-size:10.5px; color:#64748b; font-family:var(--font-mono);">${evt.plateNumber || 'ANPR Scan'}</div>
+          </td>
+          <td>
+            <strong style="color:#059669; font-size:12px;">${evt.confidenceScore}%</strong>
+          </td>
+          <td>
+            <span class="status-pill ${sevClass}">${evt.severity}</span>
+          </td>
+          <td>
+            <span style="font-size:11px; font-weight:700; color:${statusColor};">${evt.eventStatus.replace(/_/g, ' ')}</span>
+          </td>
+          <td style="font-size:11px; color:#64748b; font-family:var(--font-mono);">${evt.timestamp}</td>
+          <td>
+            ${isPending ? `
+              <button class="btn-action-primary" style="font-size:11px; padding:3px 10px; background:#ea580c; border-color:#c2410c;" onclick="App.openSmartReviewModal('${evt.id}')">
+                <i data-lucide="eye" style="width:12px; height:12px;"></i>
+                <span>Review</span>
+              </button>
+            ` : `
+              <button class="btn-action-outline" style="font-size:11px; padding:3px 8px;" onclick="App.openSmartReviewModal('${evt.id}')">
+                <i data-lucide="file-text" style="width:12px; height:12px;"></i>
+                <span>Details</span>
+              </button>
+            `}
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    if (window.lucide) lucide.createIcons();
+  },
+
+  openSmartReviewModal(eventId) {
+    this.activeReviewEventId = eventId;
+    const evt = (window.trafficDB.cameraEvents || []).find(e => e.id === eventId);
+    if (!evt) return;
+
+    const frame = document.getElementById('reviewEvidenceFrame');
+    const evtId = document.getElementById('reviewEvtId');
+    const camId = document.getElementById('reviewCamId');
+    const vio = document.getElementById('reviewViolationType');
+    const conf = document.getElementById('reviewConfidence');
+    const hash = document.getElementById('reviewFileHash');
+    const notes = document.getElementById('reviewOfficerNotes');
+
+    if (evtId) evtId.innerText = evt.id;
+    if (camId) camId.innerText = `${evt.cameraName} (${evt.cameraId})`;
+    if (vio) vio.innerText = evt.eventType.replace(/_/g, ' ');
+    if (conf) conf.innerText = `${evt.confidenceScore}%`;
+    if (hash) hash.innerText = evt.evidence ? evt.evidence.fileHash : 'SHA-256 Validated';
+    if (notes) notes.value = evt.reviewNotes || '';
+
+    if (frame && evt.evidence && evt.evidence.snapshot) {
+      frame.innerHTML = evt.evidence.snapshot.startsWith('data:') 
+        ? `<img src="${evt.evidence.snapshot}" alt="Optical Frame Snapshot" style="width:100%; border-radius:6px;">`
+        : `<div style="padding:20px; color:#fff;">Snapshot Reference: ${evt.evidence.snapshot}</div>`;
+    }
+
+    this.openModal('smartReviewModal');
+  },
+
+  async submitEventReview(action) {
+    if (!this.activeReviewEventId) return;
+    const notesInput = document.getElementById('reviewOfficerNotes');
+    const issueChallanChk = document.getElementById('chkIssueChallan');
+
+    const reviewData = {
+      action: action,
+      notes: notesInput ? notesInput.value : '',
+      issueChallan: issueChallanChk ? issueChallanChk.checked : false
+    };
+
+    const result = await window.trafficDB.reviewCameraEvent(this.activeReviewEventId, reviewData);
+    this.closeModal('smartReviewModal');
+    this.renderCameraEventsQueue();
+    this.renderViolationsTable();
+
+    if (action === 'VERIFY') {
+      this.showToast(result.message || 'Event verified by Officer. Statutory record updated.', 'success');
+    } else {
+      this.showToast('Event rejected and dismissed as false positive.', 'info');
+    }
+  },
+
+  renderIncidentsView() {
+    const tbody = document.getElementById('incidentsTableBody');
+    if (!tbody) return;
+
+    const incidents = window.trafficDB.getIncidents();
+    if (!incidents || incidents.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">No active traffic incidents logged.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = incidents.map(inc => {
+      const sevClass = (inc.severity || 'medium').toLowerCase();
+      const isOpen = inc.status === 'OPEN' || inc.status === 'IN_PROGRESS';
+      const statusColor = isOpen ? '#dc2626' : '#059669';
+
+      return `
+        <tr>
+          <td><strong style="font-family:var(--font-mono); font-size:11px;">${inc.incidentNumber || inc.id}</strong></td>
+          <td><strong style="color:#0f172a; font-size:12px;">${inc.type}</strong></td>
+          <td>
+            <div style="font-size:12px; color:#334155;">${inc.location}</div>
+          </td>
+          <td><span class="status-pill ${sevClass}">${inc.severity}</span></td>
+          <td style="font-size:11px; color:#64748b; font-family:var(--font-mono);">${inc.detectedTime}</td>
+          <td style="font-size:11.5px; color:#1e40af; font-weight:600;">${inc.assignedOfficer || 'Unassigned'}</td>
+          <td><strong style="font-size:11px; color:${statusColor};">${inc.status}</strong></td>
+          <td>
+            <button class="btn-action-primary" style="font-size:10.5px; padding:3px 8px;" onclick="App.showToast('Incident ${inc.incidentNumber || inc.id} updated with dispatch radio.', 'info')">
+              <span>Dispatch</span>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    if (window.lucide) lucide.createIcons();
+  },
+
+  openCreateIncidentModal() {
+    this.openModal('createIncidentModal');
+  },
+
+  async submitCreateIncident(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const type = document.getElementById('inIncType')?.value;
+    const location = document.getElementById('inIncLocation')?.value;
+    const severity = document.getElementById('inIncSeverity')?.value;
+    const officer = document.getElementById('inIncOfficer')?.value;
+    const desc = document.getElementById('inIncDesc')?.value;
+
+    const newInc = await window.trafficDB.createIncident({
+      type,
+      location,
+      severity,
+      assignedOfficer: officer,
+      description: desc
+    });
+
+    this.closeModal('createIncidentModal');
+    this.renderIncidentsView();
+    this.showToast(`Traffic Incident ${newInc.incidentNumber || newInc.id} registered and dispatched.`, 'success');
+  },
+
+  renderEvidenceVault() {
+    const tbody = document.getElementById('evidenceTableBody');
+    if (!tbody) return;
+
+    const files = window.trafficDB.getEvidenceFiles();
+    if (!files || files.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">No evidence records in vault.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = files.map(f => `
+      <tr>
+        <td><strong style="font-family:var(--font-mono); font-size:11px;">${f.id}</strong></td>
+        <td><span style="font-size:11px; color:#1e40af; font-weight:700;">${f.caseReference}</span></td>
+        <td>${f.fileType}</td>
+        <td><code style="font-size:10.5px;">${f.fileName}</code></td>
+        <td><code style="font-size:10px; color:#475569;" title="${f.fileHash}">${f.fileHash.substring(0, 16)}...</code></td>
+        <td style="font-size:11px; color:#64748b;">${f.captureTime}</td>
+        <td style="font-size:11px; color:#b45309;">${f.retentionDate}</td>
+        <td><span class="status-pill online">${f.status}</span></td>
+      </tr>
+    `).join('');
+
+    if (window.lucide) lucide.createIcons();
+  },
+
+  // =========================================================================
+  // GLOBAL SEARCH & NOTIFICATION CENTER
+  // =========================================================================
+
+  openGlobalSearchModal() {
+    this.openModal('globalSearchModal');
+    const input = document.getElementById('globalSearchModalInput');
+    if (input) {
+      input.value = '';
+      setTimeout(() => input.focus(), 100);
+    }
+  },
+
+  async executeGlobalSearch(query) {
+    const container = document.getElementById('globalSearchResultsContainer');
+    if (!container) return;
+    if (!query || !query.trim()) {
+      container.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b;">Please enter a search query.</div>`;
+      return;
+    }
+
+    container.innerHTML = `
+      <div style="padding:20px; text-align:center; color:#1e40af;">
+        <i data-lucide="loader-2" class="spin" style="width:24px; height:24px; margin-bottom:8px;"></i>
+        <div>Searching TRAFIX national database...</div>
+      </div>
+    `;
+    if (window.lucide) lucide.createIcons();
+
+    const results = await window.trafficDB.performGlobalSearch(query);
+    const hasAny = (results.vehicles && results.vehicles.length > 0) ||
+                   (results.licences && results.licences.length > 0) ||
+                   (results.cases && results.cases.length > 0) ||
+                   (results.violations && results.violations.length > 0) ||
+                   (results.cameras && results.cameras.length > 0) ||
+                   (results.incidents && results.incidents.length > 0);
+
+    if (!hasAny) {
+      container.innerHTML = `
+        <div class="empty-state-card" style="padding:24px;">
+          <div class="empty-state-icon"><i data-lucide="search-x"></i></div>
+          <h4 class="empty-state-title">No Matching Records</h4>
+          <p class="empty-state-text">No vehicles, driving licences, cases, or cameras matched "${query}".</p>
+        </div>
+      `;
+      if (window.lucide) lucide.createIcons();
+      return;
+    }
+
+    let html = '';
+
+    if (results.vehicles && results.vehicles.length > 0) {
+      html += `<div style="font-size:11px; font-weight:800; color:#1e40af; text-transform:uppercase; margin-bottom:6px;">Vehicles (VAHAN)</div>`;
+      results.vehicles.forEach(v => {
+        html += `
+          <div class="notif-item-row" onclick="App.closeModal('globalSearchModal'); App.switchTab('citizen-vehicles');">
+            <i data-lucide="car" style="color:#1d4ed8; margin-top:2px;"></i>
+            <div class="notif-item-content">
+              <div class="notif-item-title">${v.registrationNumber} • ${v.make || ''} ${v.model || ''}</div>
+              <div class="notif-item-desc">Owner: ${v.ownerName || 'Registered Citizen'} • Status: ${v.status}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    if (results.licences && results.licences.length > 0) {
+      html += `<div style="font-size:11px; font-weight:800; color:#1e40af; text-transform:uppercase; margin:10px 0 6px 0;">Driving Licences (SARATHI)</div>`;
+      results.licences.forEach(l => {
+        html += `
+          <div class="notif-item-row" onclick="App.closeModal('globalSearchModal'); App.switchTab('citizen-dl-services');">
+            <i data-lucide="award" style="color:#059669; margin-top:2px;"></i>
+            <div class="notif-item-content">
+              <div class="notif-item-title">${l.licenceNumber} • ${l.holderName || 'Licence Holder'}</div>
+              <div class="notif-item-desc">RTO: ${l.rto || 'Transport Dept'} • Valid Till: ${l.validUntil || '2035'}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    if (results.violations && results.violations.length > 0) {
+      html += `<div style="font-size:11px; font-weight:800; color:#1e40af; text-transform:uppercase; margin:10px 0 6px 0;">Challans & Violations</div>`;
+      results.violations.forEach(vio => {
+        html += `
+          <div class="notif-item-row" onclick="App.closeModal('globalSearchModal'); App.switchTab('violations');">
+            <i data-lucide="file-text" style="color:#dc2626; margin-top:2px;"></i>
+            <div class="notif-item-content">
+              <div class="notif-item-title">${vio.id} • Plate: ${vio.plateNumber}</div>
+              <div class="notif-item-desc">${vio.violationType} • Fine: ₹${vio.fineAmount || 1000} (${vio.paymentStatus || 'UNPAID'})</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    if (results.cameras && results.cameras.length > 0) {
+      html += `<div style="font-size:11px; font-weight:800; color:#1e40af; text-transform:uppercase; margin:10px 0 6px 0;">Traffic Cameras</div>`;
+      results.cameras.forEach(c => {
+        html += `
+          <div class="notif-item-row" onclick="App.closeModal('globalSearchModal'); App.switchTab('cameras');">
+            <i data-lucide="video" style="color:#2563eb; margin-top:2px;"></i>
+            <div class="notif-item-content">
+              <div class="notif-item-title">${c.name} (${c.id})</div>
+              <div class="notif-item-desc">${c.location} • Status: ${c.status}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    container.innerHTML = html;
+    if (window.lucide) lucide.createIcons();
+  },
+
+  toggleNotifDropdown() {
+    const card = document.getElementById('headerNotifCard');
+    if (!card) return;
+    const isShowing = card.classList.contains('active');
+    if (isShowing) {
+      card.classList.remove('active');
+    } else {
+      this.renderNotifications();
+      card.classList.add('active');
+    }
+  },
+
+  renderNotifications() {
+    const listContainer = document.getElementById('notifDropdownList');
+    const badge = document.getElementById('headerNotifBadge');
+    if (!listContainer) return;
+
+    const notifs = window.trafficDB.notifications || [];
+    const unreadCount = notifs.filter(n => !n.isRead).length;
+    if (badge) {
+      badge.innerText = unreadCount;
+      badge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+    }
+
+    if (notifs.length === 0) {
+      listContainer.innerHTML = `<div style="text-align:center; padding:20px; font-size:11px; color:#64748b;">No new notifications.</div>`;
+      return;
+    }
+
+    listContainer.innerHTML = notifs.map(n => `
+      <div class="notif-item-row ${!n.isRead ? 'unread' : ''}" onclick="App.showToast('${n.message.replace(/'/g, "\\'")}', 'info')">
+        <i data-lucide="${n.type === 'CHALLAN' ? 'alert-triangle' : n.type === 'RTO' ? 'award' : 'bell'}" style="width:16px; height:16px; color:#1e40af; margin-top:2px;"></i>
+        <div class="notif-item-content">
+          <div class="notif-item-title">${n.title || 'System Notification'}</div>
+          <div class="notif-item-desc">${n.message}</div>
+          <div class="notif-item-time">${n.timestamp || 'Today'}</div>
+        </div>
+      </div>
+    `).join('');
+
+    if (window.lucide) lucide.createIcons();
+  },
+
+  markAllNotifsRead() {
+    if (window.trafficDB.notifications) {
+      window.trafficDB.notifications.forEach(n => n.isRead = true);
+    }
+    this.renderNotifications();
+    this.showToast('All notifications marked as read', 'info');
   }
 };
 

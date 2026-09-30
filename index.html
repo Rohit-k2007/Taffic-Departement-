@@ -31,21 +31,22 @@
   <header class="gov-top-header">
     <div class="header-container">
 
-      <!-- Emblem & Title Group -->
-      <div class="emblem-group">
-        <!-- Official Government Ashok Stambh Emblem Seal -->
-        <div class="emblem-badge">
-          <img src="assets/images/gov_emblem.jpg" alt="Government of India National Emblem" class="emblem-img"
-            width="42" height="42">
+      <!-- TRAFIX Brand & Tagline Group -->
+      <div class="emblem-group" style="cursor:pointer;" onclick="App.switchTab('citizen-dashboard')">
+        <div class="emblem-badge" style="background:transparent; border:none; padding:0; display:flex; align-items:center;">
+          <img src="assets/images/trafix_logo.svg" alt="TRAFIX Logo" class="trafix-brand-logo" width="40" height="40">
         </div>
-        <div class="gov-titles">
-          <div class="gov-title-hi">भारत सरकार • सड़क परिवहन और राजमार्ग मंत्रालय</div>
-          <div class="gov-title-en">GOVERNMENT OF INDIA • MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS</div>
-          <div class="portal-brand-title">
-            <span>राष्ट्रीय यातायात पुलिस एवं आरटीओ प्रबंधन मंच</span>
-            <span class="portal-acronym">TRAFIX</span>
-          </div>
+        <div class="gov-titles" style="gap:1px;">
+          <div class="brand-title-text">TRAFIX</div>
+          <div class="brand-tagline-text">Smart Roads. Safer Cities.</div>
         </div>
+      </div>
+
+      <!-- Global Search Trigger Bar (Desktop) -->
+      <div class="global-search-trigger" id="headerGlobalSearchTrigger" onclick="App.openGlobalSearchModal()" title="Global Search across Vehicles, Licences, Complaints, Incidents, Challans, Cameras (Ctrl + K)">
+        <i data-lucide="search" style="width:15px; height:15px; color:#93c5fd;"></i>
+        <span>Search vehicles, licences, cases, cameras...</span>
+        <span class="kbd-shortcut">Ctrl K</span>
       </div>
 
       <!-- Live Telemetry Ticker -->
@@ -73,10 +74,27 @@
         </div>
       </div>
 
-      <!-- Officer Pass & Action Controls -->
+      <!-- Officer Pass, Notifications, & Action Controls -->
       <div class="header-actions">
+        <!-- Notification Center Bell -->
+        <div class="notif-dropdown-wrapper">
+          <button class="notif-bell-btn" id="btnNotifBell" onclick="App.toggleNotifDropdown()" title="System Notifications">
+            <i data-lucide="bell" style="width:17px; height:17px;"></i>
+            <span class="notif-badge-pill" id="headerNotifBadge">4</span>
+          </button>
+          <div class="notif-dropdown-card" id="headerNotifCard">
+            <div class="notif-header">
+              <h4>System Notifications</h4>
+              <button onclick="App.markAllNotifsRead()" style="background:none; border:none; font-size:11px; color:#2563eb; cursor:pointer; font-weight:600;">Mark all read</button>
+            </div>
+            <div class="notif-list-container" id="notifDropdownList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
         <div id="activeUserBadge"
-          style="display:flex; align-items:center; gap:6px; background:#111827; border:1px solid #b45309; padding:4px 10px; border-radius:4px; font-size:11px; color:#f8fafc;">
+          style="display:flex; align-items:center; gap:6px; background:#111827; border:1px solid #1e3a8a; padding:4px 10px; border-radius:4px; font-size:11px; color:#f8fafc;">
           <span id="roleIndicatorDot"
             style="width:8px; height:8px; border-radius:50%; background:#10b981; animation:pulse-dot-anim 1.2s infinite;"></span>
           <span id="activeUserRoleText">Mode: <strong>Citizen Public Portal</strong></span>
@@ -299,10 +317,50 @@
           <span class="security-lock-badge" id="badgeLockPolice"><i data-lucide="lock" style="width:9px; height:9px;"></i> 2FA OTP</span>
         </div>
 
+        <!-- Officer: Incident Management Desk -->
+        <button class="sidebar-nav-item" data-tab="incidents" onclick="App.switchTab('incidents')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">08</span>
+            <i data-lucide="alert-circle" class="nav-item-icon" style="width:16px; height:16px; color:#2563eb;"></i>
+            <span>Traffic Incidents Desk</span>
+          </div>
+          <span style="font-size:9.5px; color:#1e40af; background:#eff6ff; padding:1px 6px; border-radius:3px; border:1px solid #bfdbfe; font-weight:700;">DISPATCH</span>
+        </button>
+
+        <!-- Officer: Smart Traffic Cameras Grid -->
+        <button class="sidebar-nav-item" data-tab="cameras" onclick="App.switchTab('cameras')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">08B</span>
+            <i data-lucide="video" class="nav-item-icon" style="width:16px; height:16px; color:#059669;"></i>
+            <span>Smart Cameras Grid</span>
+          </div>
+          <span style="font-size:9.5px; color:#059669; background:#ecfdf5; padding:1px 6px; border-radius:3px; border:1px solid #a7f3d0; font-weight:700;">4K OPTICAL</span>
+        </button>
+
+        <!-- Officer: AI Incident Capture & Mandatory Human Review -->
+        <button class="sidebar-nav-item" data-tab="camera-events" onclick="App.switchTab('camera-events')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">08C</span>
+            <i data-lucide="shield-alert" class="nav-item-icon" style="width:16px; height:16px; color:#ea580c;"></i>
+            <span>AI Event Review Queue</span>
+          </div>
+          <span style="font-size:9.5px; color:#ea580c; background:#ffedd5; padding:1px 6px; border-radius:3px; border:1px solid #fed7aa; font-weight:700;">HUMAN VERIFY</span>
+        </button>
+
+        <!-- Officer: Digital Evidence Vault -->
+        <button class="sidebar-nav-item" data-tab="evidence" onclick="App.switchTab('evidence')">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="nav-step-num">08D</span>
+            <i data-lucide="lock" class="nav-item-icon" style="width:16px; height:16px; color:#1e40af;"></i>
+            <span>Digital Evidence Vault</span>
+          </div>
+          <span style="font-size:9.5px; color:#1e40af; background:#eff6ff; padding:1px 6px; border-radius:3px; border:1px solid #bfdbfe;">SHA-256</span>
+        </button>
+
         <!-- Officer: Review Assigned Cases -->
         <button class="sidebar-nav-item" data-tab="officer-cases" onclick="App.switchTab('officer-cases')">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span class="nav-step-num">08</span>
+            <span class="nav-step-num">08E</span>
             <i data-lucide="clipboard-check" class="nav-item-icon" style="width:16px; height:16px;"></i>
             <span>Police: Review Cases</span>
           </div>
@@ -430,12 +488,12 @@
           <div class="banner-header-row">
             <!-- Identity & Crest -->
             <div class="banner-identity-group">
-              <div class="banner-emblem-seal">
-                <img src="assets/images/gov_emblem.jpg" alt="Government of India Emblem">
+              <div class="banner-emblem-seal" style="background:transparent; border:none; padding:0;">
+                <img src="assets/images/trafix_logo.svg" alt="TRAFIX Logo" style="width:48px; height:48px;">
               </div>
               <div>
-                <div class="banner-title-hi">सत्यमेव जयते • भारत सरकार • सड़क परिवहन और राजमार्ग मंत्रालय</div>
-                <h1 class="banner-title-en">NATIONAL MOTORIST DIGITAL PORTAL &amp; ENFORCEMENT DESK</h1>
+                <div class="banner-title-hi">TRAFIX • SMART ROADS. SAFER CITIES.</div>
+                <h1 class="banner-title-en">Good morning, <span id="citWelcomeGreetingName">Vikramaditya Sharma</span></h1>
                 <div class="banner-user-chips">
                   <span class="banner-chip">
                     <i data-lucide="user" style="width:13px; height:13px;"></i>
@@ -2461,10 +2519,10 @@
               <!-- Header -->
               <div class="hall-ticket-header">
                 <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:6px;">
-                  <img src="assets/images/gov_emblem.jpg" alt="Government Emblem" style="height:48px;">
+                  <img src="assets/images/trafix_logo.svg" alt="TRAFIX Logo" style="height:48px; width:48px;">
                   <div>
-                    <div style="font-size:11px; font-weight:800; color:#0f172a; letter-spacing:0.04em;">GOVERNMENT OF INDIA • MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS</div>
-                    <div style="font-size:13px; font-weight:900; color:#b45309; margin-top:2px;">SARATHI PARIVAHAN • PRACTICAL DRIVING TEST ADMIT CARD</div>
+                    <div style="font-size:11px; font-weight:800; color:#0f172a; letter-spacing:0.04em;">TRAFIX • SMART ROADS. SAFER CITIES.</div>
+                    <div style="font-size:13px; font-weight:900; color:#1e40af; margin-top:2px;">SARATHI PARIVAHAN • PRACTICAL DRIVING TEST ADMIT CARD</div>
                     <div style="font-size:10px; color:#64748b;">Automated Driving Test Track (ADTT) Competency Examination</div>
                   </div>
                 </div>
@@ -3284,8 +3342,351 @@
 
       </section>
 
+      <!-- =========================================================================
+           PANEL 10: SMART TRAFFIC CAMERAS & HEALTH GRID
+           ========================================================================= -->
+      <section class="view-panel" id="panel-cameras">
+        <div class="main-view-top-bar" style="margin:-18px -18px 18px -18px; border-radius:0;">
+          <div class="view-heading-group">
+            <div class="breadcrumb-trail">
+              <span class="breadcrumb-crumb">TRAFIX</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb">Surveillance</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb active">Traffic Cameras Grid</span>
+            </div>
+            <h2 class="view-title-main">Smart Traffic Camera Network</h2>
+            <p class="view-desc-sub">Real-Time ANPR, Doppler Radar, and RLVD Optical Surveillance Units across NCR & Highways</p>
+          </div>
+          <div class="view-top-actions">
+            <button class="btn-action-primary" onclick="App.renderCamerasView()" style="font-size:12px; font-weight:700;">
+              <i data-lucide="refresh-cw" style="width:14px; height:14px;"></i>
+              <span>Refresh Telemetry</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Camera Network KPI Strip -->
+        <div class="stat-kpi-grid">
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Total Cameras</span>
+              <div class="stat-kpi-icon" style="background:#eff6ff; color:#1d4ed8;"><i data-lucide="video"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiTotalCameras">12</div>
+            <div class="stat-kpi-footer">4K Optical & Radar Doppler</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Online & Active</span>
+              <div class="stat-kpi-icon" style="background:#ecfdf5; color:#059669;"><i data-lucide="check-circle-2"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiOnlineCameras" style="color:#059669;">10</div>
+            <div class="stat-kpi-footer">Live Stream Available</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Under Maintenance</span>
+              <div class="stat-kpi-icon" style="background:#fffbeb; color:#d97706;"><i data-lucide="wrench"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiMaintenanceCameras" style="color:#d97706;">1</div>
+            <div class="stat-kpi-footer">Optical Calibration</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Offline Link</span>
+              <div class="stat-kpi-icon" style="background:#fef2f2; color:#dc2626;"><i data-lucide="alert-octagon"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiOfflineCameras" style="color:#dc2626;">1</div>
+            <div class="stat-kpi-footer">Field Engineer Dispatched</div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="gov-card" style="margin-bottom:16px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:12px; font-weight:700; color:#334155;">Status Filter:</span>
+            <button class="filter-tab-btn active" id="btnCamFilterAll" onclick="App.filterCameras('ALL')">All Units (12)</button>
+            <button class="filter-tab-btn" id="btnCamFilterOnline" onclick="App.filterCameras('ONLINE')">Online (10)</button>
+            <button class="filter-tab-btn" id="btnCamFilterOffline" onclick="App.filterCameras('OFFLINE')">Offline (1)</button>
+            <button class="filter-tab-btn" id="btnCamFilterMaintenance" onclick="App.filterCameras('MAINTENANCE')">Maintenance (1)</button>
+          </div>
+          <div style="font-size:11px; color:#64748b;">
+            <i data-lucide="shield-check" style="width:13px; height:13px; color:#059669; vertical-align:middle;"></i>
+            Camera access restricted by backend role authorization.
+          </div>
+        </div>
+
+        <!-- Cameras Grid -->
+        <div class="camera-card-grid" id="camerasGridContainer">
+          <!-- Dynamically populated via App.renderCamerasView() -->
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 11: SMART INCIDENT CAPTURE & MANDATORY HUMAN REVIEW QUEUE
+           ========================================================================= -->
+      <section class="view-panel" id="panel-camera-events">
+        <div class="main-view-top-bar" style="margin:-18px -18px 18px -18px; border-radius:0;">
+          <div class="view-heading-group">
+            <div class="breadcrumb-trail">
+              <span class="breadcrumb-crumb">TRAFIX</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb">AI Decision Support</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb active">Mandatory Human Review</span>
+            </div>
+            <h2 class="view-title-main">Smart Incident Capture Queue</h2>
+            <p class="view-desc-sub">Human-in-the-Loop Verification Protocol: AI Detections Require Officer Sign-off Before Enforcement</p>
+          </div>
+        </div>
+
+        <!-- Decision Support Statutory Disclaimer Banner -->
+        <div class="decision-support-banner" style="margin-bottom:16px; border-radius:8px; border:1px solid #fde68a;">
+          <i data-lucide="alert-triangle"></i>
+          <div>
+            <strong>RESPONSIBLE AI SURVEILLANCE DIRECTIVE:</strong>
+            AI optical detection serves strictly as decision support. No automated punitive fine or suspension is ever issued without verified human inspection by a commissioned traffic officer.
+          </div>
+        </div>
+
+        <!-- Events KPI Cards -->
+        <div class="stat-kpi-grid">
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Pending Review</span>
+              <div class="stat-kpi-icon" style="background:#ffedd5; color:#ea580c;"><i data-lucide="clock"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiPendingEvents" style="color:#ea580c;">3</div>
+            <div class="stat-kpi-footer">Requires Officer Verification</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Human-Verified</span>
+              <div class="stat-kpi-icon" style="background:#ecfdf5; color:#059669;"><i data-lucide="check-circle-2"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiVerifiedEvents" style="color:#059669;">1</div>
+            <div class="stat-kpi-footer">Citations Dispatched</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Dismissed / False Positives</span>
+              <div class="stat-kpi-icon" style="background:#f1f5f9; color:#475569;"><i data-lucide="x-circle"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiDismissedEvents">0</div>
+            <div class="stat-kpi-footer">No Enforcement Action Taken</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Avg AI Confidence</span>
+              <div class="stat-kpi-icon" style="background:#eff6ff; color:#2563eb;"><i data-lucide="cpu"></i></div>
+            </div>
+            <div class="stat-kpi-value" style="color:#2563eb;">96.2%</div>
+            <div class="stat-kpi-footer">YOLO-v9 + Radar Sensor Fusion</div>
+          </div>
+        </div>
+
+        <!-- Events Queue Table -->
+        <div class="gov-card">
+          <div class="gov-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="card-title-group">
+              <div class="card-title-icon"><i data-lucide="shield-alert"></i></div>
+              <div>
+                <div class="card-title">Pending Human Review Registry</div>
+                <div class="card-subtitle">Examine optical frame snapshots, radar Doppler speed telemetry, and verify citation validity</div>
+              </div>
+            </div>
+          </div>
+          <div class="gov-table-wrapper">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Event ID</th>
+                  <th>Camera &amp; Intersection</th>
+                  <th>Detected Event</th>
+                  <th>Confidence</th>
+                  <th>Severity</th>
+                  <th>Status</th>
+                  <th>Capture Timestamp</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cameraEventsTableBody">
+                <!-- Dynamically populated via App.renderCameraEventsQueue() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 12: TRAFFIC INCIDENT OPERATIONS & DISPATCH
+           ========================================================================= -->
+      <section class="view-panel" id="panel-incidents">
+        <div class="main-view-top-bar" style="margin:-18px -18px 18px -18px; border-radius:0;">
+          <div class="view-heading-group">
+            <div class="breadcrumb-trail">
+              <span class="breadcrumb-crumb">TRAFIX</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb">Command Center</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb active">Traffic Incidents</span>
+            </div>
+            <h2 class="view-title-main">Operational Traffic Incident Desk</h2>
+            <p class="view-desc-sub">Live Incident Logging, Field Patrol Dispatch, Crane/Tow Coordination, and Timeline Tracking</p>
+          </div>
+          <div class="view-top-actions">
+            <button class="btn-action-primary" onclick="App.openCreateIncidentModal()" style="font-size:12px; font-weight:700;">
+              <i data-lucide="plus-circle" style="width:14px; height:14px;"></i>
+              <span>Log New Incident</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="stat-kpi-grid">
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Active Incidents</span>
+              <div class="stat-kpi-icon" style="background:#fee2e2; color:#dc2626;"><i data-lucide="alert-triangle"></i></div>
+            </div>
+            <div class="stat-kpi-value" id="kpiActiveIncidents" style="color:#dc2626;">2</div>
+            <div class="stat-kpi-footer">Field Units Deployed</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Avg Response ETA</span>
+              <div class="stat-kpi-icon" style="background:#ecfdf5; color:#059669;"><i data-lucide="clock"></i></div>
+            </div>
+            <div class="stat-kpi-value" style="color:#059669;">4.2 min</div>
+            <div class="stat-kpi-footer">Dispatch to On-Scene</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Corridors Affected</span>
+              <div class="stat-kpi-icon" style="background:#ffedd5; color:#ea580c;"><i data-lucide="map-pin"></i></div>
+            </div>
+            <div class="stat-kpi-value" style="color:#ea580c;">2</div>
+            <div class="stat-kpi-footer">Ring Road &amp; ITO</div>
+          </div>
+          <div class="stat-kpi-card">
+            <div class="stat-kpi-header">
+              <span class="stat-kpi-label">Resolved Today</span>
+              <div class="stat-kpi-icon" style="background:#eff6ff; color:#2563eb;"><i data-lucide="check"></i></div>
+            </div>
+            <div class="stat-kpi-value" style="color:#2563eb;">1</div>
+            <div class="stat-kpi-footer">Cleared by Traffic Police</div>
+          </div>
+        </div>
+
+        <!-- Incidents List Table -->
+        <div class="gov-card">
+          <div class="gov-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="card-title-group">
+              <div class="card-title-icon"><i data-lucide="clipboard-list"></i></div>
+              <div>
+                <div class="card-title">Live Incidents Registry</div>
+                <div class="card-subtitle">Real-time incident tracking with assigned officers, severity ratings, and response logs</div>
+              </div>
+            </div>
+          </div>
+          <div class="gov-table-wrapper">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Incident ID</th>
+                  <th>Type</th>
+                  <th>Location &amp; Corridor</th>
+                  <th>Severity</th>
+                  <th>Detected Time</th>
+                  <th>Assigned Officer</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="incidentsTableBody">
+                <!-- Dynamically populated via App.renderIncidentsView() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           PANEL 13: DIGITAL EVIDENCE VAULT (CHAIN-OF-CUSTODY)
+           ========================================================================= -->
+      <section class="view-panel" id="panel-evidence">
+        <div class="main-view-top-bar" style="margin:-18px -18px 18px -18px; border-radius:0;">
+          <div class="view-heading-group">
+            <div class="breadcrumb-trail">
+              <span class="breadcrumb-crumb">TRAFIX</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb">Forensics</span>
+              <span>/</span>
+              <span class="breadcrumb-crumb active">Digital Evidence Vault</span>
+            </div>
+            <h2 class="view-title-main">Cryptographic Evidence Vault</h2>
+            <p class="view-desc-sub">Sealed Optical Snapshots, Video Bursts, SHA-256 Hashes &amp; Chain-of-Custody Retention Logs</p>
+          </div>
+        </div>
+
+        <div class="gov-card">
+          <div class="gov-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="card-title-group">
+              <div class="card-title-icon"><i data-lucide="lock"></i></div>
+              <div>
+                <div class="card-title">Sealed Evidence Custody Ledger</div>
+                <div class="card-subtitle">Immutable records with retention dates and verifying officer badges for judicial proceedings</div>
+              </div>
+            </div>
+          </div>
+          <div class="gov-table-wrapper">
+            <table class="gov-table">
+              <thead>
+                <tr>
+                  <th>Evidence ID</th>
+                  <th>Case / Event Ref</th>
+                  <th>Type</th>
+                  <th>File Name</th>
+                  <th>SHA-256 Hash</th>
+                  <th>Captured At</th>
+                  <th>Retention Expiry</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="evidenceTableBody">
+                <!-- Dynamically populated via App.renderEvidenceVault() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="#panel-citizen-dashboard" class="bottom-nav-item active" onclick="App.switchTab('citizen-dashboard')">
+      <i data-lucide="layout-dashboard" style="width:18px; height:18px;"></i>
+      <span>Dashboard</span>
+    </a>
+    <a href="#panel-current" class="bottom-nav-item" onclick="App.switchTab('current')">
+      <i data-lucide="map" style="width:18px; height:18px;"></i>
+      <span>Live Map</span>
+    </a>
+    <a href="#panel-incidents" class="bottom-nav-item" onclick="App.switchTab('incidents')">
+      <i data-lucide="alert-triangle" style="width:18px; height:18px;"></i>
+      <span>Incidents</span>
+    </a>
+    <a href="#panel-cameras" class="bottom-nav-item" onclick="App.switchTab('cameras')">
+      <i data-lucide="video" style="width:18px; height:18px;"></i>
+      <span>Cameras</span>
+    </a>
+    <a href="#panel-citizen-vehicles" class="bottom-nav-item" onclick="App.switchTab('citizen-vehicles')">
+      <i data-lucide="user" style="width:18px; height:18px;"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
 
   <!-- =========================================================================
        MODALS
@@ -4240,10 +4641,10 @@
       <div class="modal-body" style="background:#f8fafc;">
         <div class="officer-pass-card" id="digitalDutyPassCard">
           <div class="pass-header">
-            <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Seal" class="pass-crest-img" width="46"
+            <img src="assets/images/trafix_logo.svg" alt="TRAFIX Logo" class="pass-crest-img" width="46"
               height="46">
-            <div class="pass-title-main">DIRECTORATE GENERAL OF TRAFFIC POLICE</div>
-            <div class="pass-title-sub">MINISTRY OF ROAD TRANSPORT &amp; HIGHWAYS • GOVT OF INDIA</div>
+            <div class="pass-title-main">TRAFIX TRAFFIC ENFORCEMENT COMMAND</div>
+            <div class="pass-title-sub">SMART ROADS. SAFER CITIES. • OFFICIAL DUTY PASS</div>
           </div>
 
           <div class="pass-body-grid">
@@ -4567,12 +4968,10 @@
       <div class="modal-body" style="background:#f8fafc; padding:16px;">
         <div class="challan-receipt-box" id="printableReceiptBox">
           <div style="text-align:center; border-bottom:2px solid #0f172a; padding-bottom:10px; margin-bottom:14px;">
-            <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Seal" width="42" height="42"
+            <img src="assets/images/trafix_logo.svg" alt="TRAFIX Logo" width="42" height="42"
               style="margin-bottom:4px;">
-            <div style="font-weight:800; font-size:13px; color:#0f172a;">GOVERNMENT OF INDIA • MINISTRY OF ROAD
-              TRANSPORT &amp; HIGHWAYS</div>
-            <div style="font-size:11px; font-weight:700; color:#b45309;">OFFICIAL STATUTORY E-CHALLAN PAYMENT RECEIPT
-            </div>
+            <div style="font-weight:800; font-size:13px; color:#0f172a;">TRAFIX ENFORCEMENT &amp; RTO MANAGEMENT PLATFORM</div>
+            <div style="font-size:11px; font-weight:700; color:#1e40af;">OFFICIAL STATUTORY E-CHALLAN PAYMENT RECEIPT</div>
             <div style="font-size:10px; color:#64748b;">Generated under Motor Vehicles Act, 1988 (Section 200
               Compounding Offenses)</div>
           </div>
@@ -4864,6 +5263,206 @@
     </div>
   </div>
 
+  <!-- =========================================================================
+       TRAFIX MODALS: GLOBAL SEARCH, SMART INCIDENT REVIEW & CAMERA STREAM
+       ========================================================================= -->
+
+  <!-- 1. Unified Global Search Modal (Ctrl + K) -->
+  <div class="modal-backdrop" id="globalSearchModal">
+    <div class="modal-card" style="max-width:680px; width:95%;">
+      <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #2563eb; padding:12px 18px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i data-lucide="search" style="width:18px; height:18px; color:#60a5fa;"></i>
+          <span style="font-weight:700; font-size:14px;">TRAFIX Global Intelligence Search</span>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('globalSearchModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding:16px;">
+        <div style="position:relative; margin-bottom:14px;">
+          <input type="text" id="globalSearchModalInput" class="form-input" placeholder="Search vehicle plate, DL number, case ID, camera name, incident..." style="padding-left:36px; font-size:13px;" onkeyup="if(event.key==='Enter') App.executeGlobalSearch(this.value)">
+          <i data-lucide="search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; color:#94a3b8;"></i>
+        </div>
+        <div id="globalSearchResultsContainer" style="max-height:400px; overflow-y:auto;">
+          <div style="text-align:center; padding:30px 10px; color:#64748b; font-size:12px;">
+            <i data-lucide="file-search" style="width:32px; height:32px; margin-bottom:6px; opacity:0.6;"></i>
+            <div>Type a registration number (e.g. DL01AB1234), licence number, or case ID and press Enter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Smart Incident Capture & Mandatory Human Review Modal -->
+  <div class="modal-backdrop" id="smartReviewModal">
+    <div class="modal-card smart-review-modal-card">
+      <div class="modal-header" style="background:#0b192c; color:#fff; border-bottom:2px solid #ea580c; padding:14px 20px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="background:#ea580c; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:#fff;">
+            <i data-lucide="shield-alert" style="width:18px; height:18px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:800; font-size:14px;" id="reviewModalTitle">Smart Incident Detection Review</div>
+            <div style="font-size:10px; color:#93c5fd;" id="reviewModalSubtitle">AI Decision Support • Mandatory Human Inspection</div>
+          </div>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('smartReviewModal')">&times;</button>
+      </div>
+
+      <div class="decision-support-banner">
+        <i data-lucide="alert-triangle"></i>
+        <span><strong>LEGAL MANDATE:</strong> AI detection is decision support only. Statutory human review is mandatory before issuing any citation or compounding notice.</span>
+      </div>
+
+      <div class="modal-body" style="padding:16px 20px; max-height:calc(85vh - 140px); overflow-y:auto;">
+        <!-- Evidence Snapshot & Radar Telemetry -->
+        <div class="evidence-snapshot-frame" id="reviewEvidenceFrame">
+          <!-- Injected SVG snapshot via JS -->
+        </div>
+
+        <!-- Chain of Custody & Telemetry Metadata -->
+        <div class="evidence-chain-metadata">
+          <div>
+            <span style="color:#64748b;">Event ID:</span>
+            <strong id="reviewEvtId">EVT-2026-101</strong>
+          </div>
+          <div>
+            <span style="color:#64748b;">Camera ID:</span>
+            <strong id="reviewCamId">CAM-DL-02</strong>
+          </div>
+          <div>
+            <span style="color:#64748b;">Detected Violation:</span>
+            <strong id="reviewViolationType" style="color:#b91c1c;">RED_LIGHT_VIOLATION</strong>
+          </div>
+          <div>
+            <span style="color:#64748b;">AI Confidence Score:</span>
+            <strong id="reviewConfidence" style="color:#059669;">96.4%</strong>
+          </div>
+          <div style="grid-column:span 2;">
+            <span style="color:#64748b;">Cryptographic Evidence Hash:</span>
+            <div style="word-break:break-all; font-size:10px; color:#0f172a;" id="reviewFileHash">4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945</div>
+          </div>
+        </div>
+
+        <!-- Officer Review Input -->
+        <div style="margin-bottom:12px;">
+          <label class="form-label" style="font-weight:700; font-size:11px;">Officer Inspection Notes:</label>
+          <textarea id="reviewOfficerNotes" class="form-input" rows="2" placeholder="Record visual verification observations, vehicle plate legibility, trajectory confirmation..." style="font-size:12px;"></textarea>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; background:#eff6ff; padding:8px 12px; border-radius:6px; border:1px solid #bfdbfe;">
+          <input type="checkbox" id="chkIssueChallan" checked style="accent-color:#1e40af; width:16px; height:16px;">
+          <label for="chkIssueChallan" style="font-size:12px; font-weight:700; color:#1e40af; cursor:pointer;">
+            Generate Statutory e-Challan citation upon verification
+          </label>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="review-decision-actions">
+          <button type="button" class="btn-action-outline" style="border-color:#ef4444; color:#dc2626;" onclick="App.submitEventReview('REJECT')">
+            <i data-lucide="x-circle" style="width:14px; height:14px;"></i>
+            <span>Reject / False Positive</span>
+          </button>
+          <button type="button" class="btn-action-primary" style="background:#059669; border-color:#047857;" onclick="App.submitEventReview('VERIFY')">
+            <i data-lucide="check-circle-2" style="width:14px; height:14px;"></i>
+            <span>Verify Violation &amp; Proceed</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Camera Stream & Telemetry Modal -->
+  <div class="modal-backdrop" id="cameraStreamModal">
+    <div class="modal-card" style="max-width:720px; width:95%;">
+      <div class="modal-header" style="background:#0b192c; color:#fff; border-bottom:2px solid #2563eb; padding:12px 18px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i data-lucide="video" style="width:18px; height:18px; color:#60a5fa;"></i>
+          <span style="font-weight:700; font-size:14px;" id="streamModalTitle">Live Optical Stream</span>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('cameraStreamModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding:16px; background:#07172c;">
+        <div style="height:320px; background:#0b192c; border-radius:8px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; border:1px solid #1e3a8a;">
+          <!-- Moving Video Simulation -->
+          <svg width="100%" height="100%" viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg">
+            <rect width="640" height="320" fill="#07172c"/>
+            <path d="M0 240L240 100L400 100L640 240H0Z" fill="#0f1f38"/>
+            <line x1="320" y1="100" x2="320" y2="240" stroke="#f97316" stroke-width="2" stroke-dasharray="8 8"/>
+            <!-- Camera Crosshair Grid -->
+            <line x1="300" y1="160" x2="340" y2="160" stroke="#60a5fa" stroke-width="1.5"/>
+            <line x1="320" y1="140" x2="320" y2="180" stroke="#60a5fa" stroke-width="1.5"/>
+            <circle cx="320" cy="160" r="40" fill="none" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4 4"/>
+            <!-- Telemetry Overlay Text -->
+            <text x="20" y="30" fill="#10b981" font-family="monospace" font-size="12" font-weight="bold">FEED: LIVE 4K 60FPS • ENCRYPTED SHA-256</text>
+            <text x="20" y="50" fill="#93c5fd" font-family="monospace" font-size="11" id="streamTelemetryCoords">LAT: 28.6129 N | LON: 77.2295 E</text>
+            <text x="500" y="30" fill="#f59e0b" font-family="monospace" font-size="11">BITRATE: 14.8 Mbps</text>
+          </svg>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; color:#cbd5e1; font-size:11px;">
+          <div>Location: <strong id="streamModalLocation">C-Hexagon &amp; Rajpath Marg</strong></div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-action-primary" style="font-size:11px; padding:4px 10px;" onclick="App.toggleCameraMaintenance()">
+              Toggle Maintenance
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Create Incident Modal -->
+  <div class="modal-backdrop" id="createIncidentModal">
+    <div class="modal-card" style="max-width:540px; width:95%;">
+      <div class="modal-header" style="background:#0f172a; color:#fff; border-bottom:2px solid #2563eb; padding:12px 18px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i data-lucide="plus-circle" style="width:18px; height:18px; color:#60a5fa;"></i>
+          <span style="font-weight:700; font-size:14px;">Log Traffic Incident</span>
+        </div>
+        <button class="btn-icon" style="color:#fff;" onclick="App.closeModal('createIncidentModal')">&times;</button>
+      </div>
+      <div class="modal-body" style="padding:16px;">
+        <form id="formCreateIncident" onsubmit="App.submitCreateIncident(event)">
+          <div style="margin-bottom:10px;">
+            <label class="form-label" style="font-weight:700; font-size:11px;">Incident Type:</label>
+            <select id="inIncType" class="form-input" required>
+              <option value="Multi-Vehicle Collision">Multi-Vehicle Collision</option>
+              <option value="Vehicle Breakdown">Vehicle Breakdown</option>
+              <option value="Signal Hardware Failure">Signal Hardware Failure</option>
+              <option value="Severe Waterlogging">Severe Waterlogging</option>
+              <option value="Commercial Cargo Spill">Commercial Cargo Spill</option>
+              <option value="Illegal Road Blockade">Illegal Road Blockade</option>
+            </select>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label class="form-label" style="font-weight:700; font-size:11px;">Location &amp; Corridor:</label>
+            <input type="text" id="inIncLocation" class="form-input" placeholder="e.g. Ring Road near Dhaula Kuan Ramp" required>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label class="form-label" style="font-weight:700; font-size:11px;">Severity Rating:</label>
+            <select id="inIncSeverity" class="form-input" required>
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM" selected>MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+              <option value="CRITICAL">CRITICAL</option>
+            </select>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label class="form-label" style="font-weight:700; font-size:11px;">Assigned Officer / Unit:</label>
+            <input type="text" id="inIncOfficer" class="form-input" placeholder="e.g. Sub-Inspector Anita Rawat (DL-TP-3321)">
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label" style="font-weight:700; font-size:11px;">Description &amp; Operational Notes:</label>
+            <textarea id="inIncDesc" class="form-input" rows="2" placeholder="Details of the incident, lanes blocked, tow assistance needed..."></textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button type="button" class="btn-action-outline" onclick="App.closeModal('createIncidentModal')">Cancel</button>
+            <button type="submit" class="btn-action-primary">Log Incident</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
 
@@ -4871,13 +5470,11 @@
   <footer class="gov-footer">
     <div class="footer-inner">
       <div style="display:flex; align-items:center; gap:10px;">
-        <img src="assets/images/gov_emblem.jpg" alt="Ashok Stambh Emblem" class="footer-emblem-img" width="34"
+        <img src="assets/images/trafix_logo.svg" alt="TRAFIX Logo" class="footer-emblem-img" width="34"
           height="34">
         <div>
-          <div style="font-weight:700; color:#ffffff;">NATDAMS - National Automated Traffic Department &amp; Enforcement
-            System</div>
-          <div style="font-size:0.7rem;">Hosted by National Informatics Centre (NIC) • Ministry of Road Transport &amp;
-            Highways, Government of India</div>
+          <div style="font-weight:700; color:#ffffff;">TRAFIX - Government Traffic Police &amp; RTO Management Platform</div>
+          <div style="font-size:0.7rem; color:#93c5fd;">Smart Roads. Safer Cities. • Real-Time Telemetry &amp; Decision Support</div>
         </div>
       </div>
 

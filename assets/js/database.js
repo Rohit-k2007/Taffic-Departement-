@@ -30,6 +30,10 @@ class TrafficDatabase {
     this.analytics = null;
     this.users = [];
     this.vahanData = null;
+    this.cameras = [];
+    this.cameraEvents = [];
+    this.incidents = [];
+    this.evidenceFiles = [];
   }
 
   authHeaders() {
@@ -165,6 +169,34 @@ class TrafficDatabase {
       if (resAnalytics.ok) {
         const data = await resAnalytics.json();
         this.analytics = data.metrics || null;
+      }
+
+      // 19. Fetch Cameras
+      const resCameras = await fetch(`${this.apiBase}/api/cameras`);
+      if (resCameras.ok) {
+        const data = await resCameras.json();
+        this.cameras = data.cameras || [];
+      }
+
+      // 20. Fetch Camera Events (AI Incident Capture Queue)
+      const resEvents = await fetch(`${this.apiBase}/api/camera-events`);
+      if (resEvents.ok) {
+        const data = await resEvents.json();
+        this.cameraEvents = data.events || [];
+      }
+
+      // 21. Fetch Incidents
+      const resIncidents = await fetch(`${this.apiBase}/api/incidents`);
+      if (resIncidents.ok) {
+        const data = await resIncidents.json();
+        this.incidents = data.incidents || [];
+      }
+
+      // 22. Fetch Evidence Files
+      const resEvidence = await fetch(`${this.apiBase}/api/evidence`);
+      if (resEvidence.ok) {
+        const data = await resEvidence.json();
+        this.evidenceFiles = data.evidence || [];
       }
 
     } catch (e) {
@@ -726,6 +758,174 @@ class TrafficDatabase {
     }
     const hex = Math.abs(hash).toString(16).padStart(8, '0');
     return `${hex}49afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.substring(0, 64);
+  }
+
+  // --- CAMERAS & SMART CAPTURE ---
+  getCameras(status = null, district = null) {
+    let list = this.cameras;
+    if (status && status !== 'ALL') {
+      list = list.filter(c => c.status.toUpperCase() === status.toUpperCase());
+    }
+    if (district && district !== 'ALL') {
+      list = list.filter(c => c.district === district);
+    }
+    return list;
+  }
+
+  getCameraById(camId) {
+    return this.cameras.find(c => c.id === camId) || null;
+  }
+
+  async updateCameraStatus(camId, status, notes = '') {
+    try {
+      const res = await fetch(`${this.apiBase}/api/cameras/${camId}/status`, {
+        method: 'PUT',
+        headers: this.authHeaders(),
+        body: JSON.stringify({ status, notes })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const existing = this.cameras.find(c => c.id === camId);
+        if (existing) {
+          existing.status = status;
+          if (notes) existing.lastActivity = notes;
+        }
+        return data;
+      }
+    } catch (e) {
+      console.warn("Camera status update fallback:", e);
+    }
+    const cam = this.cameras.find(c => c.id === camId);
+    if (cam) cam.status = status;
+    return { success: true, camera: cam };
+  }
+
+  // --- SMART CAMERA EVENTS & MANDATORY HUMAN REVIEW ---
+  getCameraEvents(status = null, severity = null) {
+    let list = this.cameraEvents;
+    if (status && status !== 'ALL') {
+      list = list.filter(e => e.eventStatus === status);
+    }
+    if (severity && severity !== 'ALL') {
+      list = list.filter(e => e.severity === severity);
+    }
+    return list;
+  }
+
+  async reviewCameraEvent(evtId, reviewData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/camera-events/${evtId}/review`, {
+        method: 'POST',
+        headers: this.authHeaders(),
+        body: JSON.stringify(reviewData)
+      });
+      if (res.ok) {
+        const result = await res.json();
+        const idx = this.cameraEvents.findIndex(e => e.id === evtId);
+        if (idx >= 0 && result.event) {
+          this.cameraEvents[idx] = result.event;
+        }
+        if (result.challan) {
+          this.violations.unshift(result.challan);
+        }
+        return result;
+      }
+    } catch (e) {
+      console.warn("Camera event review fallback:", e);
+    }
+    const evt = this.cameraEvents.find(e => e.id === evtId);
+    if (evt) {
+      evt.eventStatus = reviewData.action === 'VERIFY' ? 'VERIFIED' : 'REJECTED';
+      evt.reviewNotes = reviewData.notes || '';
+    }
+    return { success: true, event: evt };
+  }
+
+  // --- TRAFFIC INCIDENTS ---
+  getIncidents(status = null, severity = null) {
+    let list = this.incidents;
+    if (status && status !== 'ALL') list = list.filter(i => i.status === status);
+    if (severity && severity !== 'ALL') list = list.filter(i => i.severity === severity);
+    return list;
+  }
+
+  async createIncident(incidentData) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/incidents`, {
+        method: 'POST',
+        headers: this.authHeaders(),
+        body: JSON.stringify(incidentData)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        this.incidents.unshift(data.incident);
+        return data.incident;
+      }
+    } catch (e) {
+      console.warn("Create incident fallback:", e);
+    }
+    const inc = Object.assign({
+      id: "INC-" + Date.now(),
+      incidentNumber: "INC-2026-" + Math.floor(1000 + Math.random() * 9000),
+      detectedTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      status: "OPEN"
+    }, incidentData);
+    this.incidents.unshift(inc);
+    return inc;
+  }
+
+  async updateIncident(incId, patch) {
+    try {
+      const res = await fetch(`${this.apiBase}/api/incidents/${incId}`, {
+        method: 'PUT',
+        headers: this.authHeaders(),
+        body: JSON.stringify(patch)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const idx = this.incidents.findIndex(i => i.id === incId || i.incidentNumber === incId);
+        if (idx >= 0 && data.incident) this.incidents[idx] = data.incident;
+        return data.incident;
+      }
+    } catch (e) {
+      console.warn("Update incident fallback:", e);
+    }
+    const inc = this.incidents.find(i => i.id === incId || i.incidentNumber === incId);
+    if (inc) Object.assign(inc, patch);
+    return inc;
+  }
+
+  // --- EVIDENCE FILES ---
+  getEvidenceFiles() {
+    return this.evidenceFiles || [];
+  }
+
+  // --- GLOBAL SEARCH ---
+  async performGlobalSearch(query) {
+    if (!query || !query.trim()) {
+      return { vehicles: [], licences: [], cases: [], incidents: [], violations: [], cameras: [], rtoApplications: [] };
+    }
+    try {
+      const res = await fetch(`${this.apiBase}/api/global-search?q=${encodeURIComponent(query.trim())}`, {
+        headers: this.authHeaders()
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.results || {};
+      }
+    } catch (e) {
+      console.warn("Global search API fallback to local cache:", e);
+    }
+    const q = query.trim().toUpperCase();
+    return {
+      vehicles: (this.vehicles || []).filter(v => v.registrationNumber?.toUpperCase().includes(q) || v.ownerName?.toUpperCase().includes(q)).slice(0, 5),
+      licences: (this.licences || []).filter(l => l.licenceNumber?.toUpperCase().includes(q) || l.holderName?.toUpperCase().includes(q)).slice(0, 5),
+      cases: (this.cases || []).filter(c => c.id?.toUpperCase().includes(q) || c.description?.toUpperCase().includes(q)).slice(0, 5),
+      incidents: (this.incidents || []).filter(i => i.id?.toUpperCase().includes(q) || i.type?.toUpperCase().includes(q)).slice(0, 5),
+      violations: (this.violations || []).filter(v => v.id?.toUpperCase().includes(q) || v.plateNumber?.toUpperCase().includes(q)).slice(0, 5),
+      cameras: (this.cameras || []).filter(c => c.id?.toUpperCase().includes(q) || c.name?.toUpperCase().includes(q)).slice(0, 5),
+      rtoApplications: (this.rtoApplications || []).filter(a => a.id?.toUpperCase().includes(q) || a.applicantName?.toUpperCase().includes(q)).slice(0, 5)
+    };
   }
 }
 
