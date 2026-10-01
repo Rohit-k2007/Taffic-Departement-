@@ -13,7 +13,7 @@ CREATE TABLE states (
     state_id INT PRIMARY KEY AUTO_INCREMENT,
     state_code VARCHAR(10) UNIQUE NOT NULL,
     state_name VARCHAR(100) NOT NULL,
-    state_type ENUM('STATE','UNION_TERRITORY') NOT NULL,
+    state_type ENUM('STATE','Distict','UNION_TERRITORY') NOT NULL,
     capital VARCHAR(100),
     official_website VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -181,7 +181,7 @@ CREATE TABLE vehicle_registration_series (
 -- =========================================================================
 
 INSERT INTO states (state_id, state_code, state_name, state_type, capital, official_website) VALUES
-(1, 'RJ', 'Rajasthan', 'STATE', 'Jaipur', 'https://transport.rajasthan.gov.in'),
+(1, 'RJ', 'Rajasthan', 'STATE', 'Jaipur','Jodhpur','Ajmer','pali','Kishangarh','Nagaur','Merta city','pipar city','churu','Shriganganagar', 'https://transport.rajasthan.gov.in'),
 (2, 'DL', 'Delhi NCT', 'UNION_TERRITORY', 'New Delhi', 'https://transport.delhi.gov.in'),
 (3, 'MH', 'Maharashtra', 'STATE', 'Mumbai', 'https://transport.maharashtra.gov.in'),
 (4, 'UP', 'Uttar Pradesh', 'STATE', 'Lucknow', 'https://uptransport.upsdc.gov.in'),
